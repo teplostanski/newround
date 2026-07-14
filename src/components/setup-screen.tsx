@@ -1,7 +1,8 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import type { Player } from './app';
 
 type SetupScreenProps = {
-  players: string[];
+  players: Player[];
   onAddPlayer: (name: string) => void;
   onStartGame: () => void;
 };
@@ -37,14 +38,14 @@ const SetupScreen = ({ players, onAddPlayer, onStartGame }: SetupScreenProps) =>
         />
         <button type="submit">Добавить</button>
       </form>
-      <ul>
+      <ol>
         {players.length !== 0 &&
-          players.map((player, index) => (
-            <li key={index}>
-              Игрок {index + 1} {player}
+          players.map((player) => (
+            <li key={player.id}>
+              {player.name}
             </li>
           ))}
-      </ul>
+      </ol>
 
       <button
         type="button"
