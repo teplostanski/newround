@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import type { Player } from './app';
+import styles from './setup-screen.module.css';
 
 type SetupScreenProps = {
   players: Player[];
@@ -28,26 +29,34 @@ const SetupScreen = ({ players, onAddPlayer, onStartGame }: SetupScreenProps) =>
   };
 
   return (
-    <div>
-      <form onSubmit={handleAddPlayer}>
+    <div className={styles.screen}>
+      <form className={styles.form} onSubmit={handleAddPlayer}>
         <input
+          className={styles.input}
           type="text"
-          placeholder="Игрок"
+          placeholder="Имя игрока"
           value={playerName}
           onChange={handlePlayerNameChange}
         />
-        <button type="submit">Добавить</button>
+        <button className={styles.btnGhost} type="submit">
+          Добавить
+        </button>
       </form>
-      <ol>
-        {players.length !== 0 &&
-          players.map((player) => (
-            <li key={player.id}>
+
+      {players.length === 0 ? (
+        <p className={styles.empty}>Добавьте хотя бы двух игроков</p>
+      ) : (
+        <ol className={styles.list}>
+          {players.map((player) => (
+            <li className={styles.item} key={player.id}>
               {player.name}
             </li>
           ))}
-      </ol>
+        </ol>
+      )}
 
       <button
+        className={styles.start}
         type="button"
         disabled={players.length < 2}
         onClick={onStartGame}

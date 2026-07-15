@@ -1,0 +1,12 @@
+.screen {
+  color: var(--muted);
+}
+
+.placeholder {
+  margin: 0;
+  padding: 1rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  text-align: center;
+}
