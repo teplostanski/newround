@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { RoundScreen } from './round-screen';
 import { SetupScreen } from './setup-screen';
 import { StatsScreen } from './stats-screen';
+import styles from './app.module.css';
 
 export type Player = {
   id: string;
@@ -14,14 +15,10 @@ export type ScoreMap = Record<string, number>;
 const App = () => {
   const [screen, setScreen] = useState<'setup' | 'round' | 'stats'>('setup');
   const [players, setPlayers] = useState<Player[]>([]);
-  
-  const setupScores = Object.fromEntries(players.map((p) => [p.id, 0]))
+
+  const setupScores = Object.fromEntries(players.map((p) => [p.id, 0]));
 
   const [scores, setScores] = useState<ScoreMap>(setupScores);
-  console.log(players);
-  console.log(scores);
-  
-
 
   const handleAddPlayer = (name: string) => {
     setPlayers((prev) => [...prev, { id: nanoid(), name }]);
@@ -29,7 +26,7 @@ const App = () => {
 
   const handleStartGame = () => {
     setScreen('round');
-    setScores(setupScores)
+    setScores(setupScores);
   };
 
   const handleScoreChange = (id: string, newValue: number) => {
@@ -37,8 +34,8 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Tablo</h1>
+    <div className={styles.shell}>
+      <h1 className={styles.brand}>Tablo</h1>
       {screen === 'setup' && (
         <SetupScreen
           players={players}
