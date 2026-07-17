@@ -21,6 +21,7 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@vite-pwa/astro": "^1.2.0",
     "vite-plugin-readable-classnames": "^1.5.11"
   }
 }
