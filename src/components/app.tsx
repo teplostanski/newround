@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
+import { InstallApp } from './install-app';
 import { RoundScreen } from './round-screen';
 import { SetupScreen } from './setup-screen';
 import { StatsScreen } from './stats-screen';
@@ -35,7 +36,10 @@ const App = () => {
 
   return (
     <div className={styles.shell}>
-      <h1 className={styles.brand}>Tablo</h1>
+      <header className={styles.header}>
+        <h1 className={styles.brand}>Tablo</h1>
+        <InstallApp />
+      </header>
       {screen === 'setup' && (
         <SetupScreen
           players={players}
