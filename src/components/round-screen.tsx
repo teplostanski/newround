@@ -27,23 +27,23 @@ const RoundScreen = ({
   };
 
   return (
-    <div className={styles.screen}>
+    <div className="screen">
       <p className={styles.heading}>Партия {roundNumber}</p>
-      <ul className={styles.list}>
+      <ul className={`list ${styles.list}`}>
         {players.map((player) => (
           <li className={styles.card} key={player.id}>
-            <p className={styles.name}>{player.name}</p>
+            <p className="title">{player.name}</p>
             <p className={styles.score}>{scores[player.id]}</p>
             <div className={styles.controls}>
               <button
-                className={styles.btn}
+                className={styles.scoreBtn}
                 type="button"
                 onClick={() => onChangeScore(player.id, decScore(player.id))}
               >
                 −
               </button>
               <button
-                className={styles.btn}
+                className={styles.scoreBtn}
                 type="button"
                 onClick={() => onChangeScore(player.id, incScore(player.id))}
               >
