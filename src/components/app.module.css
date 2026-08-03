@@ -1,21 +1,8 @@
 .shell {
-  --bg: #e8edf2;
-  --surface: #f7f9fb;
-  --ink: #1a2332;
-  --muted: #5c6b7a;
-  --line: #c5d0db;
-  --accent: #2f6f5e;
-  --accent-ink: #f4faf7;
-  --danger-soft: #d9e2ea;
-  --radius: 10px;
-  --font: 'IBM Plex Sans', 'Segoe UI', sans-serif;
-
   min-height: 100dvh;
   margin: 0 auto;
   max-width: 28rem;
   padding: 1.25rem 1rem 2.5rem;
-  color: var(--ink);
-  font-family: var(--font);
   background:
     radial-gradient(120% 80% at 50% -10%, #d7e4ef 0%, transparent 55%),
     var(--bg);

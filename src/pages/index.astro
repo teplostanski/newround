@@ -1,6 +1,7 @@
 ---
 import { App } from '../components/app';
 import { pwaInfo } from 'virtual:pwa-info';
+import '../styles/global.css';
 ---
 
 <html lang="ru">
@@ -28,28 +29,6 @@ import { pwaInfo } from 'virtual:pwa-info';
     <title>Tablo</title>
     {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
     <script src="../pwa.ts"></script>
-    <style is:global>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-      }
-
-      html,
-      body {
-        margin: 0;
-        min-height: 100%;
-      }
-
-      body {
-        background: #e8edf2;
-      }
-
-      button,
-      input {
-        font: inherit;
-      }
-    </style>
   </head>
   <body>
     <App client:load />

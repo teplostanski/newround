@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import styles from './install-app.module.css';
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -52,7 +51,7 @@ const InstallApp = () => {
 
   if (installEvent) {
     return (
-      <button className={styles.action} type="button" onClick={handleInstall}>
+      <button className="btnLink" type="button" onClick={handleInstall}>
         Установить
       </button>
     );
@@ -60,10 +59,7 @@ const InstallApp = () => {
 
   if (showIosHint) {
     return (
-      <span
-        className={styles.hint}
-        title="Поделиться → На экран «Домой»"
-      >
+      <span className="muted" title="Поделиться → На экран «Домой»">
         Установить
       </span>
     );
