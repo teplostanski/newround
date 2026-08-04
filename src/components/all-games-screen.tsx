@@ -1,14 +1,21 @@
+import cn from 'classnames';
 import type { Game } from './app';
+import styles from './all-games-screen.module.css'
 
 type AllGamesScreenProps = {
   games: Game[];
-  onNewGame: () => void;
+  onCreateNewGame: () => void;
+  onOpenGame: (id: string) => void;
 };
 
-const AllGamesScreen = ({ games, onNewGame }: AllGamesScreenProps) => {
+const AllGamesScreen = ({
+  games,
+  onCreateNewGame,
+  onOpenGame,
+}: AllGamesScreenProps) => {
   return (
     <div className="screen">
-      <button className="btn btnBlock" type="button" onClick={onNewGame}>
+      <button className="btn btnBlock" type="button" onClick={onCreateNewGame}>
         Новая игра
       </button>
 
@@ -17,7 +24,11 @@ const AllGamesScreen = ({ games, onNewGame }: AllGamesScreenProps) => {
       ) : (
         <ul className="list">
           {games.map((game) => (
-            <li className="item itemStacked" key={game.id}>
+            <li
+              className={cn('item', 'itemStacked', styles.linkItem)}
+              key={game.id}
+              onClick={() => onOpenGame(game.id)}
+            >
               <p className="title">{game.name}</p>
               <p className="meta">
                 {game.players.length}{' '}

@@ -10,10 +10,42 @@
 
 .header {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0 0 1.5rem;
+}
+
+.headerBar {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin: 0 0 1.5rem;
+  min-height: 1.5rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.navBtn {
+  margin: 0;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.navBtn:active {
+  transform: translateY(1px);
 }
 
 .brand {
