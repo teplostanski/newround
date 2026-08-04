@@ -1,54 +1,136 @@
-.heading {
-  margin: 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
 .list {
   gap: 0.65rem;
 }
 
 .card {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 0.75rem 1rem;
+  --card-gradient-at: 50% -12%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   padding: 0.9rem 1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
+  background:
+    radial-gradient(
+      ellipse 185% 155% at var(--card-gradient-at),
+      rgb(215 228 239 / 0.24) 0%,
+      rgb(215 228 239 / 0.07) 48%,
+      transparent 84%
+    ),
+    color-mix(in srgb, var(--bg) 72%, var(--surface));
 }
 
-.score {
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
-  justify-self: end;
+.card:nth-child(4n + 2) {
+  --card-gradient-at: -12% 42%;
 }
 
-.controls {
-  grid-column: 1 / -1;
+.card:nth-child(4n + 3) {
+  --card-gradient-at: 108% 68%;
+}
+
+.card:nth-child(4n) {
+  --card-gradient-at: 28% 112%;
+}
+
+.player {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+.avatar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      ellipse 170% 170% at 28% 18%,
+      rgb(255 255 255 / 0.28) 0%,
+      rgb(255 255 255 / 0.06) 52%,
+      transparent 82%
+    ),
+    var(--avatar-color);
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.player .title {
+  min-width: 0;
+}
+
+.stepper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 0.35rem;
 }
 
-.scoreBtn {
-  padding: 0.75rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: #eef3f7;
+.stepperBtn,
+.stepperValue {
+  background:
+    radial-gradient(
+      ellipse 165% 145% at var(--tile-glow-at, 50% 0%),
+      rgb(243 247 250 / 0.55) 0%,
+      rgb(243 247 250 / 0.12) 46%,
+      transparent 84%
+    ),
+    var(--surface);
+}
+
+.stepperBtn {
+  --tile-glow-at: 50% 0%;
+  margin: 0;
+  padding: 0.7rem;
+  border: 0;
+  border-radius: calc(var(--radius) - 2px);
   color: var(--ink);
   font: inherit;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 600;
   line-height: 1;
   cursor: pointer;
 }
 
-.scoreBtn:active {
-  transform: translateY(1px);
+.card:nth-child(3n + 2) .stepperBtn:first-of-type {
+  --tile-glow-at: 0% 50%;
+}
+
+.card:nth-child(3n) .stepperBtn:last-of-type {
+  --tile-glow-at: 100% 50%;
+}
+
+.stepperBtn:disabled {
+  color: var(--muted);
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.stepperBtn:active:not(:disabled) {
+  background: color-mix(in srgb, var(--line) 35%, var(--surface));
+}
+
+.stepperValue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  border-radius: calc(var(--radius) - 2px);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.card:nth-child(5n + 3) .stepperValue {
+  --tile-glow-at: 50% 100%;
+}
+
+.card:nth-child(5n + 1) .stepperValue {
+  --tile-glow-at: 100% 0%;
 }

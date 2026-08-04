@@ -1,18 +1,23 @@
+import type { CSSProperties } from 'react';
 import type { Player, ScoreMap } from './app';
+import { getPlayerCardColor } from '../constants/player-card-colors';
 import styles from './round-screen.module.css';
 
 type RoundScreenProps = {
   players: Player[];
   scores: ScoreMap;
-  roundNumber: number;
   onChangeScore: (id: string, newValue: number) => void;
+  onFinishRound: () => void;
 };
+
+const getInitial = (name: string) =>
+  name.trim().charAt(0).toLocaleUpperCase('ru') || '?';
 
 const RoundScreen = ({
   players,
   scores,
-  roundNumber,
   onChangeScore,
+  onFinishRound,
 }: RoundScreenProps) => {
   const incScore = (playerId: string) => {
     const currentScore = scores[playerId];
@@ -28,23 +33,40 @@ const RoundScreen = ({
 
   return (
     <div className="screen">
-      <p className={styles.heading}>Партия {roundNumber}</p>
       <ul className={`list ${styles.list}`}>
-        {players.map((player) => (
+        {players.map((player, index) => (
           <li className={styles.card} key={player.id}>
-            <p className="title">{player.name}</p>
-            <p className={styles.score}>{scores[player.id]}</p>
-            <div className={styles.controls}>
+            <div className={styles.player}>
+              <span
+                className={styles.avatar}
+                style={
+                  {
+                    '--avatar-color': getPlayerCardColor(index),
+                  } as CSSProperties
+                }
+                aria-hidden="true"
+              >
+                {getInitial(player.name)}
+              </span>
+              <p className="title">{player.name}</p>
+            </div>
+            <div className={styles.stepper}>
               <button
-                className={styles.scoreBtn}
+                className={styles.stepperBtn}
                 type="button"
+                disabled={scores[player.id] === 0}
+                aria-label={`Уменьшить счёт ${player.name}`}
                 onClick={() => onChangeScore(player.id, decScore(player.id))}
               >
                 −
               </button>
+              <output className={styles.stepperValue}>
+                {scores[player.id]}
+              </output>
               <button
-                className={styles.scoreBtn}
+                className={styles.stepperBtn}
                 type="button"
+                aria-label={`Увеличить счёт ${player.name}`}
                 onClick={() => onChangeScore(player.id, incScore(player.id))}
               >
                 +
@@ -53,6 +75,10 @@ const RoundScreen = ({
           </li>
         ))}
       </ul>
+
+      <button className="btn btnBlock" type="button" onClick={onFinishRound}>
+        Завершить партию
+      </button>
     </div>
   );
 };
