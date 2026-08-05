@@ -1,6 +1,11 @@
 import cn from 'classnames';
-import type { Game } from './app';
-import styles from './all-games-screen.module.css'
+import { ViewTransition } from 'react';
+import type { Game } from '@/domain/game';
+import {
+  sharedTitleTransitions,
+  transitionNames,
+} from '@/lib/view-transitions';
+import styles from './all-games-screen.module.css';
 
 type AllGamesScreenProps = {
   games: Game[];
@@ -16,7 +21,13 @@ const AllGamesScreen = ({
   return (
     <div className="screen">
       <button className="btn btnBlock" type="button" onClick={onCreateNewGame}>
-        Новая игра
+        <ViewTransition
+          name={transitionNames.newGameTitle}
+          share={sharedTitleTransitions}
+          default="none"
+        >
+          <span>Новая игра</span>
+        </ViewTransition>
       </button>
 
       {games.length === 0 ? (
@@ -29,7 +40,13 @@ const AllGamesScreen = ({
               key={game.id}
               onClick={() => onOpenGame(game.id)}
             >
-              <p className="title">{game.name}</p>
+              <ViewTransition
+                name={transitionNames.gameTitle(game.id)}
+                share={sharedTitleTransitions}
+                default="none"
+              >
+                <p className="title">{game.name}</p>
+              </ViewTransition>
               <p className="meta">
                 {game.players.length}{' '}
                 {game.players.length === 1 ? 'игрок' : 'игроков'}

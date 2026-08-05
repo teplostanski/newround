@@ -1,10 +1,13 @@
-# build output
+.next/
 dist/
-# generated types
-.astro/
+out/
+*.tsbuildinfo
 
 # dependencies
 node_modules/
+
+# generated service worker
+public/sw.js
 
 # logs
 npm-debug.log*

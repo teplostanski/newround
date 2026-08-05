@@ -1,5 +1,10 @@
 import cn from 'classnames';
-import type { Game } from './app';
+import { ViewTransition } from 'react';
+import type { Game } from '@/domain/game';
+import {
+  sharedTitleTransitions,
+  transitionNames,
+} from '@/lib/view-transitions';
 import styles from './sessions-screen.module.css';
 
 type SessionListScreenProps = {
@@ -31,7 +36,13 @@ const SessionListScreen = ({ game, onOpenSession }: SessionListScreenProps) => {
               onClick={() => onOpenSession(session.id)}
             >
               <div className={styles.itemHeader}>
-                <p className="title">Сессия {index + 1}</p>
+                <ViewTransition
+                  name={transitionNames.sessionTitle(session.id)}
+                  share={sharedTitleTransitions}
+                  default="none"
+                >
+                  <p className="title">Сессия {index + 1}</p>
+                </ViewTransition>
                 <span className={styles.badge}>
                   {session.rounds.length}{' '}
                   {session.rounds.length === 1 ? 'партия' : 'партий'}

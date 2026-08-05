@@ -1,3 +1,4 @@
+import ArrowDownToSquare from '@gravity-ui/icons/ArrowDownToSquare';
 import { useEffect, useState } from 'react';
 
 type BeforeInstallPromptEvent = Event & {
@@ -10,20 +11,16 @@ const isStandalone = () =>
   ('standalone' in navigator &&
     Boolean((navigator as Navigator & { standalone?: boolean }).standalone));
 
-const isIos = () => /iphone|ipad|ipod/i.test(navigator.userAgent);
+type InstallAppProps = {
+  className: string;
+};
 
-const InstallApp = () => {
+const InstallApp = ({ className }: InstallAppProps) => {
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [showIosHint, setShowIosHint] = useState(false);
 
   useEffect(() => {
     if (isStandalone()) {
-      return;
-    }
-
-    if (isIos()) {
-      setShowIosHint(true);
       return;
     }
 
@@ -31,11 +28,14 @@ const InstallApp = () => {
       event.preventDefault();
       setInstallEvent(event as BeforeInstallPromptEvent);
     };
+    const onAppInstalled = () => setInstallEvent(null);
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
+    window.addEventListener('appinstalled', onAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', onBeforeInstall);
+      window.removeEventListener('appinstalled', onAppInstalled);
     };
   }, []);
 
@@ -51,17 +51,20 @@ const InstallApp = () => {
 
   if (installEvent) {
     return (
-      <button className="btnLink" type="button" onClick={handleInstall}>
-        Установить
+      <button
+        className={className}
+        type="button"
+        aria-label="Установить приложение"
+        title="Установить приложение"
+        onClick={handleInstall}
+      >
+        <ArrowDownToSquare
+          width={20}
+          height={20}
+          aria-hidden="true"
+          focusable="false"
+        />
       </button>
-    );
-  }
-
-  if (showIosHint) {
-    return (
-      <span className="muted" title="Поделиться → На экран «Домой»">
-        Установить
-      </span>
     );
   }
 
