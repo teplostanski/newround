@@ -1,11 +1,6 @@
 import { useState, type ChangeEvent, type SubmitEvent } from 'react';
 import { nanoid } from 'nanoid';
-import type { Player } from './app';
-
-export type NewGameData = {
-  name: string;
-  players: Player[];
-};
+import type { NewGameData, Player } from '@/domain/game';
 
 type SetupNewGameScreenProps = {
   onCreateGame: (formData: NewGameData) => void;

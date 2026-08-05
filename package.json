@@ -1,29 +1,38 @@
 {
   "name": "newround",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "next dev",
+    "build": "next build && serwist build",
+    "preview": "serve out",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@astrojs/react": "^6.0.2",
+    "@gravity-ui/icons": "^2.21.0",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "astro": "^7.1.6",
     "classnames": "^2.5.1",
+    "geist": "^1.7.2",
     "nanoid": "^6.0.0",
+    "next": "16.3.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "use-local-storage-state": "^20.0.0"
   },
   "devDependencies": {
-    "@vite-pwa/astro": "^1.2.0",
-    "vite-plugin-readable-classnames": "^1.5.11"
+    "@serwist/cli": "^9.5.12",
+    "@serwist/next": "^9.5.12",
+    "@types/node": "^26.1.2",
+    "esbuild": "^0.28.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.0",
+    "serve": "^14.2.6",
+    "serwist": "^9.5.12",
+    "typescript": "^6.0.3"
   }
 }

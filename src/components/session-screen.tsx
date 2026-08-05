@@ -1,5 +1,10 @@
 import cn from 'classnames';
-import type { Game, ScoreMap, Session } from './app';
+import { ViewTransition } from 'react';
+import type { Game, ScoreMap, Session } from '@/domain/game';
+import {
+  sharedTitleTransitions,
+  transitionNames,
+} from '@/lib/view-transitions';
 import styles from './session-screen.module.css';
 
 type SessionScreenProps = {
@@ -51,7 +56,13 @@ const SessionScreen = ({
               onClick={() => onOpenRound(round.id)}
             >
               <div className={styles.itemHeader}>
-                <p className="title">Партия {index + 1}</p>
+                <ViewTransition
+                  name={transitionNames.roundTitle(round.id)}
+                  share={sharedTitleTransitions}
+                  default="none"
+                >
+                  <p className="title">Партия {index + 1}</p>
+                </ViewTransition>
               </div>
               <p className={styles.scoreSummary}>
                 {formatRoundSummary(game.players, round.scores)}

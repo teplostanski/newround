@@ -20,7 +20,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  min-height: 1.5rem;
+  min-height: 2.75rem;
 }
 
 .nav {
@@ -30,25 +30,56 @@
   min-width: 0;
 }
 
-.navBtn {
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+.iconBtn {
+  display: inline-flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 2.75rem;
+  align-items: center;
+  justify-content: center;
   margin: 0;
-  padding: 0.35rem 0.55rem;
+  padding: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--muted);
-  font: inherit;
-  font-size: 0.85rem;
-  font-weight: 600;
-  line-height: 1;
+  text-decoration: none;
+  touch-action: manipulation;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 100ms ease;
   cursor: pointer;
 }
 
-.navBtn:active {
-  transform: translateY(1px);
+.iconBtn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 55%, white);
+  outline-offset: 2px;
+}
+
+.iconBtn:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) {
+  .iconBtn:hover {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    color: var(--accent);
+  }
 }
 
 .brand {
+  width: fit-content;
+  max-width: 100%;
   margin: 0;
   font-size: 1.75rem;
   font-weight: 600;

@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { Player, ScoreMap } from './app';
+import type { Player, ScoreMap } from '@/domain/game';
 import { getPlayerCardColor } from '../constants/player-card-colors';
 import styles from './round-screen.module.css';
 
