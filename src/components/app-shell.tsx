@@ -35,35 +35,47 @@ const AppShellView = ({
         <nav className={styles.nav} aria-label="Основная навигация">
           {backHref && (
             <>
-              <Link
-                className={styles.iconBtn}
-                href={backHref}
-                aria-label="Назад"
-                title="Назад"
-                transitionTypes={routeTransitionTypes.back}
+              <ViewTransition
+                enter="header-action-enter"
+                exit="header-action-exit"
+                default="none"
               >
-                <ChevronLeft
-                  width={20}
-                  height={20}
-                  aria-hidden="true"
-                  focusable="false"
-                />
-              </Link>
-              {backHref !== routes.games && (
                 <Link
                   className={styles.iconBtn}
-                  href={routes.games}
-                  aria-label="Главная"
-                  title="Главная"
+                  href={backHref}
+                  aria-label="Назад"
+                  title="Назад"
                   transitionTypes={routeTransitionTypes.back}
                 >
-                  <House
+                  <ChevronLeft
                     width={20}
                     height={20}
                     aria-hidden="true"
                     focusable="false"
                   />
                 </Link>
+              </ViewTransition>
+              {backHref !== routes.games && (
+                <ViewTransition
+                  enter="header-action-enter"
+                  exit="header-action-exit"
+                  default="none"
+                >
+                  <Link
+                    className={styles.iconBtn}
+                    href={routes.games}
+                    aria-label="Главная"
+                    title="Главная"
+                    transitionTypes={routeTransitionTypes.back}
+                  >
+                    <House
+                      width={20}
+                      height={20}
+                      aria-hidden="true"
+                      focusable="false"
+                    />
+                  </Link>
+                </ViewTransition>
               )}
             </>
           )}

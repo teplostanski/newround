@@ -2,7 +2,7 @@
 
 import ChevronsCollapseUpRight from '@gravity-ui/icons/ChevronsCollapseUpRight';
 import ChevronsExpandUpRight from '@gravity-ui/icons/ChevronsExpandUpRight';
-import { useSyncExternalStore } from 'react';
+import { useSyncExternalStore, ViewTransition } from 'react';
 
 type FullscreenToggleProps = {
   className: string;
@@ -54,20 +54,26 @@ const FullscreenToggle = ({ className }: FullscreenToggleProps) => {
   };
 
   return (
-    <button
-      className={className}
-      type="button"
-      aria-label={label}
-      title={label}
-      onClick={handleToggle}
+    <ViewTransition
+      enter="header-action-enter"
+      exit="header-action-exit"
+      default="none"
     >
-      <FullscreenIcon
-        width={20}
-        height={20}
-        aria-hidden="true"
-        focusable="false"
-      />
-    </button>
+      <button
+        className={className}
+        type="button"
+        aria-label={label}
+        title={label}
+        onClick={handleToggle}
+      >
+        <FullscreenIcon
+          width={20}
+          height={20}
+          aria-hidden="true"
+          focusable="false"
+        />
+      </button>
+    </ViewTransition>
   );
 };
 

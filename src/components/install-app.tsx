@@ -1,5 +1,5 @@
 import ArrowDownToSquare from '@gravity-ui/icons/ArrowDownToSquare';
-import { useEffect, useState } from 'react';
+import { startTransition, useEffect, useState, ViewTransition } from 'react';
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -26,9 +26,12 @@ const InstallApp = ({ className }: InstallAppProps) => {
 
     const onBeforeInstall = (event: Event) => {
       event.preventDefault();
-      setInstallEvent(event as BeforeInstallPromptEvent);
+      startTransition(() =>
+        setInstallEvent(event as BeforeInstallPromptEvent),
+      );
     };
-    const onAppInstalled = () => setInstallEvent(null);
+    const onAppInstalled = () =>
+      startTransition(() => setInstallEvent(null));
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
     window.addEventListener('appinstalled', onAppInstalled);
@@ -46,25 +49,31 @@ const InstallApp = ({ className }: InstallAppProps) => {
 
     await installEvent.prompt();
     await installEvent.userChoice;
-    setInstallEvent(null);
+    startTransition(() => setInstallEvent(null));
   };
 
   if (installEvent) {
     return (
-      <button
-        className={className}
-        type="button"
-        aria-label="Установить приложение"
-        title="Установить приложение"
-        onClick={handleInstall}
+      <ViewTransition
+        enter="header-action-enter"
+        exit="header-action-exit"
+        default="none"
       >
-        <ArrowDownToSquare
-          width={20}
-          height={20}
-          aria-hidden="true"
-          focusable="false"
-        />
-      </button>
+        <button
+          className={className}
+          type="button"
+          aria-label="Установить приложение"
+          title="Установить приложение"
+          onClick={handleInstall}
+        >
+          <ArrowDownToSquare
+            width={20}
+            height={20}
+            aria-hidden="true"
+            focusable="false"
+          />
+        </button>
+      </ViewTransition>
     );
   }
 
