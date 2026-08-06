@@ -9,7 +9,7 @@ import { GamesStoreProvider } from '@/state/games-store';
 import '@/styles/global.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://tablo.teplostanski.me'),
+  metadataBase: new URL('https://newround.teplostanski.me'),
   applicationName: 'newround',
   title: {
     default: 'newround',
