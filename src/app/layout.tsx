@@ -45,6 +45,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
       <SerwistProvider
         swUrl="/sw.js"
         disable={process.env.NODE_ENV === 'development'}
+        options={{ type: 'classic' }}
       >
         <GamesStoreProvider>
           <Suspense fallback={<InitialLoader />}>

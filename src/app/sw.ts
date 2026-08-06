@@ -21,11 +21,15 @@ const serwist = new Serwist({
       const alternateUrl = new URL(url);
       alternateUrl.search = '';
 
-      if (alternateUrl.pathname !== '/') {
-        alternateUrl.pathname = alternateUrl.pathname.endsWith('/')
-          ? alternateUrl.pathname.slice(0, -1)
-          : `${alternateUrl.pathname}/`;
+      if (alternateUrl.pathname === '/') {
+        const indexAlias = new URL(alternateUrl);
+        indexAlias.pathname = '/index';
+        return [indexAlias];
       }
+
+      alternateUrl.pathname = alternateUrl.pathname.endsWith('/')
+        ? alternateUrl.pathname.slice(0, -1)
+        : `${alternateUrl.pathname}/`;
 
       return [alternateUrl];
     },
@@ -51,7 +55,9 @@ serwist.registerCapture(
     url.search = '';
     const alternateUrl = new URL(url);
 
-    if (alternateUrl.pathname !== '/') {
+    if (alternateUrl.pathname === '/') {
+      alternateUrl.pathname = '/index';
+    } else {
       alternateUrl.pathname = alternateUrl.pathname.endsWith('/')
         ? alternateUrl.pathname.slice(0, -1)
         : `${alternateUrl.pathname}/`;
