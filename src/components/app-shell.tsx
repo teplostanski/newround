@@ -36,8 +36,10 @@ const AppShellView = ({
           {backHref && (
             <>
               <ViewTransition
+                name="header-back"
                 enter="header-action-enter"
                 exit="header-action-exit"
+                share="header-action-share"
                 default="none"
               >
                 <Link
@@ -57,6 +59,7 @@ const AppShellView = ({
               </ViewTransition>
               {backHref !== routes.games && (
                 <ViewTransition
+                  name="header-home"
                   enter="header-action-enter"
                   exit="header-action-exit"
                   default="none"

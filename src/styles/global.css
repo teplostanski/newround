@@ -238,7 +238,8 @@ input {
 }
 
 ::view-transition-group(.header-action-enter),
-::view-transition-group(.header-action-exit) {
+::view-transition-group(.header-action-exit),
+::view-transition-group(.header-action-share) {
   z-index: 15;
 }
 
@@ -250,6 +251,18 @@ input {
 ::view-transition-new(.header-action-enter) {
   animation: 220ms cubic-bezier(0, 0, 0.2, 1) both header-action-enter;
   mix-blend-mode: normal;
+}
+
+::view-transition-old(.header-action-share),
+::view-transition-new(.header-action-share) {
+  animation: none;
+  height: 100%;
+  mix-blend-mode: normal;
+}
+
+::view-transition-group(.header-action-share) {
+  animation-duration: 220ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 ::view-transition-old(.route-forward) {
@@ -344,14 +357,12 @@ input {
 @keyframes header-action-exit {
   to {
     opacity: 0;
-    transform: scale(0.88);
   }
 }
 
 @keyframes header-action-enter {
   from {
     opacity: 0;
-    transform: scale(0.88);
   }
 }
 

@@ -38,6 +38,7 @@
 }
 
 .iconBtn {
+  box-sizing: border-box;
   display: inline-flex;
   width: 2.75rem;
   height: 2.75rem;
@@ -51,6 +52,7 @@
   background: var(--surface);
   color: var(--muted);
   text-decoration: none;
+  line-height: 0;
   touch-action: manipulation;
   transition:
     border-color 160ms ease,
@@ -58,6 +60,13 @@
     color 160ms ease,
     transform 100ms ease;
   cursor: pointer;
+}
+
+.iconBtn svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
 }
 
 .iconBtn:focus-visible {
