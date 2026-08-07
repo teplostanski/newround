@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
   allowedDevOrigins: localDevOrigins,
+  transpilePackages: ['@awesome.me/webawesome'],
 };
 
 export default nextConfig;
