@@ -16,70 +16,21 @@ declare const self: ServiceWorkerGlobalScope;
 const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   precacheOptions: {
+    // Query params identify client state (gameId/sessionId); shell HTML is shared.
     ignoreURLParametersMatching: [/.*/],
-    urlManipulation: ({ url }) => {
-      const alternateUrl = new URL(url);
-      alternateUrl.search = '';
-
-      if (alternateUrl.pathname === '/') {
-        const indexAlias = new URL(alternateUrl);
-        indexAlias.pathname = '/index';
-        return [indexAlias];
-      }
-
-      alternateUrl.pathname = alternateUrl.pathname.endsWith('/')
-        ? alternateUrl.pathname.slice(0, -1)
-        : `${alternateUrl.pathname}/`;
-
-      return [alternateUrl];
-    },
+    // Manifest already uses trailing-slash directory URLs (`/games/`).
+    directoryIndex: null,
+    cleanURLs: false,
+    cleanupOutdatedCaches: true,
+    concurrency: 20,
+    // Prefer cache for precached URLs; do not fall through to network offline.
+    fallbackToNetwork: false,
   },
   skipWaiting: true,
   clientsClaim: true,
-  navigationPreload: true,
+  // Navigation preload races the network and breaks offline reloads.
+  navigationPreload: false,
   runtimeCaching: defaultCache,
-  fallbacks: {
-    entries: [
-      {
-        url: '/~offline/',
-        matcher: ({ request }) => request.destination === 'document',
-      },
-    ],
-  },
 });
-
-serwist.registerCapture(
-  ({ url }) => url.origin === self.location.origin,
-  async ({ request }) => {
-    const url = new URL(request.url);
-    url.search = '';
-    const alternateUrl = new URL(url);
-
-    if (alternateUrl.pathname === '/') {
-      alternateUrl.pathname = '/index';
-    } else {
-      alternateUrl.pathname = alternateUrl.pathname.endsWith('/')
-        ? alternateUrl.pathname.slice(0, -1)
-        : `${alternateUrl.pathname}/`;
-    }
-
-    for (const candidate of [url, alternateUrl]) {
-      const cachedResponse = await caches.match(candidate, {
-        ignoreSearch: true,
-      });
-
-      if (cachedResponse) {
-        return new Response(null, {
-          status: cachedResponse.status,
-          statusText: cachedResponse.statusText,
-          headers: cachedResponse.headers,
-        });
-      }
-    }
-
-    return fetch(request);
-  },
-  'HEAD',
-);
 
 serwist.addEventListeners();

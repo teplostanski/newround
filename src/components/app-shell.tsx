@@ -30,6 +30,7 @@ const AppShellView = ({
   children,
 }: AppShellViewProps) => (
   <div className={styles.shell}>
+    0
     <header className={styles.header}>
       <div className={styles.headerBar}>
         <nav className={styles.nav} aria-label="Основная навигация">
@@ -200,18 +201,6 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
             : transitionNames.pageTitle
         }
         backHref={backHref}
-      >
-        {children}
-      </AppShellView>
-    );
-  }
-
-  if (pathname === '/~offline') {
-    return (
-      <AppShellView
-        title="Нет подключения"
-        transitionName={transitionNames.pageTitle}
-        backHref={routes.games}
       >
         {children}
       </AppShellView>
