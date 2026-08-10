@@ -1,3 +1,5 @@
+'use client';
+
 import type { CSSProperties } from 'react';
 import type { Player, ScoreMap } from '@/domain/game';
 import { getPlayerCardColor } from '../constants/player-card-colors';
@@ -76,9 +78,15 @@ const RoundScreen = ({
         ))}
       </ul>
 
-      <button className="btn btnBlock" type="button" onClick={onFinishRound}>
+      <wa-button
+        className="wa-block"
+        type="button"
+        variant="brand"
+        appearance="accent"
+        onClick={onFinishRound}
+      >
         Завершить партию
-      </button>
+      </wa-button>
     </div>
   );
 };

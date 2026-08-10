@@ -1,5 +1,8 @@
-import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+'use client';
+
+import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { nanoid } from 'nanoid';
+import type WaInput from '@awesome.me/webawesome/dist/components/input/input.js';
 import type { NewGameData, Player } from '@/domain/game';
 
 type SetupNewGameScreenProps = {
@@ -11,71 +14,72 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
   const [playerName, setPlayerName] = useState('');
   const [players, setPlayers] = useState<Player[]>([]);
 
-  const handlePlayerNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setPlayerName(event.target.value);
-  };
-
-  const handleGameNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setGameName(event.target.value);
-  };
-
-  const handleAddPlayer = (name: string) => {
-    setPlayers((prev) => [...prev, { id: nanoid(), name }]);
-  };
-
-  const handleAddPlayerSubmit = (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const addPlayerFromField = () => {
     const trimmedName = playerName.trim();
 
     if (!trimmedName) {
       return;
     }
 
-    handleAddPlayer(trimmedName);
+    setPlayers((prev) => [...prev, { id: nanoid(), name: trimmedName }]);
     setPlayerName('');
   };
 
-  const handleCreateGame = (event: SubmitEvent<HTMLFormElement>) => {
+  const handleCreateGame = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     onCreateGame({ name: gameName, players });
   };
 
+  const handlePlayerKeyDown = (event: KeyboardEvent<WaInput>) => {
+    if (event.key !== 'Enter') {
+      return;
+    }
+
+    event.preventDefault();
+    addPlayerFromField();
+  };
+
   return (
     <div className="screen">
-      <form id="main-form" onSubmit={handleCreateGame} />
-
-      <div className="stack">
-        <input
-          form="main-form"
-          className="input"
+      <form className="stack" onSubmit={handleCreateGame}>
+        <wa-input
           type="text"
           placeholder="Название игры"
           value={gameName}
-          onChange={handleGameNameChange}
+          onInput={(event) =>
+            setGameName((event.currentTarget as WaInput).value ?? '')
+          }
         />
 
         <fieldset className="fieldset">
           <legend className="legend">Игроки</legend>
 
-          <form className="row" onSubmit={handleAddPlayerSubmit}>
+          <div className="row">
             <label className="visuallyHidden" htmlFor="player-name">
               Имя игрока
             </label>
 
-            <input
+            <wa-input
               id="player-name"
-              className="input"
+              className="wa-grow"
               type="text"
               placeholder="Имя игрока"
               value={playerName}
-              onChange={handlePlayerNameChange}
+              onInput={(event) =>
+                setPlayerName((event.currentTarget as WaInput).value ?? '')
+              }
+              onKeyDown={handlePlayerKeyDown as never}
             />
 
-            <button className="btnGhost" type="submit">
+            <wa-button
+              type="button"
+              variant="neutral"
+              appearance="outlined"
+              onClick={addPlayerFromField}
+            >
               Добавить
-            </button>
-          </form>
+            </wa-button>
+          </div>
 
           {players.length === 0 ? (
             <p className="empty">Добавьте хотя бы одного игрока</p>
@@ -90,15 +94,16 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
           )}
         </fieldset>
 
-        <button
-          form="main-form"
-          className="btn btnBlock"
+        <wa-button
+          className="wa-block"
           type="submit"
-          disabled={players.length < 1}
+          variant="brand"
+          appearance="accent"
+          disabled={players.length < 1 ? true : undefined}
         >
           Начать игру
-        </button>
-      </div>
+        </wa-button>
+      </form>
     </div>
   );
 };

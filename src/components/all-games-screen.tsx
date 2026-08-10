@@ -1,3 +1,5 @@
+'use client';
+
 import cn from 'classnames';
 import { ViewTransition } from 'react';
 import type { Game } from '@/domain/game';
@@ -20,7 +22,13 @@ const AllGamesScreen = ({
 }: AllGamesScreenProps) => {
   return (
     <div className="screen">
-      <button className="btn btnBlock" type="button" onClick={onCreateNewGame}>
+      <wa-button
+        className="wa-block"
+        type="button"
+        variant="brand"
+        appearance="accent"
+        onClick={onCreateNewGame}
+      >
         <ViewTransition
           name={transitionNames.newGameTitle}
           share={sharedTitleTransitions}
@@ -28,7 +36,7 @@ const AllGamesScreen = ({
         >
           <span>Новая игра</span>
         </ViewTransition>
-      </button>
+      </wa-button>
 
       {games.length === 0 ? (
         <p className="empty">Пока нет игр — создайте первую</p>

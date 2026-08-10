@@ -1,3 +1,5 @@
+'use client';
+
 import cn from 'classnames';
 import { ViewTransition } from 'react';
 import type { Game, ScoreMap, Session } from '@/domain/game';
@@ -41,9 +43,15 @@ const SessionScreen = ({
         {game.players.length === 1 ? 'игрок' : 'игроков'}
       </p>
 
-      <button className="btn btnBlock" type="button" onClick={onStartRound}>
+      <wa-button
+        className="wa-block"
+        type="button"
+        variant="brand"
+        appearance="accent"
+        onClick={onStartRound}
+      >
         Начать партию
-      </button>
+      </wa-button>
 
       {session.rounds.length === 0 ? (
         <p className="empty">Партий пока нет — начните первую</p>
