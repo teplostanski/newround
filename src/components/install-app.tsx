@@ -1,5 +1,19 @@
+'use client';
+
 import ArrowDownToSquare from '@gravity-ui/icons/ArrowDownToSquare';
-import { startTransition, useEffect, useState, ViewTransition } from 'react';
+import type WaDialog from '@awesome.me/webawesome/dist/components/dialog/dialog.js';
+import {
+  startTransition,
+  useEffect,
+  useRef,
+  useState,
+  ViewTransition,
+} from 'react';
+import {
+  detectInstallPlatform,
+  installInstructions,
+} from '@/lib/install-platform';
+import styles from './install-app.module.css';
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -16,10 +30,19 @@ type InstallAppProps = {
 };
 
 const InstallApp = ({ className }: InstallAppProps) => {
+  const dialogRef = useRef<WaDialog | null>(null);
+  const [isStandaloneApp, setIsStandaloneApp] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
+  const [platform, setPlatform] = useState(() => detectInstallPlatform());
 
   useEffect(() => {
+    startTransition(() => {
+      setIsStandaloneApp(isStandalone());
+      setPlatform(detectInstallPlatform());
+    });
+
     if (isStandalone()) {
       return;
     }
@@ -30,8 +53,13 @@ const InstallApp = ({ className }: InstallAppProps) => {
         setInstallEvent(event as BeforeInstallPromptEvent),
       );
     };
-    const onAppInstalled = () =>
-      startTransition(() => setInstallEvent(null));
+    const onAppInstalled = () => {
+      startTransition(() => {
+        setInstallEvent(null);
+        setIsOpen(false);
+        setIsStandaloneApp(true);
+      });
+    };
 
     window.addEventListener('beforeinstallprompt', onBeforeInstall);
     window.addEventListener('appinstalled', onAppInstalled);
@@ -42,6 +70,30 @@ const InstallApp = ({ className }: InstallAppProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) {
+      return;
+    }
+
+    dialog.open = isOpen;
+
+    const onHide = () => {
+      startTransition(() => setIsOpen(false));
+    };
+
+    dialog.addEventListener('wa-hide', onHide);
+    return () => {
+      dialog.removeEventListener('wa-hide', onHide);
+    };
+  }, [isOpen]);
+
+  if (isStandaloneApp) {
+    return null;
+  }
+
+  const instructions = installInstructions[platform];
+
   const handleInstall = async () => {
     if (!installEvent) {
       return;
@@ -49,11 +101,14 @@ const InstallApp = ({ className }: InstallAppProps) => {
 
     await installEvent.prompt();
     await installEvent.userChoice;
-    startTransition(() => setInstallEvent(null));
+    startTransition(() => {
+      setInstallEvent(null);
+      setIsOpen(false);
+    });
   };
 
-  if (installEvent) {
-    return (
+  return (
+    <>
       <ViewTransition
         enter="header-action-enter"
         exit="header-action-exit"
@@ -64,7 +119,7 @@ const InstallApp = ({ className }: InstallAppProps) => {
           type="button"
           aria-label="Установить приложение"
           title="Установить приложение"
-          onClick={handleInstall}
+          onClick={() => setIsOpen(true)}
         >
           <ArrowDownToSquare
             width={20}
@@ -74,10 +129,49 @@ const InstallApp = ({ className }: InstallAppProps) => {
           />
         </button>
       </ViewTransition>
-    );
-  }
 
-  return null;
+      <wa-dialog
+        ref={dialogRef as never}
+        label="Установить newround"
+        light-dismiss
+        className={styles.dialog}
+      >
+        <div className={styles.body}>
+          <p className={styles.lead}>
+            Добавьте приложение на домашний экран — так удобнее вести счёт за
+            столом.
+          </p>
+          <ul className={styles.benefits}>
+            <li>Работает без интернета после первого открытия</li>
+            <li>Открывается с иконки, как обычное приложение</li>
+            <li>Быстрый доступ во время партии</li>
+          </ul>
+
+          {installEvent ? (
+            <wa-button
+              variant="brand"
+              appearance="accent"
+              className="wa-block"
+              onClick={() => {
+                void handleInstall();
+              }}
+            >
+              Установить
+            </wa-button>
+          ) : (
+            <div className={styles.howto}>
+              <p className={styles.howtoTitle}>Как установить</p>
+              <ol className={styles.steps}>
+                {instructions.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
+          )}
+        </div>
+      </wa-dialog>
+    </>
+  );
 };
 
 export { InstallApp };
