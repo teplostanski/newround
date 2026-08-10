@@ -30,7 +30,6 @@ const AppShellView = ({
   children,
 }: AppShellViewProps) => (
   <div className={styles.shell}>
-    0
     <header className={styles.header}>
       <div className={styles.headerBar}>
         <nav className={styles.nav} aria-label="Основная навигация">

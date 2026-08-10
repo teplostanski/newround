@@ -5,7 +5,11 @@ import { Suspense, type ReactNode } from 'react';
 import { ClientApp } from '@/components/client-app';
 import { InitialLoader } from '@/components/route-loader';
 import { ServiceWorkerReset } from '@/components/service-worker-reset';
+import { WebAwesomeRegistry } from '@/components/web-awesome-registry';
 import { GamesStoreProvider } from '@/state/games-store';
+import '@awesome.me/webawesome/dist/styles/themes/default.css';
+import '@awesome.me/webawesome/dist/styles/utilities.css';
+import '@/styles/theme-newround.css';
 import '@/styles/global.css';
 
 export const metadata: Metadata = {
@@ -39,9 +43,13 @@ export const viewport: Viewport = {
 };
 
 const RootLayout = ({ children }: { children: ReactNode }) => (
-  <html lang="ru" className={GeistSans.className}>
+  <html
+    lang="ru"
+    className={`${GeistSans.className} wa-theme-default wa-palette-default wa-brand-green wa-light`}
+  >
     <body>
       <ServiceWorkerReset />
+      <WebAwesomeRegistry />
       <SerwistProvider
         swUrl="/sw.js"
         disable={process.env.NODE_ENV === 'development'}

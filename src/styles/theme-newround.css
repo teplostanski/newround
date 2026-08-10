@@ -1,0 +1,86 @@
+
+
+:where(:root),
+.wa-light,
+.wa-dark .wa-invert {
+  color-scheme: light;
+
+  --wa-color-surface-raised: #f7f9fb;
+  --wa-color-surface-default: #f7f9fb;
+  --wa-color-surface-lowered: #e8edf2;
+  --wa-color-surface-border: #c5d0db;
+
+  --wa-color-text-normal: #1a2332;
+  --wa-color-text-quiet: #5c6b7a;
+  --wa-color-text-link: #2f6f5e;
+
+  --wa-color-focus: color-mix(in srgb, #2f6f5e 55%, white);
+  --wa-color-overlay-modal: color-mix(in oklab, #1a2332 45%, transparent);
+
+  --wa-color-brand-95: #f4faf7;
+  --wa-color-brand-90: #e3f0ea;
+  --wa-color-brand-80: #c5e0d4;
+  --wa-color-brand-70: #9ec9b8;
+  --wa-color-brand-60: #6fa896;
+  --wa-color-brand-50: #2f6f5e;
+  --wa-color-brand-40: #275c4e;
+  --wa-color-brand-30: #1f4a3f;
+  --wa-color-brand-20: #16352d;
+  --wa-color-brand-10: #0e221c;
+  --wa-color-brand-05: #081410;
+
+  --wa-color-brand-fill-quiet: var(--wa-color-brand-95);
+  --wa-color-brand-fill-normal: var(--wa-color-brand-90);
+  --wa-color-brand-fill-loud: var(--wa-color-brand-50);
+  --wa-color-brand-border-quiet: var(--wa-color-brand-90);
+  --wa-color-brand-border-normal: var(--wa-color-brand-80);
+  --wa-color-brand-border-loud: var(--wa-color-brand-60);
+  --wa-color-brand-on-quiet: var(--wa-color-brand-40);
+  --wa-color-brand-on-normal: var(--wa-color-brand-30);
+  --wa-color-brand-on-loud: #f4faf7;
+
+  --wa-color-neutral-fill-quiet: #f7f9fb;
+  --wa-color-neutral-fill-normal: #e8edf2;
+  --wa-color-neutral-fill-loud: #1a2332;
+  --wa-color-neutral-border-quiet: #e8edf2;
+  --wa-color-neutral-border-normal: #c5d0db;
+  --wa-color-neutral-border-loud: #c5d0db;
+  --wa-color-neutral-on-quiet: #5c6b7a;
+  --wa-color-neutral-on-normal: #1a2332;
+  --wa-color-neutral-on-loud: #f7f9fb;
+
+  --wa-font-family-body: inherit;
+  --wa-font-family-heading: inherit;
+  --wa-font-weight-semibold: 600;
+
+  --wa-border-radius-scale: 1.35;
+  --wa-form-control-border-radius: 1rem;
+  --wa-panel-border-radius: 1rem;
+
+  --wa-form-control-background-color: var(--wa-color-surface-default);
+  --wa-form-control-border-color: var(--wa-color-surface-border);
+
+  --bg: var(--wa-color-surface-lowered);
+  --surface: var(--wa-color-surface-default);
+  --ink: var(--wa-color-text-normal);
+  --muted: var(--wa-color-text-quiet);
+  --line: var(--wa-color-surface-border);
+  --accent: var(--wa-color-brand-fill-loud);
+  --accent-ink: var(--wa-color-brand-on-loud);
+  --danger-soft: #d9e2ea;
+  --radius: 1rem;
+}
+
+wa-button.wa-block {
+  width: 100%;
+}
+
+wa-button.wa-block::part(button) {
+  width: 100%;
+  justify-content: center;
+}
+
+wa-input.wa-grow {
+  flex: 1;
+  min-width: 0;
+}
