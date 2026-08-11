@@ -59,9 +59,11 @@ const FullscreenToggle = ({ className }: FullscreenToggleProps) => {
       exit="header-action-exit"
       default="none"
     >
-      <button
+      <wa-button
         className={className}
         type="button"
+        variant="neutral"
+        appearance="outlined"
         aria-label={label}
         title={label}
         onClick={handleToggle}
@@ -72,7 +74,7 @@ const FullscreenToggle = ({ className }: FullscreenToggleProps) => {
           aria-hidden="true"
           focusable="false"
         />
-      </button>
+      </wa-button>
     </ViewTransition>
   );
 };

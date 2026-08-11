@@ -9,6 +9,7 @@ import {
   useState,
   ViewTransition,
 } from 'react';
+import { createPortal } from 'react-dom';
 import {
   detectInstallPlatform,
   installInstructions,
@@ -36,11 +37,13 @@ const InstallApp = ({ className }: InstallAppProps) => {
   const [installEvent, setInstallEvent] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [platform, setPlatform] = useState(() => detectInstallPlatform());
+  const [canPortal, setCanPortal] = useState(false);
 
   useEffect(() => {
     startTransition(() => {
       setIsStandaloneApp(isStandalone());
       setPlatform(detectInstallPlatform());
+      setCanPortal(true);
     });
 
     if (isStandalone()) {
@@ -86,7 +89,7 @@ const InstallApp = ({ className }: InstallAppProps) => {
     return () => {
       dialog.removeEventListener('wa-hide', onHide);
     };
-  }, [isOpen]);
+  }, [isOpen, canPortal]);
 
   if (isStandaloneApp) {
     return null;
@@ -107,6 +110,52 @@ const InstallApp = ({ className }: InstallAppProps) => {
     });
   };
 
+  const dialog = canPortal
+    ? createPortal(
+        <wa-dialog
+          ref={dialogRef as never}
+          label="Установить newround"
+          light-dismiss
+          className={styles.dialog}
+        >
+          <div className={styles.body}>
+            <p className={styles.lead}>
+              Добавьте приложение на домашний экран — так удобнее вести счёт за
+              столом.
+            </p>
+            <ul className={styles.benefits}>
+              <li>Работает без интернета после первого открытия</li>
+              <li>Открывается с иконки, как обычное приложение</li>
+              <li>Быстрый доступ во время партии</li>
+            </ul>
+
+            {installEvent ? (
+              <wa-button
+                variant="brand"
+                appearance="accent"
+                className="wa-block"
+                onClick={() => {
+                  void handleInstall();
+                }}
+              >
+                Установить
+              </wa-button>
+            ) : (
+              <div className={styles.howto}>
+                <p className={styles.howtoTitle}>Как установить</p>
+                <ol className={styles.steps}>
+                  {instructions.map((step) => (
+                    <li key={step}>{step}</li>
+                  ))}
+                </ol>
+              </div>
+            )}
+          </div>
+        </wa-dialog>,
+        document.body,
+      )
+    : null;
+
   return (
     <>
       <ViewTransition
@@ -114,9 +163,11 @@ const InstallApp = ({ className }: InstallAppProps) => {
         exit="header-action-exit"
         default="none"
       >
-        <button
+        <wa-button
           className={className}
           type="button"
+          variant="neutral"
+          appearance="outlined"
           aria-label="Установить приложение"
           title="Установить приложение"
           onClick={() => setIsOpen(true)}
@@ -127,49 +178,9 @@ const InstallApp = ({ className }: InstallAppProps) => {
             aria-hidden="true"
             focusable="false"
           />
-        </button>
+        </wa-button>
       </ViewTransition>
-
-      <wa-dialog
-        ref={dialogRef as never}
-        label="Установить newround"
-        light-dismiss
-        className={styles.dialog}
-      >
-        <div className={styles.body}>
-          <p className={styles.lead}>
-            Добавьте приложение на домашний экран — так удобнее вести счёт за
-            столом.
-          </p>
-          <ul className={styles.benefits}>
-            <li>Работает без интернета после первого открытия</li>
-            <li>Открывается с иконки, как обычное приложение</li>
-            <li>Быстрый доступ во время партии</li>
-          </ul>
-
-          {installEvent ? (
-            <wa-button
-              variant="brand"
-              appearance="accent"
-              className="wa-block"
-              onClick={() => {
-                void handleInstall();
-              }}
-            >
-              Установить
-            </wa-button>
-          ) : (
-            <div className={styles.howto}>
-              <p className={styles.howtoTitle}>Как установить</p>
-              <ol className={styles.steps}>
-                {instructions.map((step) => (
-                  <li key={step}>{step}</li>
-                ))}
-              </ol>
-            </div>
-          )}
-        </div>
-      </wa-dialog>
+      {dialog}
     </>
   );
 };
