@@ -2,6 +2,7 @@
 dist/
 out/
 *.tsbuildinfo
+next-env.d.ts
 
 # dependencies
 node_modules/
