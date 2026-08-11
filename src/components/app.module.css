@@ -1,18 +1,38 @@
 .shell {
-  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
   margin: 0 auto;
   max-width: 28rem;
   padding: 1.25rem 1rem 2.5rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
   background:
     radial-gradient(120% 80% at 50% -10%, #d7e4ef 0%, transparent 55%),
     var(--wa-color-surface-lowered);
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.shell::-webkit-scrollbar {
+  display: none;
 }
 
 .header {
   display: flex;
+  flex-shrink: 0;
   flex-direction: column;
   gap: 0.65rem;
   margin: 0 0 1.5rem;
+}
+
+.main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
 }
 
 .headerBar {
@@ -37,7 +57,7 @@
   margin-left: auto;
 }
 
-.iconBtn {
+.iconLink {
   box-sizing: border-box;
   display: inline-flex;
   width: 2.75rem;
@@ -47,10 +67,10 @@
   justify-content: center;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--muted);
+  border: var(--wa-border-width-s) solid var(--wa-color-neutral-border-loud);
+  border-radius: var(--wa-form-control-border-radius);
+  background: var(--wa-color-surface-default);
+  color: var(--wa-color-text-quiet);
   text-decoration: none;
   line-height: 0;
   touch-action: manipulation;
@@ -62,28 +82,56 @@
   cursor: pointer;
 }
 
-.iconBtn svg {
+.iconLink svg {
   display: block;
   width: 20px;
   height: 20px;
   flex: 0 0 20px;
 }
 
-.iconBtn:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 55%, white);
+.iconLink:focus-visible {
+  outline: 2px solid var(--wa-color-focus);
   outline-offset: 2px;
 }
 
-.iconBtn:active {
+.iconLink:active {
   transform: scale(0.96);
 }
 
 @media (hover: hover) {
-  .iconBtn:hover {
-    border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
-    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
-    color: var(--accent);
+  .iconLink:hover {
+    border-color: color-mix(
+      in srgb,
+      var(--wa-color-brand-fill-loud) 35%,
+      var(--wa-color-neutral-border-loud)
+    );
+    background: color-mix(
+      in srgb,
+      var(--wa-color-brand-fill-loud) 8%,
+      var(--wa-color-surface-default)
+    );
+    color: var(--wa-color-brand-fill-loud);
   }
+}
+
+.iconButton {
+  flex: 0 0 2.75rem;
+  width: 2.75rem;
+}
+
+.iconButton::part(button) {
+  box-sizing: border-box;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0;
+  border-radius: var(--wa-form-control-border-radius);
+}
+
+.iconButton svg {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
 .brand {
@@ -93,4 +141,5 @@
   font-size: 1.75rem;
   font-weight: 600;
   letter-spacing: -0.03em;
+  color: var(--wa-color-text-normal);
 }

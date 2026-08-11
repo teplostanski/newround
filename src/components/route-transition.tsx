@@ -12,6 +12,6 @@ export const RouteTransition = ({ children }: { children: ReactNode }) => (
     exit={directionalTransitions}
     default="none"
   >
-    <main>{children}</main>
+    <div className="route">{children}</div>
   </ViewTransition>
 );
