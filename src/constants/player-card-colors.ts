@@ -1,4 +1,3 @@
-
 const PlayerCardColors = {
   sage: '#b8d4c4',
   eucalyptus: '#aec8c0',

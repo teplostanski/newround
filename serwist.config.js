@@ -1,10 +1,7 @@
 // @ts-check
 import { serwist } from '@serwist/next/config';
 
-/**
- * @param {import('@serwist/build').ManifestEntry[]} manifestEntries
- */
-const remapRootIndex = (manifestEntries) => ({
+const remapRootIndex = (/** @type {import('@serwist/build').ManifestEntry[]} */ manifestEntries) => ({
   manifest: manifestEntries.map((entry) =>
     entry.url === '/index' || entry.url === 'index'
       ? { ...entry, url: '/' }
@@ -13,10 +10,7 @@ const remapRootIndex = (manifestEntries) => ({
   warnings: /** @type {string[]} */ ([]),
 });
 
-/**
- * @param {import('@serwist/build').ManifestEntry[]} manifestEntries
- */
-const ensureLeadingSlash = (manifestEntries) => ({
+const ensureLeadingSlash = (/** @type {import('@serwist/build').ManifestEntry[]} */ manifestEntries) => ({
   manifest: manifestEntries.map((entry) => {
     if (
       entry.url.startsWith('/') ||
@@ -31,10 +25,7 @@ const ensureLeadingSlash = (manifestEntries) => ({
   warnings: /** @type {string[]} */ ([]),
 });
 
-/**
- * @param {import('@serwist/build').ManifestEntry[]} manifestEntries
- */
-const dropErrorPages = (manifestEntries) => ({
+const dropErrorPages = (/** @type {import('@serwist/build').ManifestEntry[]} */ manifestEntries) => ({
   manifest: manifestEntries.filter((entry) => {
     const url = entry.url.replace(/^\//, '');
     return (
