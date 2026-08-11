@@ -13,6 +13,6 @@ export const routeTransitionTypes = {
 
 export const sharedTitleTransitions = {
   'nav-forward': 'shared-title-forward',
-  'nav-back': 'shared-title-back',
+  'nav-back': 'none',
   default: 'shared-title-forward',
 };

@@ -3,7 +3,12 @@
 import { ChevronLeft, House } from '@gravity-ui/icons';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { ViewTransition, type ReactNode } from 'react';
+import {
+  useLayoutEffect,
+  useRef,
+  ViewTransition,
+  type ReactNode,
+} from 'react';
 import { findGame, findSession } from '@/domain/game';
 import { routes } from '@/lib/routes';
 import {
@@ -28,50 +33,41 @@ const AppShellView = ({
   transitionName,
   backHref,
   children,
-}: AppShellViewProps) => (
-  <div className={styles.shell}>
-    <header className={styles.header}>
-      <div className={styles.headerBar}>
-        <nav className={styles.nav} aria-label="Основная навигация">
-          {backHref && (
-            <>
-              <ViewTransition
-                name="header-back"
-                enter="header-action-enter"
-                exit="header-action-exit"
-                share="header-action-share"
-                default="none"
-              >
-                <Link
-                  className={styles.iconBtn}
-                  href={backHref}
-                  aria-label="Назад"
-                  title="Назад"
-                  transitionTypes={routeTransitionTypes.back}
-                >
-                  <ChevronLeft
-                    width={20}
-                    height={20}
-                    aria-hidden="true"
-                    focusable="false"
-                  />
-                </Link>
-              </ViewTransition>
-              {backHref !== routes.games && (
+}: AppShellViewProps) => {
+  const shellRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const routeKey = `${pathname}?${searchParams?.toString() ?? ''}`;
+
+  useLayoutEffect(() => {
+    const shell = shellRef.current;
+    if (shell) {
+      shell.scrollTop = 0;
+    }
+  }, [routeKey]);
+
+  return (
+    <div className={styles.shell} ref={shellRef}>
+      <header className={styles.header}>
+        <div className={styles.headerBar}>
+          <nav className={styles.nav} aria-label="Основная навигация">
+            {backHref && (
+              <>
                 <ViewTransition
-                  name="header-home"
+                  name="header-back"
                   enter="header-action-enter"
                   exit="header-action-exit"
+                  share="header-action-share"
                   default="none"
                 >
                   <Link
-                    className={styles.iconBtn}
-                    href={routes.games}
-                    aria-label="Главная"
-                    title="Главная"
+                    className={styles.iconLink}
+                    href={backHref}
+                    aria-label="Назад"
+                    title="Назад"
                     transitionTypes={routeTransitionTypes.back}
                   >
-                    <House
+                    <ChevronLeft
                       width={20}
                       height={20}
                       aria-hidden="true"
@@ -79,29 +75,52 @@ const AppShellView = ({
                     />
                   </Link>
                 </ViewTransition>
-              )}
-            </>
-          )}
-        </nav>
-        <div className={styles.actions}>
-          <InstallApp className={styles.iconBtn} />
-          <FullscreenToggle className={styles.iconBtn} />
+                {backHref !== routes.games && (
+                  <ViewTransition
+                    name="header-home"
+                    enter="header-action-enter"
+                    exit="header-action-exit"
+                    default="none"
+                  >
+                    <Link
+                      className={styles.iconLink}
+                      href={routes.games}
+                      aria-label="Главная"
+                      title="Главная"
+                      transitionTypes={routeTransitionTypes.back}
+                    >
+                      <House
+                        width={20}
+                        height={20}
+                        aria-hidden="true"
+                        focusable="false"
+                      />
+                    </Link>
+                  </ViewTransition>
+                )}
+              </>
+            )}
+          </nav>
+          <div className={styles.actions}>
+            <InstallApp className={styles.iconButton} />
+            <FullscreenToggle className={styles.iconButton} />
+          </div>
         </div>
-      </div>
-      <ViewTransition
-        key={transitionName}
-        name={transitionName}
-        enter="header-title-enter"
-        exit="header-title-exit"
-        share={sharedTitleTransitions}
-        default="none"
-      >
-        <h1 className={styles.brand}>{title}</h1>
-      </ViewTransition>
-    </header>
-    {children}
-  </div>
-);
+        <ViewTransition
+          key={transitionName}
+          name={transitionName}
+          enter="header-title-enter"
+          exit="header-title-exit"
+          share={sharedTitleTransitions}
+          default="none"
+        >
+          <h1 className={styles.brand}>{title}</h1>
+        </ViewTransition>
+      </header>
+      <main className={styles.main}>{children}</main>
+    </div>
+  );
+};
 
 export const AppShell = ({ children }: { children: ReactNode }) => {
   const currentPathname = usePathname();
