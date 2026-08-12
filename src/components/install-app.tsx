@@ -7,12 +7,14 @@ import {
   useEffect,
   useRef,
   useState,
+  useSyncExternalStore,
   ViewTransition,
 } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  detectInstallPlatform,
-  installInstructions,
+  defaultInstallGuide,
+  detectInstallGuide,
+  type InstallGuide,
 } from '@/lib/install-platform';
 import styles from './install-app.module.css';
 
@@ -21,57 +23,117 @@ type BeforeInstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 };
 
-const isStandalone = () =>
+type StoreListener = () => void;
+
+let cachedInstallEvent: BeforeInstallPromptEvent | null = null;
+const installListeners = new Set<StoreListener>();
+
+const emitInstall = () => {
+  for (const listener of installListeners) {
+    listener();
+  }
+};
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    cachedInstallEvent = event as BeforeInstallPromptEvent;
+    emitInstall();
+  });
+  window.addEventListener('appinstalled', () => {
+    cachedInstallEvent = null;
+    emitInstall();
+  });
+}
+
+const subscribeInstall = (onStoreChange: StoreListener) => {
+  installListeners.add(onStoreChange);
+  return () => {
+    installListeners.delete(onStoreChange);
+  };
+};
+
+const getInstallSnapshot = () => cachedInstallEvent;
+const getInstallServerSnapshot = (): BeforeInstallPromptEvent | null => null;
+
+const subscribeStandalone = (onStoreChange: StoreListener) => {
+  const media = window.matchMedia('(display-mode: standalone)');
+  media.addEventListener('change', onStoreChange);
+  return () => {
+    media.removeEventListener('change', onStoreChange);
+  };
+};
+
+const getStandaloneSnapshot = () =>
   window.matchMedia('(display-mode: standalone)').matches ||
   ('standalone' in navigator &&
     Boolean((navigator as Navigator & { standalone?: boolean }).standalone));
+
+const getServerSnapshot = () => false;
+
+const subscribeClient = () => () => undefined;
+const getClientSnapshot = () => true;
+
+const fallbackGuide = defaultInstallGuide;
 
 type InstallAppProps = {
   className: string;
 };
 
+const InstallGuideContent = ({
+  guide,
+  installEvent,
+  onInstall,
+}: {
+  guide: InstallGuide;
+  installEvent: BeforeInstallPromptEvent | null;
+  onInstall: () => void;
+}) => {
+  if (installEvent || guide.native) {
+    return (
+      <wa-button
+        variant="brand"
+        appearance="accent"
+        className="wa-block"
+        disabled={!installEvent}
+        onClick={onInstall}
+      >
+        Установить
+      </wa-button>
+    );
+  }
+
+  return (
+    <div className={styles.howto}>
+      <p className={styles.howtoTitle}>{guide.title}</p>
+      <ol className={styles.steps}>
+        {guide.items.map((item) => (
+          <li key={item}>{item}</li>
+        ))}
+      </ol>
+    </div>
+  );
+};
+
 const InstallApp = ({ className }: InstallAppProps) => {
   const dialogRef = useRef<WaDialog | null>(null);
-  const [isStandaloneApp, setIsStandaloneApp] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [installEvent, setInstallEvent] =
-    useState<BeforeInstallPromptEvent | null>(null);
-  const [platform, setPlatform] = useState(() => detectInstallPlatform());
-  const [canPortal, setCanPortal] = useState(false);
-
-  useEffect(() => {
-    startTransition(() => {
-      setIsStandaloneApp(isStandalone());
-      setPlatform(detectInstallPlatform());
-      setCanPortal(true);
-    });
-
-    if (isStandalone()) {
-      return;
-    }
-
-    const onBeforeInstall = (event: Event) => {
-      event.preventDefault();
-      startTransition(() =>
-        setInstallEvent(event as BeforeInstallPromptEvent),
-      );
-    };
-    const onAppInstalled = () => {
-      startTransition(() => {
-        setInstallEvent(null);
-        setIsOpen(false);
-        setIsStandaloneApp(true);
-      });
-    };
-
-    window.addEventListener('beforeinstallprompt', onBeforeInstall);
-    window.addEventListener('appinstalled', onAppInstalled);
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', onBeforeInstall);
-      window.removeEventListener('appinstalled', onAppInstalled);
-    };
-  }, []);
+  const isClient = useSyncExternalStore(
+    subscribeClient,
+    getClientSnapshot,
+    getServerSnapshot,
+  );
+  const isStandaloneApp = useSyncExternalStore(
+    subscribeStandalone,
+    getStandaloneSnapshot,
+    getServerSnapshot,
+  );
+  const installEvent = useSyncExternalStore(
+    subscribeInstall,
+    getInstallSnapshot,
+    getInstallServerSnapshot,
+  );
+  const guide = isClient ? detectInstallGuide() : fallbackGuide;
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -89,13 +151,11 @@ const InstallApp = ({ className }: InstallAppProps) => {
     return () => {
       dialog.removeEventListener('wa-hide', onHide);
     };
-  }, [isOpen, canPortal]);
+  }, [isOpen, isClient]);
 
   if (isStandaloneApp) {
     return null;
   }
-
-  const instructions = installInstructions[platform];
 
   const handleInstall = async () => {
     if (!installEvent) {
@@ -104,13 +164,12 @@ const InstallApp = ({ className }: InstallAppProps) => {
 
     await installEvent.prompt();
     await installEvent.userChoice;
-    startTransition(() => {
-      setInstallEvent(null);
-      setIsOpen(false);
-    });
+    cachedInstallEvent = null;
+    emitInstall();
+    setIsOpen(false);
   };
 
-  const dialog = canPortal
+  const dialog = isClient
     ? createPortal(
         <wa-dialog
           ref={dialogRef as never}
@@ -119,37 +178,22 @@ const InstallApp = ({ className }: InstallAppProps) => {
           className={styles.dialog}
         >
           <div className={styles.body}>
-            <p className={styles.lead}>
-              Добавьте приложение на домашний экран — так удобнее вести счёт за
-              столом.
-            </p>
-            <ul className={styles.benefits}>
-              <li>Работает без интернета после первого открытия</li>
-              <li>Открывается с иконки, как обычное приложение</li>
-              <li>Быстрый доступ во время партии</li>
-            </ul>
+            <p className={styles.lead}>{guide.lead}</p>
+            {guide.benefits ? (
+              <ul className={styles.benefits}>
+                <li>Работает без интернета после первого открытия</li>
+                <li>Открывается с иконки, как обычное приложение</li>
+                <li>Быстрый доступ во время партии</li>
+              </ul>
+            ) : null}
 
-            {installEvent ? (
-              <wa-button
-                variant="brand"
-                appearance="accent"
-                className="wa-block"
-                onClick={() => {
-                  void handleInstall();
-                }}
-              >
-                Установить
-              </wa-button>
-            ) : (
-              <div className={styles.howto}>
-                <p className={styles.howtoTitle}>Как установить</p>
-                <ol className={styles.steps}>
-                  {instructions.map((step) => (
-                    <li key={step}>{step}</li>
-                  ))}
-                </ol>
-              </div>
-            )}
+            <InstallGuideContent
+              guide={guide}
+              installEvent={installEvent}
+              onInstall={() => {
+                void handleInstall();
+              }}
+            />
           </div>
         </wa-dialog>,
         document.body,
@@ -164,7 +208,7 @@ const InstallApp = ({ className }: InstallAppProps) => {
         default="none"
       >
         <wa-button
-          className={className}
+          className={`${className} ${styles.trigger}`}
           type="button"
           variant="neutral"
           appearance="outlined"
