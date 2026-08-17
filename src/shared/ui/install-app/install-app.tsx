@@ -15,7 +15,7 @@ import {
   defaultInstallGuide,
   detectInstallGuide,
   type InstallGuide,
-} from '@/lib/install-platform';
+} from './install-platform';
 import styles from './install-app.module.css';
 
 type BeforeInstallPromptEvent = Event & {

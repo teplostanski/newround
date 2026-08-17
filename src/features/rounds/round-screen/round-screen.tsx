@@ -1,8 +1,8 @@
 'use client';
 
 import type { CSSProperties } from 'react';
-import type { Player, ScoreMap } from '@/domain/game';
-import { getPlayerCardColor } from '../constants/player-card-colors';
+import type { Player, ScoreMap } from '@/shared/model/game';
+import { getPlayerCardColor } from './player-card-colors';
 import styles from './round-screen.module.css';
 
 type RoundScreenProps = {

@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from 'next';
 import { SerwistProvider } from '@serwist/next/react';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense, type ReactNode } from 'react';
-import { ClientApp } from '@/components/client-app';
-import { InitialLoader } from '@/components/route-loader';
-import { ServiceWorkerReset } from '@/components/service-worker-reset';
-import { WebAwesomeRegistry } from '@/components/web-awesome-registry';
-import { GamesStoreProvider } from '@/state/games-store';
+import { ClientApp } from '@/shared/ui/client-app/client-app';
+import { InitialLoader } from '@/shared/ui/route-loader/route-loader';
+import { ServiceWorkerReset } from '@/shared/ui/service-worker-reset/service-worker-reset';
+import { WebAwesomeRegistry } from '@/shared/ui/web-awesome-registry/web-awesome-registry';
+import { GamesStoreProvider } from '@/shared/model/games-store';
 import '@awesome.me/webawesome/dist/styles/themes/default.css';
 import '@awesome.me/webawesome/dist/styles/utilities.css';
-import '@/styles/theme-newround.css';
-import '@/styles/global.css';
+import '@/shared/styles/theme-newround.css';
+import '@/shared/styles/global.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://newround.teplostanski.me'),

@@ -1,9 +1,9 @@
 'use client';
 
 import { ViewTransition, type ReactNode } from 'react';
-import { useIsHydrated } from '@/hooks/use-is-hydrated';
-import { AppShell } from './app-shell';
-import { InitialLoader } from './route-loader';
+import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
+import { AppShell } from '../app-shell/app-shell';
+import { InitialLoader } from '../route-loader/route-loader';
 
 export const ClientApp = ({ children }: { children: ReactNode }) => {
   const isHydrated = useIsHydrated();

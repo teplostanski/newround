@@ -22,7 +22,7 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "src/types/**/*.d.ts",
+    "src/shared/types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.mts"

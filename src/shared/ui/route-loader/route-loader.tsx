@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { ViewTransition } from 'react';
-import appStyles from './app.module.css';
+import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
 
 type RouteLoaderProps = {

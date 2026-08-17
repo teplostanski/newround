@@ -16,7 +16,7 @@ import {
   setRoundScore,
   type Game,
   type NewGameData,
-} from '@/domain/game';
+} from '@/shared/model/game';
 
 type CreatedGame = {
   gameId: string;

@@ -3,7 +3,7 @@
 import { useState, type FormEvent, type KeyboardEvent } from 'react';
 import { nanoid } from 'nanoid';
 import type WaInput from '@awesome.me/webawesome/dist/components/input/input.js';
-import type { NewGameData, Player } from '@/domain/game';
+import type { NewGameData, Player } from '@/shared/model/game';
 
 type SetupNewGameScreenProps = {
   onCreateGame: (formData: NewGameData) => void;

@@ -2,13 +2,13 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { RouteLoader } from '@/components/route-loader';
-import { RoundScreen } from '@/components/round-screen';
-import { findGame, findRound, findSession } from '@/domain/game';
-import { useIsHydrated } from '@/hooks/use-is-hydrated';
-import { routes } from '@/lib/routes';
-import { routeTransitionTypes } from '@/lib/view-transitions';
-import { useGamesStore } from '@/state/games-store';
+import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
+import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
+import { findGame, findRound, findSession } from '@/shared/model/game';
+import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
+import { routes } from '@/shared/lib/routes';
+import { routeTransitionTypes } from '@/shared/lib/view-transitions';
+import { useGamesStore } from '@/shared/model/games-store';
 
 export const RoundPage = () => {
   const router = useRouter();

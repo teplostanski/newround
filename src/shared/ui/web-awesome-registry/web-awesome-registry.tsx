@@ -1,5 +1,5 @@
 'use client';
 
-import '@/lib/web-awesome';
+import './web-awesome';
 
 export const WebAwesomeRegistry = () => null;

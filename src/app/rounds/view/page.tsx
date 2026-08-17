@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { RouteLoader } from '@/components/route-loader';
-import { RouteTransition } from '@/components/route-transition';
+import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
+import { RouteTransition } from '@/shared/ui/route-transition/route-transition';
 import { RoundPage } from '@/features/rounds/round-page';
 
 export const metadata: Metadata = {

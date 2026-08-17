@@ -4,13 +4,13 @@ import { ChevronLeft, House } from '@gravity-ui/icons';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useLayoutEffect, ViewTransition, type ReactNode } from 'react';
-import { findGame, findSession } from '@/domain/game';
-import { routes } from '@/lib/routes';
-import { routeTransitionTypes, titleTransitionStyle, transitionNames } from '@/lib/view-transitions';
-import { useGamesStore } from '@/state/games-store';
-import { FullscreenToggle } from './fullscreen-toggle';
-import { InstallApp } from './install-app';
-import styles from './app.module.css';
+import { findGame, findSession } from '@/shared/model/game';
+import { routes } from '@/shared/lib/routes';
+import { routeTransitionTypes, titleTransitionStyle, transitionNames } from '@/shared/lib/view-transitions';
+import { useGamesStore } from '@/shared/model/games-store';
+import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
+import { InstallApp } from '../install-app/install-app';
+import styles from './app-shell.module.css';
 
 type AppShellViewProps = {
   title: string;

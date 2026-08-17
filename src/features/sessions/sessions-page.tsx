@@ -2,13 +2,13 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { RouteLoader } from '@/components/route-loader';
-import { SessionListScreen } from '@/components/sessions-screen';
-import { findGame } from '@/domain/game';
-import { useIsHydrated } from '@/hooks/use-is-hydrated';
-import { routes } from '@/lib/routes';
-import { routeTransitionTypes } from '@/lib/view-transitions';
-import { useGamesStore } from '@/state/games-store';
+import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
+import { SessionListScreen } from '@/features/sessions/sessions-screen/sessions-screen';
+import { findGame } from '@/shared/model/game';
+import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
+import { routes } from '@/shared/lib/routes';
+import { routeTransitionTypes } from '@/shared/lib/view-transitions';
+import { useGamesStore } from '@/shared/model/games-store';
 
 export const SessionsPage = () => {
   const router = useRouter();
