@@ -56,20 +56,23 @@ const subscribeInstall = (onStoreChange: StoreListener) => {
 const getInstallSnapshot = () => cachedInstallEvent;
 const getInstallServerSnapshot = (): BeforeInstallPromptEvent | null => null;
 
-const subscribeStandalone = (onStoreChange: StoreListener) => {
-  const media = window.matchMedia('(display-mode: standalone)');
+const subscribeBrowserDisplay = (onStoreChange: StoreListener) => {
+  const media = window.matchMedia('(display-mode: browser)');
   media.addEventListener('change', onStoreChange);
   return () => {
     media.removeEventListener('change', onStoreChange);
   };
 };
 
-const getStandaloneSnapshot = () =>
-  window.matchMedia('(display-mode: standalone)').matches ||
-  ('standalone' in navigator &&
-    Boolean((navigator as Navigator & { standalone?: boolean }).standalone));
+const getIsBrowserTab = () =>
+  window.matchMedia('(display-mode: browser)').matches &&
+  !(
+    'standalone' in navigator &&
+    Boolean((navigator as Navigator & { standalone?: boolean }).standalone)
+  );
 
 const getServerSnapshot = () => false;
+const getBrowserTabServerSnapshot = () => true;
 
 const subscribeClient = () => () => undefined;
 const getClientSnapshot = () => true;
@@ -123,10 +126,10 @@ const InstallApp = ({ className }: InstallAppProps) => {
     getClientSnapshot,
     getServerSnapshot,
   );
-  const isStandaloneApp = useSyncExternalStore(
-    subscribeStandalone,
-    getStandaloneSnapshot,
-    getServerSnapshot,
+  const isBrowserTab = useSyncExternalStore(
+    subscribeBrowserDisplay,
+    getIsBrowserTab,
+    getBrowserTabServerSnapshot,
   );
   const installEvent = useSyncExternalStore(
     subscribeInstall,
@@ -153,7 +156,7 @@ const InstallApp = ({ className }: InstallAppProps) => {
     };
   }, [isOpen, isClient]);
 
-  if (isStandaloneApp) {
+  if (!isBrowserTab) {
     return null;
   }
 

@@ -2,7 +2,7 @@
   --width: min(22rem, calc(100vw - 2rem));
 }
 
-@media (display-mode: standalone) {
+@media not (display-mode: browser) {
   .trigger {
     display: none !important;
   }
