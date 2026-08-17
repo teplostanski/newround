@@ -3,12 +3,7 @@
 import { ChevronLeft, House } from '@gravity-ui/icons';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import {
-  useLayoutEffect,
-  useRef,
-  ViewTransition,
-  type ReactNode,
-} from 'react';
+import { useLayoutEffect, ViewTransition, type ReactNode } from 'react';
 import { findGame, findSession } from '@/domain/game';
 import { routes } from '@/lib/routes';
 import {
@@ -34,20 +29,16 @@ const AppShellView = ({
   backHref,
   children,
 }: AppShellViewProps) => {
-  const shellRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const routeKey = `${pathname}?${searchParams?.toString() ?? ''}`;
 
   useLayoutEffect(() => {
-    const shell = shellRef.current;
-    if (shell) {
-      shell.scrollTop = 0;
-    }
+    window.scrollTo(0, 0);
   }, [routeKey]);
 
   return (
-    <div className={styles.shell} ref={shellRef}>
+    <div className={styles.shell}>
       <header className={styles.header}>
         <div className={styles.headerBar}>
           <nav className={styles.nav} aria-label="Основная навигация">
@@ -165,9 +156,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       <AppShellView
         title={game?.name ?? 'Сессии'}
         transitionName={
-          game
-            ? transitionNames.gameTitle(game.id)
-            : transitionNames.pageTitle
+          game ? transitionNames.gameTitle(game.id) : transitionNames.pageTitle
         }
         backHref={routes.games}
       >

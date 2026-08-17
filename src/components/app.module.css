@@ -1,28 +1,17 @@
 .shell {
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
+  min-height: 100dvh;
   margin: 0 auto;
   max-width: 28rem;
   padding: 1.25rem 1rem 2.5rem;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
+  overflow: visible;
   background:
     radial-gradient(120% 80% at 50% -10%, #d7e4ef 0%, transparent 55%),
     var(--wa-color-surface-lowered);
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.shell::-webkit-scrollbar {
-  display: none;
 }
 
 .header {
   display: flex;
-  flex-shrink: 0;
   flex-direction: column;
   gap: 0.65rem;
   margin: 0 0 1.5rem;
@@ -30,7 +19,6 @@
 
 .main {
   display: flex;
-  flex: 1 1 auto;
   flex-direction: column;
 }
 
