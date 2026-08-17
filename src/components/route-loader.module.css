@@ -82,13 +82,6 @@
   --bone-sheen: var(--bone-on-card-sheen);
 }
 
-.itemHeader {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
 .title {
   width: 55%;
   height: calc(1rem * var(--line-box));
@@ -105,13 +98,6 @@
   width: 70%;
   height: calc(0.9rem * var(--line-box));
   border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.badge {
-  flex-shrink: 0;
-  width: 4.75rem;
-  height: calc(0.25rem * 2 + 0.8rem * var(--line-box));
-  border-radius: 999px;
 }
 
 .summary {

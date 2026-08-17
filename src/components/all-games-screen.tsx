@@ -1,12 +1,8 @@
 'use client';
 
 import cn from 'classnames';
-import { ViewTransition } from 'react';
 import type { Game } from '@/domain/game';
-import {
-  sharedTitleTransitions,
-  transitionNames,
-} from '@/lib/view-transitions';
+import { titleTransitionStyle, transitionNames } from '@/lib/view-transitions';
 import styles from './all-games-screen.module.css';
 
 type AllGamesScreenProps = {
@@ -29,13 +25,9 @@ const AllGamesScreen = ({
         appearance="accent"
         onClick={onCreateNewGame}
       >
-        <ViewTransition
-          name={transitionNames.newGameTitle}
-          share={sharedTitleTransitions}
-          default="none"
-        >
-          <span>Новая игра</span>
-        </ViewTransition>
+        <span style={titleTransitionStyle(transitionNames.newGameTitle)}>
+          Новая игра
+        </span>
       </wa-button>
 
       {games.length === 0 ? (
@@ -48,13 +40,12 @@ const AllGamesScreen = ({
               key={game.id}
               onClick={() => onOpenGame(game.id)}
             >
-              <ViewTransition
-                name={transitionNames.gameTitle(game.id)}
-                share={sharedTitleTransitions}
-                default="none"
+              <p
+                className="title"
+                style={titleTransitionStyle(transitionNames.gameTitle(game.id))}
               >
-                <p className="title">{game.name}</p>
-              </ViewTransition>
+                {game.name}
+              </p>
               <p className="meta">
                 {game.players.length}{' '}
                 {game.players.length === 1 ? 'игрок' : 'игроков'}

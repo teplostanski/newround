@@ -1,12 +1,8 @@
 'use client';
 
 import cn from 'classnames';
-import { ViewTransition } from 'react';
 import type { Game, ScoreMap, Session } from '@/domain/game';
-import {
-  sharedTitleTransitions,
-  transitionNames,
-} from '@/lib/view-transitions';
+import { titleTransitionStyle, transitionNames } from '@/lib/view-transitions';
 import styles from './session-screen.module.css';
 
 type SessionScreenProps = {
@@ -63,15 +59,14 @@ const SessionScreen = ({
               key={round.id}
               onClick={() => onOpenRound(round.id)}
             >
-              <div className={styles.itemHeader}>
-                <ViewTransition
-                  name={transitionNames.roundTitle(round.id)}
-                  share={sharedTitleTransitions}
-                  default="none"
-                >
-                  <p className="title">Партия {index + 1}</p>
-                </ViewTransition>
-              </div>
+              <p
+                className="title"
+                style={titleTransitionStyle(
+                  transitionNames.roundTitle(round.id),
+                )}
+              >
+                Партия {index + 1}
+              </p>
               <p className={styles.scoreSummary}>
                 {formatRoundSummary(game.players, round.scores)}
               </p>

@@ -11,8 +11,7 @@ export const routeTransitionTypes = {
   back: ['nav-back'],
 };
 
-export const sharedTitleTransitions = {
-  'nav-forward': 'shared-title-forward',
-  'nav-back': 'none',
-  default: 'shared-title-forward',
-};
+export const titleTransitionStyle = (name: string) => ({
+  viewTransitionName: name,
+  viewTransitionClass: 'title-fly',
+});

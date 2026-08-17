@@ -6,11 +6,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { useLayoutEffect, ViewTransition, type ReactNode } from 'react';
 import { findGame, findSession } from '@/domain/game';
 import { routes } from '@/lib/routes';
-import {
-  routeTransitionTypes,
-  sharedTitleTransitions,
-  transitionNames,
-} from '@/lib/view-transitions';
+import { routeTransitionTypes, titleTransitionStyle, transitionNames } from '@/lib/view-transitions';
 import { useGamesStore } from '@/state/games-store';
 import { FullscreenToggle } from './fullscreen-toggle';
 import { InstallApp } from './install-app';
@@ -66,29 +62,28 @@ const AppShellView = ({
                     />
                   </Link>
                 </ViewTransition>
-                {backHref !== routes.games && (
-                  <ViewTransition
-                    name="header-home"
-                    enter="header-action-enter"
-                    exit="header-action-exit"
-                    default="none"
+                <ViewTransition
+                  name="header-home"
+                  enter="header-action-enter"
+                  exit="header-action-exit"
+                  share="header-action-share"
+                  default="none"
+                >
+                  <Link
+                    className={styles.iconLink}
+                    href={routes.games}
+                    aria-label="Главная"
+                    title="Главная"
+                    transitionTypes={routeTransitionTypes.back}
                   >
-                    <Link
-                      className={styles.iconLink}
-                      href={routes.games}
-                      aria-label="Главная"
-                      title="Главная"
-                      transitionTypes={routeTransitionTypes.back}
-                    >
-                      <House
-                        width={20}
-                        height={20}
-                        aria-hidden="true"
-                        focusable="false"
-                      />
-                    </Link>
-                  </ViewTransition>
-                )}
+                    <House
+                      width={20}
+                      height={20}
+                      aria-hidden="true"
+                      focusable="false"
+                    />
+                  </Link>
+                </ViewTransition>
               </>
             )}
           </nav>
@@ -97,16 +92,12 @@ const AppShellView = ({
             <FullscreenToggle className={styles.iconButton} />
           </div>
         </div>
-        <ViewTransition
-          key={transitionName}
-          name={transitionName}
-          enter="header-title-enter"
-          exit="header-title-exit"
-          share={sharedTitleTransitions}
-          default="none"
-        >
-          <h1 className={styles.brand}>{title}</h1>
-        </ViewTransition>
+          <h1
+            className={styles.brand}
+            style={titleTransitionStyle(transitionName)}
+          >
+            {title}
+          </h1>
       </header>
       <main className={styles.main}>{children}</main>
     </div>

@@ -45,8 +45,7 @@ const routeKind = (pathname: string): RouteKind => {
 };
 
 const HeaderSkeleton = ({ kind }: { kind: RouteKind }) => {
-  const showBack = kind !== 'games';
-  const showHome = kind === 'session' || kind === 'round';
+  const showNav = kind !== 'games';
   const brandWidth =
     kind === 'games'
       ? styles.brandShort
@@ -58,8 +57,8 @@ const HeaderSkeleton = ({ kind }: { kind: RouteKind }) => {
     <header className={appStyles.header}>
       <div className={appStyles.headerBar}>
         <nav className={appStyles.nav} aria-hidden="true">
-          {showBack && <span className={`${styles.bone} ${styles.icon}`} />}
-          {showHome && <span className={`${styles.bone} ${styles.icon}`} />}
+          {showNav && <span className={`${styles.bone} ${styles.icon}`} />}
+          {showNav && <span className={`${styles.bone} ${styles.icon}`} />}
         </nav>
         <div className={appStyles.actions}>
           <span className={`${styles.bone} ${styles.icon}`} />
@@ -90,10 +89,7 @@ const SessionsContent = () => (
     <ul className="list">
       {LIST_KEYS.map((key) => (
         <li className={`item itemStacked ${styles.onCard}`} key={key}>
-          <div className={styles.itemHeader}>
-            <span className={`${styles.bone} ${styles.title}`} />
-            <span className={`${styles.bone} ${styles.badge}`} />
-          </div>
+          <span className={`${styles.bone} ${styles.title}`} />
           <span className={`${styles.bone} ${styles.metaWide}`} />
         </li>
       ))}
