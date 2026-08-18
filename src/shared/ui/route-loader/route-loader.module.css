@@ -11,23 +11,18 @@
 
 .tokens {
   --bone: var(--wa-color-surface-default);
-  --bone-sheen: color-mix(in oklab, var(--bone), white 40%);
-  --bone-on-card: var(--wa-color-neutral-fill-normal);
-  --bone-on-card-sheen: color-mix(in oklab, var(--bone-on-card), white 35%);
   --line-box: var(--wa-line-height-condensed, 1.2);
+}
+
+.tokens :global(.item),
+.summary,
+.roundCard {
+  --bone: var(--wa-color-neutral-fill-normal);
 }
 
 .bone {
   display: block;
-  background: linear-gradient(
-    270deg,
-    var(--bone-sheen),
-    var(--bone),
-    var(--bone),
-    var(--bone-sheen)
-  );
-  background-size: 400% 100%;
-  animation: skeleton-sheen 8s ease-in-out infinite;
+  background: var(--bone);
 }
 
 .icon {
@@ -70,18 +65,6 @@
   border-radius: var(--wa-form-control-border-radius);
 }
 
-.addButton {
-  flex: 0 0 auto;
-  width: 6.75rem;
-  height: var(--wa-form-control-height);
-  border-radius: var(--wa-form-control-border-radius);
-}
-
-.onCard {
-  --bone: var(--bone-on-card);
-  --bone-sheen: var(--bone-on-card-sheen);
-}
-
 .title {
   width: 55%;
   height: calc(1rem * var(--line-box));
@@ -112,8 +95,6 @@
   width: 88%;
   height: calc(0.95rem * var(--line-box));
   border-radius: var(--wa-border-radius-pill, 999px);
-  --bone: var(--bone-on-card);
-  --bone-sheen: var(--bone-on-card-sheen);
 }
 
 .legend {
@@ -148,8 +129,6 @@
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: color-mix(in srgb, var(--bg) 72%, var(--surface));
-  --bone: var(--bone-on-card);
-  --bone-sheen: var(--bone-on-card-sheen);
 }
 
 .player {
@@ -182,21 +161,4 @@
 .stepperValue {
   height: calc(0.7rem * 2 + 1.1rem);
   border-radius: calc(var(--radius) - 2px);
-}
-
-@keyframes skeleton-sheen {
-  0% {
-    background-position: 200% 0;
-  }
-
-  to {
-    background-position: -200% 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .bone {
-    animation: none;
-    background: var(--bone);
-  }
 }

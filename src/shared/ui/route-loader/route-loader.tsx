@@ -75,7 +75,7 @@ const GamesContent = () => (
     <span className={`${styles.bone} ${styles.control}`} />
     <ul className="list">
       {LIST_KEYS.map((key) => (
-        <li className={`item itemStacked ${styles.onCard}`} key={key}>
+        <li className="item itemStacked" key={key}>
           <span className={`${styles.bone} ${styles.title}`} />
           <span className={`${styles.bone} ${styles.meta}`} />
         </li>
@@ -88,7 +88,7 @@ const SessionsContent = () => (
   <div className="screen">
     <ul className="list">
       {LIST_KEYS.map((key) => (
-        <li className={`item itemStacked ${styles.onCard}`} key={key}>
+        <li className="item itemStacked" key={key}>
           <span className={`${styles.bone} ${styles.title}`} />
           <span className={`${styles.bone} ${styles.metaWide}`} />
         </li>
@@ -105,7 +105,7 @@ const SessionContent = () => (
     <span className={`${styles.bone} ${styles.control}`} />
     <ul className="list">
       {LIST_KEYS.map((key) => (
-        <li className={`item itemStacked ${styles.onCard}`} key={key}>
+        <li className="item itemStacked" key={key}>
           <span className={`${styles.bone} ${styles.title}`} />
           <span className={`${styles.bone} ${styles.metaWide}`} />
         </li>
@@ -145,7 +145,7 @@ const NewGameContent = () => (
         </div>
         <div className="row">
           <span className={`${styles.bone} ${styles.controlGrow}`} />
-          <span className={`${styles.bone} ${styles.addButton}`} />
+          <span className={`${styles.bone} ${styles.icon}`} />
         </div>
         <span className={`${styles.bone} ${styles.emptyLine}`} />
       </fieldset>
