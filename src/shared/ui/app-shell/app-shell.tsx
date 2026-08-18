@@ -8,6 +8,7 @@ import { findGame, findSession } from '@/shared/model/game';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes, titleTransitionStyle, transitionNames } from '@/shared/lib/view-transitions';
 import { useGamesStore } from '@/shared/model/games-store';
+import { BuildStamp } from '../build-stamp/build-stamp';
 import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
 import { InstallApp } from '../install-app/install-app';
 import styles from './app-shell.module.css';
@@ -100,6 +101,9 @@ const AppShellView = ({
           </h1>
       </header>
       <main className={styles.main}>{children}</main>
+      <footer>
+        <BuildStamp />
+      </footer>
     </div>
   );
 };
