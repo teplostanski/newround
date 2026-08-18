@@ -101,26 +101,6 @@
   }
 }
 
-.iconButton {
-  flex: 0 0 2.75rem;
-  width: 2.75rem;
-}
-
-.iconButton::part(button) {
-  box-sizing: border-box;
-  width: 2.75rem;
-  height: 2.75rem;
-  min-height: 2.75rem;
-  padding: 0;
-  border-radius: var(--wa-form-control-border-radius);
-}
-
-.iconButton svg {
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-
 .brand {
   width: fit-content;
   max-width: 100%;

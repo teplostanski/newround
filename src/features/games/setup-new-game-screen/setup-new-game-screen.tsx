@@ -1,48 +1,36 @@
 'use client';
 
-import { useState, type FormEvent, type KeyboardEvent } from 'react';
+import { useId, useState, type SubmitEvent } from 'react';
 import { nanoid } from 'nanoid';
 import type WaInput from '@awesome.me/webawesome/dist/components/input/input.js';
 import type { NewGameData, Player } from '@/shared/model/game';
+import { PlayersForm } from './players-form/players-form';
 
 type SetupNewGameScreenProps = {
   onCreateGame: (formData: NewGameData) => void;
 };
 
 const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
+  const newGameFormId = useId();
   const [gameName, setGameName] = useState('');
-  const [playerName, setPlayerName] = useState('');
   const [players, setPlayers] = useState<Player[]>([]);
 
-  const addPlayerFromField = () => {
-    const trimmedName = playerName.trim();
-
-    if (!trimmedName) {
-      return;
-    }
-
-    setPlayers((prev) => [...prev, { id: nanoid(), name: trimmedName }]);
-    setPlayerName('');
+  const handleAddPlayer = (name: string) => {
+    setPlayers((current) => [...current, { id: nanoid(), name }]);
   };
 
-  const handleCreateGame = (event: FormEvent<HTMLFormElement>) => {
+  const handleCreateGame = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     onCreateGame({ name: gameName, players });
   };
 
-  const handlePlayerKeyDown = (event: KeyboardEvent<WaInput>) => {
-    if (event.key !== 'Enter') {
-      return;
-    }
-
-    event.preventDefault();
-    addPlayerFromField();
-  };
-
   return (
     <div className="screen">
-      <form className="stack" onSubmit={handleCreateGame}>
+      <form id={newGameFormId} hidden onSubmit={handleCreateGame} />
+
+      <div className="stack">
         <wa-input
+          form={newGameFormId}
           type="text"
           placeholder="Название игры"
           value={gameName}
@@ -51,50 +39,10 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
           }
         />
 
-        <fieldset className="fieldset">
-          <legend className="legend">Игроки</legend>
-
-          <div className="row">
-            <label className="visuallyHidden" htmlFor="player-name">
-              Имя игрока
-            </label>
-
-            <wa-input
-              id="player-name"
-              className="wa-grow"
-              type="text"
-              placeholder="Имя игрока"
-              value={playerName}
-              onInput={(event) =>
-                setPlayerName((event.currentTarget as WaInput).value ?? '')
-              }
-              onKeyDown={handlePlayerKeyDown as never}
-            />
-
-            <wa-button
-              type="button"
-              variant="neutral"
-              appearance="outlined"
-              onClick={addPlayerFromField}
-            >
-              Добавить
-            </wa-button>
-          </div>
-
-          {players.length === 0 ? (
-            <p className="empty">Добавьте хотя бы одного игрока</p>
-          ) : (
-            <ol className="list">
-              {players.map((player) => (
-                <li className="item" key={player.id}>
-                  {player.name}
-                </li>
-              ))}
-            </ol>
-          )}
-        </fieldset>
+        <PlayersForm players={players} onAddPlayer={handleAddPlayer} />
 
         <wa-button
+          form={newGameFormId}
           className="wa-block"
           type="submit"
           variant="brand"
@@ -103,7 +51,7 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
         >
           Начать игру
         </wa-button>
-      </form>
+      </div>
     </div>
   );
 };

@@ -88,8 +88,8 @@ const AppShellView = ({
             )}
           </nav>
           <div className={styles.actions}>
-            <InstallApp className={styles.iconButton} />
-            <FullscreenToggle className={styles.iconButton} />
+            <InstallApp className="iconButton" />
+            <FullscreenToggle className="iconButton" />
           </div>
         </div>
           <h1

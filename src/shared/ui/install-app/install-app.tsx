@@ -11,6 +11,7 @@ import {
   ViewTransition,
 } from 'react';
 import { createPortal } from 'react-dom';
+import cn from 'classnames';
 import {
   defaultInstallGuide,
   detectInstallGuide,
@@ -211,7 +212,7 @@ const InstallApp = ({ className }: InstallAppProps) => {
         default="none"
       >
         <wa-button
-          className={`${className} ${styles.trigger}`}
+          className={cn(className, styles.trigger)}
           type="button"
           variant="neutral"
           appearance="outlined"
