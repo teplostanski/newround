@@ -14,4 +14,5 @@ export const routes = {
     withQuery('/playthroughs/view', { gameId, playthroughId }),
   round: (gameId: string, playthroughId: string, roundId: string) =>
     withQuery('/rounds/view', { gameId, playthroughId, roundId }),
+  migration: '/migration',
 };

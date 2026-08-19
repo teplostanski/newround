@@ -18,7 +18,7 @@ type CreatedGame = {
   playthroughId: string;
 };
 
-type GamesStoreValue = {
+type StoreValue = {
   isReady: boolean;
   games: Game[];
   playthroughs: Playthrough[];
@@ -26,16 +26,21 @@ type GamesStoreValue = {
   addGame: (data: NewGameData) => CreatedGame;
   addRound: (gameId: string, playthroughId: string) => string | null;
   updateScore: (roundId: string, playerId: string, score: number) => void;
+  importTables: (tables: {
+    games: Game[];
+    playthroughs: Playthrough[];
+    rounds: Round[];
+  }) => Promise<void>;
 };
 
-const GamesStoreContext = createContext<GamesStoreValue | null>(null);
+const StoreContext = createContext<StoreValue | null>(null);
 
 export const findById = <T extends { id: string }>(
   items: T[],
   id: string | null,
 ) => (id ? items.find((item) => item.id === id) : undefined);
 
-export const GamesStoreProvider = ({ children }: { children: ReactNode }) => {
+export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [isReady, setIsReady] = useState(false);
   const [games, setGames] = useState<Game[]>([]);
   const [playthroughs, setPlaythroughs] = useState<Playthrough[]>([]);
@@ -155,6 +160,21 @@ export const GamesStoreProvider = ({ children }: { children: ReactNode }) => {
     [rounds],
   );
 
+  const importTables = useCallback(async (tables: {
+    games: Game[];
+    playthroughs: Playthrough[];
+    rounds: Round[];
+  }) => {
+    setGames(tables.games);
+    setPlaythroughs(tables.playthroughs);
+    setRounds(tables.rounds);
+    await db.transaction('rw', db.games, db.playthroughs, db.rounds, async () => {
+      await db.games.bulkAdd(tables.games);
+      await db.playthroughs.bulkAdd(tables.playthroughs);
+      await db.rounds.bulkAdd(tables.rounds);
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       isReady,
@@ -164,22 +184,23 @@ export const GamesStoreProvider = ({ children }: { children: ReactNode }) => {
       addGame,
       addRound,
       updateScore,
+      importTables,
     }),
-    [addGame, addRound, games, isReady, playthroughs, rounds, updateScore],
+    [addGame, addRound, games, isReady, playthroughs, rounds, updateScore, importTables],
   );
 
   return (
-    <GamesStoreContext.Provider value={value}>
+    <StoreContext.Provider value={value}>
       {children}
-    </GamesStoreContext.Provider>
+    </StoreContext.Provider>
   );
 };
 
-export const useGamesStore = () => {
-  const store = useContext(GamesStoreContext);
+export const useStore = () => {
+  const store = useContext(StoreContext);
 
   if (!store) {
-    throw new Error('useGamesStore must be used inside GamesStoreProvider');
+    throw new Error('useStore must be used inside StoreProvider');
   }
 
   return store;

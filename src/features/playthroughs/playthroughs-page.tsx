@@ -6,12 +6,12 @@ import { PlaythroughListScreen } from '@/features/playthroughs/playthroughs-scre
 import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
-import { findById, useGamesStore } from '@/shared/model/games-store';
+import { findById, useStore } from '@/shared/model/store';
 
 export const PlaythroughsPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { games, isReady, playthroughs } = useGamesStore();
+  const { games, isReady, playthroughs } = useStore();
   const gameId = searchParams.get('gameId');
   const game = findById(games, gameId);
 

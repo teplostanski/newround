@@ -10,7 +10,7 @@ import {
   titleTransitionStyle,
   transitionNames,
 } from '@/shared/lib/view-transitions';
-import { findById, useGamesStore } from '@/shared/model/games-store';
+import { findById, useStore } from '@/shared/model/store';
 import { BuildStamp } from '../build-stamp/build-stamp';
 import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
 import { InstallApp } from '../install-app/install-app';
@@ -116,7 +116,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const pathname =
     currentPathname !== '/' ? currentPathname.replace(/\/$/, '') : '/';
   const searchParams = useSearchParams();
-  const { games, playthroughs, rounds } = useGamesStore();
+  const { games, playthroughs, rounds } = useStore();
   const gameId = searchParams?.get('gameId') ?? null;
   const playthroughId = searchParams?.get('playthroughId') ?? null;
   const roundId = searchParams?.get('roundId') ?? null;
@@ -137,6 +137,18 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       <AppShellView
         title="Новая игра"
         transitionName={transitionNames.newGameTitle}
+        backHref={routes.games}
+      >
+        {children}
+      </AppShellView>
+    );
+  }
+  
+  if (pathname === '/migration') {
+    return (
+      <AppShellView
+        title="Миграция"
+        transitionName={transitionNames.pageTitle}
         backHref={routes.games}
       >
         {children}

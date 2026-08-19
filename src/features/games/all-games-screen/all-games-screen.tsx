@@ -9,12 +9,14 @@ type AllGamesScreenProps = {
   games: Game[];
   onCreateNewGame: () => void;
   onOpenGame: (id: string) => void;
+  onOpenMigration: () => void;
 };
 
 const AllGamesScreen = ({
   games,
   onCreateNewGame,
   onOpenGame,
+  onOpenMigration,
 }: AllGamesScreenProps) => {
   return (
     <div className="screen">
@@ -31,7 +33,18 @@ const AllGamesScreen = ({
       </wa-button>
 
       {games.length === 0 ? (
-        <p className="empty">Пока нет игр — создайте первую</p>
+        <>
+          <p className="empty">Пока нет игр — создайте первую</p>
+          <wa-button
+            className="wa-block"
+            type="button"
+            variant="neutral"
+            appearance="outlined"
+            onClick={onOpenMigration}
+          >
+            Перенести старые данные
+          </wa-button>
+        </>
       ) : (
         <ul className="list">
           {games.map((game) => (

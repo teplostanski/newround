@@ -6,7 +6,7 @@ import { PlaythroughScreen } from '@/features/playthroughs/playthrough-screen/pl
 import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
-import { findById, useGamesStore } from '@/shared/model/games-store';
+import { findById, useStore } from '@/shared/model/store';
 import type { Game, Playthrough, Round } from '@/shared/model/types';
 
 type NavigationSnapshot = {
@@ -18,7 +18,7 @@ type NavigationSnapshot = {
 export const PlaythroughPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { addRound, games, isReady, playthroughs, rounds } = useGamesStore();
+  const { addRound, games, isReady, playthroughs, rounds } = useStore();
   const [, startNavigation] = useTransition();
   const [navigationSnapshot, setNavigationSnapshot] =
     useState<NavigationSnapshot | null>(null);

@@ -6,7 +6,7 @@ import { ClientApp } from '@/shared/ui/client-app/client-app';
 import { InitialLoader } from '@/shared/ui/route-loader/route-loader';
 import { ServiceWorkerReset } from '@/shared/ui/service-worker-reset/service-worker-reset';
 import { WebAwesomeRegistry } from '@/shared/ui/web-awesome-registry/web-awesome-registry';
-import { GamesStoreProvider } from '@/shared/model/games-store';
+import { StoreProvider } from '@/shared/model/store';
 import '@awesome.me/webawesome/dist/styles/themes/default.css';
 import '@awesome.me/webawesome/dist/styles/utilities.css';
 import '@/shared/styles/theme-newround.css';
@@ -56,11 +56,11 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
         reloadOnOnline={false}
         options={{ type: 'classic' }}
       >
-        <GamesStoreProvider>
+        <StoreProvider>
           <Suspense fallback={<InitialLoader />}>
             <ClientApp>{children}</ClientApp>
           </Suspense>
-        </GamesStoreProvider>
+        </StoreProvider>
       </SerwistProvider>
     </body>
   </html>
