@@ -33,8 +33,10 @@ const routeKind = (pathname: string): RouteKind => {
       return 'games';
     case '/games/new':
       return 'newGame';
+    case '/playthroughs':
     case '/sessions':
       return 'sessions';
+    case '/playthroughs/view':
     case '/sessions/view':
       return 'session';
     case '/rounds/view':

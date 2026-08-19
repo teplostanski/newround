@@ -4,10 +4,13 @@ import { ChevronLeft, House } from '@gravity-ui/icons';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useLayoutEffect, ViewTransition, type ReactNode } from 'react';
-import { findGame, findSession } from '@/shared/model/game';
 import { routes } from '@/shared/lib/routes';
-import { routeTransitionTypes, titleTransitionStyle, transitionNames } from '@/shared/lib/view-transitions';
-import { useGamesStore } from '@/shared/model/games-store';
+import {
+  routeTransitionTypes,
+  titleTransitionStyle,
+  transitionNames,
+} from '@/shared/lib/view-transitions';
+import { findById, useGamesStore } from '@/shared/model/games-store';
 import { BuildStamp } from '../build-stamp/build-stamp';
 import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
 import { InstallApp } from '../install-app/install-app';
@@ -93,12 +96,12 @@ const AppShellView = ({
             <FullscreenToggle className="iconButton" />
           </div>
         </div>
-          <h1
-            className={styles.brand}
-            style={titleTransitionStyle(transitionName)}
-          >
-            {title}
-          </h1>
+        <h1
+          className={styles.brand}
+          style={titleTransitionStyle(transitionName)}
+        >
+          {title}
+        </h1>
       </header>
       <main className={styles.main}>{children}</main>
       <footer>
@@ -113,18 +116,13 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const pathname =
     currentPathname !== '/' ? currentPathname.replace(/\/$/, '') : '/';
   const searchParams = useSearchParams();
-  const { games } = useGamesStore();
+  const { games, playthroughs, rounds } = useGamesStore();
   const gameId = searchParams?.get('gameId') ?? null;
-  const sessionId = searchParams?.get('sessionId') ?? null;
+  const playthroughId = searchParams?.get('playthroughId') ?? null;
   const roundId = searchParams?.get('roundId') ?? null;
-  const game = findGame(games, gameId);
-  const session = findSession(game, sessionId);
-  const sessionIndex = game?.sessions.findIndex(
-    (candidate) => candidate.id === sessionId,
-  );
-  const roundIndex = session?.rounds.findIndex(
-    (candidate) => candidate.id === roundId,
-  );
+  const game = findById(games, gameId);
+  const playthrough = findById(playthroughs, playthroughId);
+  const round = findById(rounds, roundId);
 
   if (pathname === '/' || pathname === '/games') {
     return (
@@ -146,12 +144,12 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     );
   }
 
-  if (pathname === '/sessions') {
+  if (pathname === '/playthroughs') {
     return (
       <AppShellView
         title={game?.name ?? 'Сессии'}
         transitionName={
-          game ? transitionNames.gameTitle(game.id) : transitionNames.pageTitle
+          gameId ? transitionNames.gameTitle(gameId) : transitionNames.pageTitle
         }
         backHref={routes.games}
       >
@@ -160,22 +158,18 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     );
   }
 
-  if (pathname === '/sessions/view') {
-    const backHref = game ? routes.sessions(game.id) : routes.games;
-    const title =
-      sessionIndex !== undefined && sessionIndex >= 0
-        ? `Сессия ${sessionIndex + 1}`
-        : 'Сессия';
-
+  if (pathname === '/playthroughs/view') {
     return (
       <AppShellView
-        title={title}
+        title={
+          playthrough ? `Сессия ${playthrough.sequenceNumber}` : 'Сессия'
+        }
         transitionName={
-          session
-            ? transitionNames.sessionTitle(session.id)
+          playthroughId
+            ? transitionNames.sessionTitle(playthroughId)
             : transitionNames.pageTitle
         }
-        backHref={backHref}
+        backHref={game ? routes.playthroughs(game.id) : routes.games}
       >
         {children}
       </AppShellView>
@@ -183,20 +177,16 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   }
 
   if (pathname === '/rounds/view') {
-    const title =
-      roundIndex !== undefined && roundIndex >= 0
-        ? `Партия ${roundIndex + 1}`
-        : 'Партия';
     const backHref =
-      game && session
-        ? routes.session(game.id, session.id)
+      game && playthrough
+        ? routes.playthrough(game.id, playthrough.id)
         : game
-          ? routes.sessions(game.id)
+          ? routes.playthroughs(game.id)
           : routes.games;
 
     return (
       <AppShellView
-        title={title}
+        title={round ? `Партия ${round.sequenceNumber}` : 'Партия'}
         transitionName={
           roundId
             ? transitionNames.roundTitle(roundId)

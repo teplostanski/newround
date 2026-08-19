@@ -1,7 +1,7 @@
 'use client';
 
 import cn from 'classnames';
-import type { Game } from '@/shared/model/game';
+import type { Game } from '@/shared/model/types';
 import { titleTransitionStyle, transitionNames } from '@/shared/lib/view-transitions';
 import styles from './all-games-screen.module.css';
 

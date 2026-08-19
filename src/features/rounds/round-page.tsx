@@ -2,28 +2,25 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
 import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
-import { findGame, findRound, findSession } from '@/shared/model/game';
-import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
+import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
-import { useGamesStore } from '@/shared/model/games-store';
+import { findById, useGamesStore } from '@/shared/model/games-store';
 
 export const RoundPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { games, updateScore } = useGamesStore();
-  const isHydrated = useIsHydrated();
-  const gameId = searchParams?.get('gameId') ?? null;
-  const sessionId = searchParams?.get('sessionId') ?? null;
-  const roundId = searchParams?.get('roundId') ?? null;
-  const game = findGame(games, gameId);
-  const session = findSession(game, sessionId);
-  const round = findRound(session, roundId);
+  const { games, isReady, playthroughs, rounds, updateScore } = useGamesStore();
+  const gameId = searchParams.get('gameId');
+  const playthroughId = searchParams.get('playthroughId');
+  const roundId = searchParams.get('roundId');
+  const game = findById(games, gameId);
+  const playthrough = findById(playthroughs, playthroughId);
+  const round = findById(rounds, roundId);
 
   useEffect(() => {
-    if (!isHydrated) {
+    if (!isReady) {
       return;
     }
 
@@ -32,17 +29,17 @@ export const RoundPage = () => {
       return;
     }
 
-    if (!session) {
-      router.replace(routes.sessions(game.id));
+    if (!playthrough) {
+      router.replace(routes.playthroughs(game.id));
       return;
     }
 
     if (!round) {
-      router.replace(routes.session(game.id, session.id));
+      router.replace(routes.playthrough(game.id, playthrough.id));
     }
-  }, [game, isHydrated, round, router, session]);
+  }, [game, isReady, playthrough, round, router]);
 
-  if (!isHydrated || !game || !session || !round) {
+  if (!isReady || !game || !playthrough || !round) {
     return <RouteLoader />;
   }
 
@@ -51,10 +48,10 @@ export const RoundPage = () => {
       players={game.players}
       scores={round.scores}
       onChangeScore={(playerId, score) =>
-        updateScore(game.id, session.id, round.id, playerId, score)
+        updateScore(round.id, playerId, score)
       }
       onFinishRound={() =>
-        router.push(routes.session(game.id, session.id), {
+        router.push(routes.playthrough(game.id, playthrough.id), {
           transitionTypes: routeTransitionTypes.back,
         })
       }

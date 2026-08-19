@@ -1,42 +1,46 @@
 'use client';
 
 import cn from 'classnames';
-import type { Game, ScoreMap, Session } from '@/shared/model/game';
-import { titleTransitionStyle, transitionNames } from '@/shared/lib/view-transitions';
-import styles from './session-screen.module.css';
+import {
+  titleTransitionStyle,
+  transitionNames,
+} from '@/shared/lib/view-transitions';
+import styles from './playthrough-screen.module.css';
+import type { Game, Playthrough, Round, Scores } from '@/shared/model/types';
 
-type SessionScreenProps = {
+type PlaythroughScreenProps = {
   game: Game;
-  session: Session;
+  playthrough: Playthrough;
+  rounds: Round[];
   onStartRound: () => void;
   onOpenRound: (roundId: string) => void;
 };
 
-const formatSessionDate = (timestamp: number) =>
-  new Date(timestamp).toLocaleDateString('ru-RU', {
+const formatPlaythroughDate = (createdAt: number) =>
+  new Date(createdAt).toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'long',
     hour: '2-digit',
     minute: '2-digit',
   });
 
-const formatRoundSummary = (players: Game['players'], scores: ScoreMap) =>
+const formatRoundSummary = (players: Game['players'], scores: Scores) =>
   players
     .map((player) => `${player.name} — ${scores[player.id] ?? 0}`)
     .join(' · ');
 
-const SessionScreen = ({
+const PlaythroughScreen = ({
   game,
-  session,
+  playthrough,
+  rounds,
   onStartRound,
   onOpenRound,
-}: SessionScreenProps) => {
+}: PlaythroughScreenProps) => {
   return (
     <div className="screen">
       <p className={styles.summary}>
-        {game.name} · {formatSessionDate(session.timestamp)} ·{' '}
-        {game.players.length}{' '}
-        {game.players.length === 1 ? 'игрок' : 'игроков'}
+        {game.name} · {formatPlaythroughDate(playthrough.createdAt)} ·{' '}
+        {game.players.length} {game.players.length === 1 ? 'игрок' : 'игроков'}
       </p>
 
       <wa-button
@@ -49,11 +53,11 @@ const SessionScreen = ({
         Начать партию
       </wa-button>
 
-      {session.rounds.length === 0 ? (
+      {rounds.length === 0 ? (
         <p className="empty">Партий пока нет — начните первую</p>
       ) : (
         <ul className="list">
-          {session.rounds.map((round, index) => (
+          {rounds.map((round) => (
             <li
               className={cn('item', 'itemStacked', styles.linkItem)}
               key={round.id}
@@ -65,7 +69,7 @@ const SessionScreen = ({
                   transitionNames.roundTitle(round.id),
                 )}
               >
-                Партия {index + 1}
+                Партия {round.sequenceNumber}
               </p>
               <p className={styles.scoreSummary}>
                 {formatRoundSummary(game.players, round.scores)}
@@ -78,4 +82,4 @@ const SessionScreen = ({
   );
 };
 
-export { SessionScreen };
+export { PlaythroughScreen };
