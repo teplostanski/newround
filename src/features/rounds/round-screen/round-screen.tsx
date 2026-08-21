@@ -1,13 +1,13 @@
 'use client';
 
 import { Button, Card, Chip } from '@heroui/react';
-import type { Player, ScoreMap } from '@/shared/model/game';
+import type { Player, Scores } from '@/shared/model/types';
 import { getPlayerTone } from '@/shared/lib/player-tone';
 import styles from './round-screen.module.css';
 
 type RoundScreenProps = {
   players: Player[];
-  scores: ScoreMap;
+  scores: Scores;
   onChangeScore: (id: string, newValue: number) => void;
   onFinishRound: () => void;
 };

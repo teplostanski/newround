@@ -26,11 +26,6 @@ type StoreValue = {
   addGame: (data: NewGameData) => CreatedGame;
   addRound: (gameId: string, playthroughId: string) => string | null;
   updateScore: (roundId: string, playerId: string, score: number) => void;
-  importTables: (tables: {
-    games: Game[];
-    playthroughs: Playthrough[];
-    rounds: Round[];
-  }) => Promise<void>;
 };
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -160,21 +155,6 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     [rounds],
   );
 
-  const importTables = useCallback(async (tables: {
-    games: Game[];
-    playthroughs: Playthrough[];
-    rounds: Round[];
-  }) => {
-    setGames(tables.games);
-    setPlaythroughs(tables.playthroughs);
-    setRounds(tables.rounds);
-    await db.transaction('rw', db.games, db.playthroughs, db.rounds, async () => {
-      await db.games.bulkAdd(tables.games);
-      await db.playthroughs.bulkAdd(tables.playthroughs);
-      await db.rounds.bulkAdd(tables.rounds);
-    });
-  }, []);
-
   const value = useMemo(
     () => ({
       isReady,
@@ -184,9 +164,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       addGame,
       addRound,
       updateScore,
-      importTables,
     }),
-    [addGame, addRound, games, isReady, playthroughs, rounds, updateScore, importTables],
+    [addGame, addRound, games, isReady, playthroughs, rounds, updateScore],
   );
 
   return (

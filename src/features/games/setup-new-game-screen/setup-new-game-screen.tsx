@@ -3,7 +3,7 @@
 import { useId, useState, type SubmitEvent } from 'react';
 import { nanoid } from 'nanoid';
 import { Button, Input } from '@heroui/react';
-import type { NewGameData, Player } from '@/shared/model/game';
+import type { NewGameData, Player } from '@/shared/model/types';
 import { PlayersForm } from './players-form/players-form';
 
 type SetupNewGameScreenProps = {

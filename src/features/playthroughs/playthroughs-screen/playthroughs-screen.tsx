@@ -45,7 +45,7 @@ const PlaythroughListScreen = ({
                     <p
                       className="titleFly"
                       style={titleTransitionStyle(
-                        transitionNames.sessionTitle(playthrough.id),
+                        transitionNames.playthroughTitle(playthrough.id),
                       )}
                     >
                       Сессия {playthrough.sequenceNumber}

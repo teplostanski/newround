@@ -3,7 +3,7 @@
 import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Chip, Fieldset, Input, Separator } from '@heroui/react';
 import { Plus } from '@gravity-ui/icons';
-import type { Player } from '@/shared/model/game';
+import type { Player } from '@/shared/model/types';
 import { getPlayerTone } from '@/shared/lib/player-tone';
 
 type PlayersFormProps = {

@@ -11,4 +11,4 @@ type PlayerTone = (typeof playerTones)[number];
 const getPlayerTone = (index: number): PlayerTone =>
   playerTones[index % playerTones.length];
 
-export { getPlayerTone, type PlayerTone };
+export { getPlayerTone };

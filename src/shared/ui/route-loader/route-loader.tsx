@@ -13,8 +13,8 @@ type RouteLoaderProps = {
 type RouteKind =
   | 'games'
   | 'newGame'
-  | 'sessions'
-  | 'session'
+  | 'playthroughs'
+  | 'playthrough'
   | 'round'
   | 'fallback';
 
@@ -37,11 +37,9 @@ const routeKind = (pathname: string): RouteKind => {
     case '/games/new':
       return 'newGame';
     case '/playthroughs':
-    case '/sessions':
-      return 'sessions';
+      return 'playthroughs';
     case '/playthroughs/view':
-    case '/sessions/view':
-      return 'session';
+      return 'playthrough';
     case '/rounds/view':
       return 'round';
     default:
@@ -107,13 +105,13 @@ const GamesContent = () => (
   </div>
 );
 
-const SessionsContent = () => (
+const PlaythroughsContent = () => (
   <div className="screen">
     <ListSkeleton metaWide />
   </div>
 );
 
-const SessionContent = () => (
+const PlaythroughContent = () => (
   <div className="screen">
     <Card className="w-full">
       <Card.Content>
@@ -168,10 +166,10 @@ const ContentSkeleton = ({ kind }: { kind: RouteKind }) => {
   switch (kind) {
     case 'newGame':
       return <NewGameContent />;
-    case 'sessions':
-      return <SessionsContent />;
-    case 'session':
-      return <SessionContent />;
+    case 'playthroughs':
+      return <PlaythroughsContent />;
+    case 'playthrough':
+      return <PlaythroughContent />;
     case 'round':
       return <RoundContent />;
     case 'games':

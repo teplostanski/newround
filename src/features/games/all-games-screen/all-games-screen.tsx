@@ -1,6 +1,6 @@
 'use client';
 
-import { buttonVariants, Card } from '@heroui/react';
+import { Card } from '@heroui/react';
 import Link from 'next/link';
 import type { Game } from '@/shared/model/types';
 import { routes } from '@/shared/lib/routes';
@@ -28,19 +28,7 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
       </Link>
 
       {games.length === 0 ? (
-        <>
-          <p className="empty">Пока нет игр — создайте первую</p>
-          <Link
-            href={routes.migration}
-            className={buttonVariants({
-              fullWidth: true,
-              variant: 'secondary',
-            })}
-            transitionTypes={routeTransitionTypes.forward}
-          >
-            Перенести старые данные
-          </Link>
-        </>
+        <p className="empty">Пока нет игр — создайте первую</p>
       ) : (
         <ul className="list">
           {games.map((game) => (

@@ -2,7 +2,7 @@ export const transitionNames = {
   pageTitle: 'page-title',
   newGameTitle: 'new-game-title',
   gameTitle: (gameId: string) => `game-title-${gameId}`,
-  sessionTitle: (sessionId: string) => `session-title-${sessionId}`,
+  playthroughTitle: (playthroughId: string) => `playthrough-title-${playthroughId}`,
   roundTitle: (roundId: string) => `round-title-${roundId}`,
 };
 

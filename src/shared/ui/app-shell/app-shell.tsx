@@ -144,18 +144,6 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     );
   }
 
-  if (pathname === '/migration') {
-    return (
-      <AppShellView
-        title="Миграция"
-        transitionName={transitionNames.pageTitle}
-        backHref={routes.games}
-      >
-        {children}
-      </AppShellView>
-    );
-  }
-
   if (pathname === '/playthroughs') {
     return (
       <AppShellView
@@ -178,7 +166,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
         }
         transitionName={
           playthroughId
-            ? transitionNames.sessionTitle(playthroughId)
+            ? transitionNames.playthroughTitle(playthroughId)
             : transitionNames.pageTitle
         }
         backHref={game ? routes.playthroughs(game.id) : routes.games}
