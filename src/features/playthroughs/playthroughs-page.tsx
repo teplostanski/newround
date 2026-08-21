@@ -26,7 +26,7 @@ export const PlaythroughsPage = () => {
 
   const gamePlaythroughs = playthroughs
     .filter((playthrough) => playthrough.gameId === game.id)
-    .toSorted((left, right) => left.sequenceNumber - right.sequenceNumber);
+    .toSorted((left, right) => right.sequenceNumber - left.sequenceNumber);
 
   return (
     <PlaythroughListScreen gameId={game.id} playthroughs={gamePlaythroughs} />

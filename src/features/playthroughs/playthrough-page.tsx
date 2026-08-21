@@ -28,7 +28,7 @@ export const PlaythroughPage = () => {
   const playthrough = findById(playthroughs, playthroughId);
   const playthroughRounds = rounds
     .filter((round) => round.playthroughId === playthroughId)
-    .toSorted((left, right) => left.sequenceNumber - right.sequenceNumber);
+    .toSorted((left, right) => right.sequenceNumber - left.sequenceNumber);
 
   useEffect(() => {
     if (!isReady) {

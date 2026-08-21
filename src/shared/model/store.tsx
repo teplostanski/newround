@@ -48,8 +48,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       const [loadedGames, loadedPlaythroughs, loadedRounds] = await Promise.all(
         [
           db.games.orderBy('createdAt').reverse().toArray(),
-          db.playthroughs.toArray(),
-          db.rounds.toArray(),
+          db.playthroughs.orderBy('createdAt').reverse().toArray(),
+          db.rounds.orderBy('createdAt').reverse().toArray(),
         ],
       );
 
@@ -90,7 +90,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     };
 
     setGames((current) => [game, ...current]);
-    setPlaythroughs((current) => [...current, playthrough]);
+    setPlaythroughs((current) => [playthrough, ...current]);
     void db.transaction('rw', db.games, db.playthroughs, async () => {
       await db.games.add(game);
       await db.playthroughs.add(playthrough);
@@ -124,7 +124,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: now,
       };
 
-      setRounds((current) => [...current, round]);
+      setRounds((current) => [round, ...current]);
       void db.rounds.add(round);
 
       return round.id;
