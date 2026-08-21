@@ -24,23 +24,23 @@ const asSpan = (props: ComponentProps<'span'>) => <span {...props} />;
 
 const normalizePath = (pathname: string | null) => {
   if (!pathname || pathname === '/') {
-    return '/games';
+    return '/';
   }
 
-  return pathname.replace(/\/$/, '') || '/games';
+  return pathname.replace(/\/$/, '') || '/';
 };
 
 const routeKind = (pathname: string): RouteKind => {
   switch (pathname) {
-    case '/games':
+    case '/':
       return 'games';
-    case '/games/new':
+    case '/game/create':
       return 'newGame';
-    case '/playthroughs':
+    case '/game':
       return 'playthroughs';
-    case '/playthroughs/view':
+    case '/playthrough':
       return 'playthrough';
-    case '/rounds/view':
+    case '/round':
       return 'round';
     default:
       return 'fallback';

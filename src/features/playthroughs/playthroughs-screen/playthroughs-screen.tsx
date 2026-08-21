@@ -30,7 +30,7 @@ const PlaythroughListScreen = ({
   return (
     <div className="screen">
       {playthroughs.length === 0 ? (
-        <p className="empty">Пока нет сессий</p>
+        <p className="empty">Пока нет партий</p>
       ) : (
         <ul className="list">
           {playthroughs.map((playthrough) => (
@@ -48,7 +48,7 @@ const PlaythroughListScreen = ({
                         transitionNames.playthroughTitle(playthrough.id),
                       )}
                     >
-                      Сессия {playthrough.sequenceNumber}
+                      Партия {playthrough.sequenceNumber}
                     </p>
                     <Card.Description>
                       {formatPlaythroughDate(playthrough.createdAt)}

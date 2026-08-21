@@ -73,7 +73,7 @@ const RoundScreen = ({
       </ul>
 
       <Button fullWidth onPress={onFinishRound}>
-        Завершить партию
+        Завершить раунд
       </Button>
     </div>
   );

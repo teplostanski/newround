@@ -75,7 +75,7 @@ const AppShellView = ({
                 >
                   <Link
                     className="iconButton"
-                    href={routes.games}
+                    href={routes.home}
                     aria-label="Главная"
                     title="Главная"
                     transitionTypes={routeTransitionTypes.back}
@@ -124,7 +124,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const playthrough = findById(playthroughs, playthroughId);
   const round = findById(rounds, roundId);
 
-  if (pathname === '/' || pathname === '/games') {
+  if (pathname === '/') {
     return (
       <AppShellView title="Игры" transitionName={transitionNames.pageTitle}>
         {children}
@@ -132,61 +132,61 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     );
   }
 
-  if (pathname === '/games/new') {
+  if (pathname === '/game/create') {
     return (
       <AppShellView
         title="Новая игра"
         transitionName={transitionNames.newGameTitle}
-        backHref={routes.games}
+        backHref={routes.home}
       >
         {children}
       </AppShellView>
     );
   }
 
-  if (pathname === '/playthroughs') {
+  if (pathname === '/game') {
     return (
       <AppShellView
-        title={game?.name ?? 'Сессии'}
+        title={game?.name ?? 'Партии'}
         transitionName={
           gameId ? transitionNames.gameTitle(gameId) : transitionNames.pageTitle
         }
-        backHref={routes.games}
+        backHref={routes.home}
       >
         {children}
       </AppShellView>
     );
   }
 
-  if (pathname === '/playthroughs/view') {
+  if (pathname === '/playthrough') {
     return (
       <AppShellView
         title={
-          playthrough ? `Сессия ${playthrough.sequenceNumber}` : 'Сессия'
+          playthrough ? `Партия ${playthrough.sequenceNumber}` : 'Партия'
         }
         transitionName={
           playthroughId
             ? transitionNames.playthroughTitle(playthroughId)
             : transitionNames.pageTitle
         }
-        backHref={game ? routes.playthroughs(game.id) : routes.games}
+        backHref={game ? routes.game(game.id) : routes.home}
       >
         {children}
       </AppShellView>
     );
   }
 
-  if (pathname === '/rounds/view') {
+  if (pathname === '/round') {
     const backHref =
       game && playthrough
         ? routes.playthrough(game.id, playthrough.id)
         : game
-          ? routes.playthroughs(game.id)
-          : routes.games;
+          ? routes.game(game.id)
+          : routes.home;
 
     return (
       <AppShellView
-        title={round ? `Партия ${round.sequenceNumber}` : 'Партия'}
+        title={round ? `Раунд ${round.sequenceNumber}` : 'Раунд'}
         transitionName={
           roundId
             ? transitionNames.roundTitle(roundId)
@@ -203,7 +203,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
     <AppShellView
       title="newround"
       transitionName={transitionNames.pageTitle}
-      backHref={routes.games}
+      backHref={routes.home}
     >
       {children}
     </AppShellView>

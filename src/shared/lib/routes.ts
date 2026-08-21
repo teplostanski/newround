@@ -7,11 +7,11 @@ const withQuery = (
 };
 
 export const routes = {
-  games: '/games',
-  newGame: '/games/new',
-  playthroughs: (gameId: string) => withQuery('/playthroughs', { gameId }),
+  home: '/',
+  gameCreate: '/game/create',
+  game: (gameId: string) => withQuery('/game', { gameId }),
   playthrough: (gameId: string, playthroughId: string) =>
-    withQuery('/playthroughs/view', { gameId, playthroughId }),
+    withQuery('/playthrough', { gameId, playthroughId }),
   round: (gameId: string, playthroughId: string, roundId: string) =>
-    withQuery('/rounds/view', { gameId, playthroughId, roundId }),
+    withQuery('/round', { gameId, playthroughId, roundId }),
 };

@@ -25,12 +25,12 @@ export const RoundPage = () => {
     }
 
     if (!game) {
-      router.replace(routes.games);
+      router.replace(routes.home);
       return;
     }
 
     if (!playthrough) {
-      router.replace(routes.playthroughs(game.id));
+      router.replace(routes.game(game.id));
       return;
     }
 

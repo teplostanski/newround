@@ -49,11 +49,11 @@ const PlaythroughScreen = ({
       </Card>
 
       <Button fullWidth onPress={onStartRound}>
-        Начать партию
+        Начать раунд
       </Button>
 
       {rounds.length === 0 ? (
-        <p className="empty">Партий пока нет — начните первую</p>
+        <p className="empty">Раундов пока нет — начните первый</p>
       ) : (
         <ul className="list">
           {rounds.map((round) => (
@@ -71,7 +71,7 @@ const PlaythroughScreen = ({
                         transitionNames.roundTitle(round.id),
                       )}
                     >
-                      Партия {round.sequenceNumber}
+                      Раунд {round.sequenceNumber}
                     </p>
                     <Card.Description>
                       {formatRoundSummary(game.players, round.scores)}

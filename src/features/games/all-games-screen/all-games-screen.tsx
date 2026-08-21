@@ -18,7 +18,7 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
   return (
     <div className="screen">
       <Link
-        href={routes.newGame}
+        href={routes.gameCreate}
         className="ctaLink"
         transitionTypes={routeTransitionTypes.forward}
       >
@@ -34,7 +34,7 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
           {games.map((game) => (
             <li key={game.id}>
               <Link
-                href={routes.playthroughs(game.id)}
+                href={routes.game(game.id)}
                 className="listButton"
                 transitionTypes={routeTransitionTypes.forward}
               >

@@ -16,7 +16,7 @@ export const PlaythroughsPage = () => {
 
   useEffect(() => {
     if (isReady && !game) {
-      router.replace(routes.games);
+      router.replace(routes.home);
     }
   }, [game, isReady, router]);
 

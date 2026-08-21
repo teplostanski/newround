@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && serwist build",
-    "preview": "serve out",
+    "preview": "serve out -l 3001",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },

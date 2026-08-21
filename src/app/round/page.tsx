@@ -5,7 +5,7 @@ import { RouteTransition } from '@/shared/ui/route-transition/route-transition';
 import { RoundPage } from '@/features/rounds/round-page';
 
 export const metadata: Metadata = {
-  title: 'Партия',
+  title: 'Раунд',
 };
 
 export default function CurrentRoundPage() {
