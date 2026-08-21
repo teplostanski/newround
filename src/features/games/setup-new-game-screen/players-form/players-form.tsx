@@ -1,9 +1,10 @@
 'use client';
 
 import { useId, useState, type SubmitEvent } from 'react';
-import type WaInput from '@awesome.me/webawesome/dist/components/input/input.js';
-import type { Player } from '@/shared/model/game';
+import { Button, Chip, Fieldset, Input, Separator } from '@heroui/react';
 import { Plus } from '@gravity-ui/icons';
+import type { Player } from '@/shared/model/game';
+import { getPlayerTone } from '@/shared/lib/player-tone';
 
 type PlayersFormProps = {
   players: Player[];
@@ -29,54 +30,53 @@ const PlayersForm = ({ players, onAddPlayer }: PlayersFormProps) => {
   };
 
   return (
-    <fieldset className="fieldset">
-      <legend className="legend">Игроки</legend>
+    <Fieldset>
+      <Fieldset.Legend>Игроки</Fieldset.Legend>
 
+      <Separator className="mt-2" />
+      
       <form className="row" onSubmit={handleSubmit}>
         <label className="visuallyHidden" htmlFor={playerNameId}>
           Имя игрока
         </label>
 
-        <wa-input
+        <Input
           id={playerNameId}
-          className="wa-grow"
+          className="min-w-0 flex-1"
           type="text"
           placeholder="Имя игрока"
           value={playerName}
-          onInput={(event) =>
-            setPlayerName((event.currentTarget as WaInput).value ?? '')
-          }
+          onChange={(event) => setPlayerName(event.target.value)}
         />
 
-        <wa-button
-          className="iconButton"
+        <Button
+          isIconOnly
           type="submit"
-          variant="neutral"
-          appearance="outlined"
+          variant="secondary"
+          className="iconButton"
           aria-label={addPlayerLabel}
-          title={addPlayerLabel}
         >
-          <Plus
-            width={20}
-            height={20}
-            aria-hidden="true"
-            focusable="false"
-          />
-        </wa-button>
+          <Plus width={20} height={20} aria-hidden="true" focusable="false" />
+        </Button>
       </form>
 
       {players.length === 0 ? (
         <p className="empty">Добавьте хотя бы одного игрока</p>
       ) : (
-        <ol className="list">
-          {players.map((player) => (
-            <li className="item" key={player.id}>
+        <div className="flex flex-wrap gap-2">
+          {players.map((player, index) => (
+            <Chip
+              key={player.id}
+              color={getPlayerTone(index)}
+              variant="soft"
+              size='lg'
+            >
               {player.name}
-            </li>
+            </Chip>
           ))}
-        </ol>
+        </div>
       )}
-    </fieldset>
+    </Fieldset>
   );
 };
 

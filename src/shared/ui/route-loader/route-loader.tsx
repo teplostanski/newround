@@ -1,7 +1,8 @@
 'use client';
 
+import { Card, Fieldset, Skeleton } from '@heroui/react';
 import { usePathname } from 'next/navigation';
-import { ViewTransition } from 'react';
+import { ViewTransition, type ComponentProps } from 'react';
 import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
 
@@ -18,6 +19,8 @@ type RouteKind =
   | 'fallback';
 
 const LIST_KEYS = [0, 1, 2] as const;
+
+const asSpan = (props: ComponentProps<'span'>) => <span {...props} />;
 
 const normalizePath = (pathname: string | null) => {
   if (!pathname || pathname === '/') {
@@ -59,60 +62,66 @@ const HeaderSkeleton = ({ kind }: { kind: RouteKind }) => {
     <header className={appStyles.header}>
       <div className={appStyles.headerBar}>
         <nav className={appStyles.nav} aria-hidden="true">
-          {showNav && <span className={`${styles.bone} ${styles.icon}`} />}
-          {showNav && <span className={`${styles.bone} ${styles.icon}`} />}
+          {showNav && <Skeleton className="size-11" />}
+          {showNav && <Skeleton className="size-11" />}
         </nav>
         <div className={appStyles.actions}>
-          <span className={`${styles.bone} ${styles.icon}`} />
-          <span className={`${styles.bone} ${styles.icon}`} />
+          <Skeleton className="size-11" />
+          <Skeleton className="size-11" />
         </div>
       </div>
-      <span className={`${styles.bone} ${styles.brand} ${brandWidth}`} />
+      <Skeleton className={`h-8 ${brandWidth}`} />
     </header>
   );
 };
 
+const ListSkeleton = ({ metaWide = false }: { metaWide?: boolean }) => (
+  <ul className="list">
+    {LIST_KEYS.map((key) => (
+      <li key={key}>
+        <Card className="w-full">
+          <Card.Header>
+            <Card.Title>
+              <Skeleton
+                className="inline-block h-4 w-[55%]"
+                render={asSpan}
+              />
+            </Card.Title>
+            <Card.Description>
+              <Skeleton
+                className={`inline-block h-3.5 ${metaWide ? 'w-[70%]' : 'w-[35%]'}`}
+                render={asSpan}
+              />
+            </Card.Description>
+          </Card.Header>
+        </Card>
+      </li>
+    ))}
+  </ul>
+);
+
 const GamesContent = () => (
   <div className="screen">
-    <span className={`${styles.bone} ${styles.control}`} />
-    <ul className="list">
-      {LIST_KEYS.map((key) => (
-        <li className="item itemStacked" key={key}>
-          <span className={`${styles.bone} ${styles.title}`} />
-          <span className={`${styles.bone} ${styles.meta}`} />
-        </li>
-      ))}
-    </ul>
+    <Skeleton className="buttonBone" />
+    <ListSkeleton />
   </div>
 );
 
 const SessionsContent = () => (
   <div className="screen">
-    <ul className="list">
-      {LIST_KEYS.map((key) => (
-        <li className="item itemStacked" key={key}>
-          <span className={`${styles.bone} ${styles.title}`} />
-          <span className={`${styles.bone} ${styles.metaWide}`} />
-        </li>
-      ))}
-    </ul>
+    <ListSkeleton metaWide />
   </div>
 );
 
 const SessionContent = () => (
   <div className="screen">
-    <div className={styles.summary}>
-      <span className={`${styles.bone} ${styles.summaryLine}`} />
-    </div>
-    <span className={`${styles.bone} ${styles.control}`} />
-    <ul className="list">
-      {LIST_KEYS.map((key) => (
-        <li className="item itemStacked" key={key}>
-          <span className={`${styles.bone} ${styles.title}`} />
-          <span className={`${styles.bone} ${styles.metaWide}`} />
-        </li>
-      ))}
-    </ul>
+    <Card className="w-full">
+      <Card.Content>
+        <Skeleton className="h-4 w-[88%]" />
+      </Card.Content>
+    </Card>
+    <Skeleton className="h-11 w-full" />
+    <ListSkeleton metaWide />
   </div>
 );
 
@@ -120,38 +129,37 @@ const RoundContent = () => (
   <div className="screen">
     <ul className={`list ${styles.roundList}`}>
       {LIST_KEYS.map((key) => (
-        <li className={styles.roundCard} key={key}>
-          <div className={styles.player}>
-            <span className={`${styles.bone} ${styles.avatar}`} />
-            <span className={`${styles.bone} ${styles.playerName}`} />
-          </div>
-          <div className={styles.stepper}>
-            <span className={`${styles.bone} ${styles.stepperCell}`} />
-            <span className={`${styles.bone} ${styles.stepperValue}`} />
-            <span className={`${styles.bone} ${styles.stepperCell}`} />
-          </div>
+        <li key={key}>
+          <Card className="w-full bg-background">
+            <Skeleton className="h-7 w-[40%]" />
+            <div className={styles.roundStepper}>
+              <Skeleton className="h-11" />
+              <Skeleton className="h-11" />
+              <Skeleton className="h-11" />
+            </div>
+          </Card>
         </li>
       ))}
     </ul>
-    <span className={`${styles.bone} ${styles.control}`} />
+    <Skeleton className="h-11 w-full" />
   </div>
 );
 
 const NewGameContent = () => (
   <div className="screen">
     <div className="stack">
-      <span className={`${styles.bone} ${styles.control}`} />
-      <fieldset className="fieldset">
-        <div className={styles.legend}>
-          <span className={`${styles.bone} ${styles.legendText}`} />
-        </div>
+      <Skeleton className="h-11 w-full" />
+      <Fieldset>
+        <Fieldset.Legend>
+          <Skeleton className="inline-block h-4 w-24" render={asSpan} />
+        </Fieldset.Legend>
         <div className="row">
-          <span className={`${styles.bone} ${styles.controlGrow}`} />
-          <span className={`${styles.bone} ${styles.icon}`} />
+          <Skeleton className="h-11 min-w-0 flex-1" />
+          <Skeleton className="size-11 shrink-0" />
         </div>
-        <span className={`${styles.bone} ${styles.emptyLine}`} />
-      </fieldset>
-      <span className={`${styles.bone} ${styles.control}`} />
+        <Skeleton className="h-4 w-[70%]" />
+      </Fieldset>
+      <Skeleton className="h-11 w-full" />
     </div>
   </div>
 );
@@ -185,14 +193,14 @@ export const RouteLoader = ({ fullscreen = false }: RouteLoaderProps) => {
       aria-live="polite"
     >
       {fullscreen ? (
-        <div className={`${appStyles.shell} ${styles.tokens}`} aria-hidden="true">
+        <div className={appStyles.shell} aria-hidden="true">
           <HeaderSkeleton kind={kind} />
           <div className={appStyles.main}>
             <ContentSkeleton kind={kind} />
           </div>
         </div>
       ) : (
-        <div className={styles.tokens} aria-hidden="true">
+        <div aria-hidden="true">
           <ContentSkeleton kind={kind} />
         </div>
       )}

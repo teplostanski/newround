@@ -1,22 +1,25 @@
 'use client';
 
-import { ViewTransition, type ReactNode } from 'react';
+import { I18nProvider } from '@heroui/react';
+import type { ReactNode } from 'react';
 import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
 import { useStore } from '@/shared/model/store';
 import { AppShell } from '../app-shell/app-shell';
 import { InitialLoader } from '../route-loader/route-loader';
 
+const FORCE_SKELETON = false;
+
 export const ClientApp = ({ children }: { children: ReactNode }) => {
   const isHydrated = useIsHydrated();
   const { isReady } = useStore();
 
-  if (!isHydrated || !isReady) {
+  if (FORCE_SKELETON || !isHydrated || !isReady) {
     return <InitialLoader />;
   }
 
   return (
-    <ViewTransition enter="app-screen-enter" default="none">
+    <I18nProvider locale="ru-RU">
       <AppShell>{children}</AppShell>
-    </ViewTransition>
+    </I18nProvider>
   );
 };

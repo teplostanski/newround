@@ -1,8 +1,8 @@
 'use client';
 
-import type { CSSProperties } from 'react';
+import { Button, Card, Chip } from '@heroui/react';
 import type { Player, ScoreMap } from '@/shared/model/game';
-import { getPlayerCardColor } from './player-card-colors';
+import { getPlayerTone } from '@/shared/lib/player-tone';
 import styles from './round-screen.module.css';
 
 type RoundScreenProps = {
@@ -11,9 +11,6 @@ type RoundScreenProps = {
   onChangeScore: (id: string, newValue: number) => void;
   onFinishRound: () => void;
 };
-
-const getInitial = (name: string) =>
-  name.trim().charAt(0).toLocaleUpperCase('ru') || '?';
 
 const RoundScreen = ({
   players,
@@ -37,56 +34,47 @@ const RoundScreen = ({
     <div className="screen">
       <ul className={`list ${styles.list}`}>
         {players.map((player, index) => (
-          <li className={styles.card} key={player.id}>
-            <div className={styles.player}>
-              <span
-                className={styles.avatar}
-                style={
-                  {
-                    '--avatar-color': getPlayerCardColor(index),
-                  } as CSSProperties
-                }
-                aria-hidden="true"
-              >
-                {getInitial(player.name)}
-              </span>
-              <p className="title">{player.name}</p>
-            </div>
-            <div className={styles.stepper}>
-              <button
-                className={styles.stepperBtn}
-                type="button"
-                disabled={scores[player.id] === 0}
-                aria-label={`Уменьшить счёт ${player.name}`}
-                onClick={() => onChangeScore(player.id, decScore(player.id))}
-              >
-                −
-              </button>
-              <output className={styles.stepperValue}>
-                {scores[player.id]}
-              </output>
-              <button
-                className={styles.stepperBtn}
-                type="button"
-                aria-label={`Увеличить счёт ${player.name}`}
-                onClick={() => onChangeScore(player.id, incScore(player.id))}
-              >
-                +
-              </button>
-            </div>
+          <li key={player.id}>
+            <Card className={`w-full ${styles.scoreCard}`}>
+              <Chip color={getPlayerTone(index)} variant="soft" size="lg">
+                {player.name}
+              </Chip>
+              <div className={styles.stepper}>
+                <Button
+                  variant="ghost"
+                  className={styles.stepperTile}
+                  isDisabled={scores[player.id] === 0}
+                  aria-label={`Уменьшить счёт ${player.name}`}
+                  onPress={() =>
+                    onChangeScore(player.id, decScore(player.id))
+                  }
+                >
+                  −
+                </Button>
+                <output
+                  className={`${styles.stepperTile} ${styles.stepperValue}`}
+                >
+                  {scores[player.id]}
+                </output>
+                <Button
+                  variant="ghost"
+                  className={styles.stepperTile}
+                  aria-label={`Увеличить счёт ${player.name}`}
+                  onPress={() =>
+                    onChangeScore(player.id, incScore(player.id))
+                  }
+                >
+                  +
+                </Button>
+              </div>
+            </Card>
           </li>
         ))}
       </ul>
 
-      <wa-button
-        className="wa-block"
-        type="button"
-        variant="brand"
-        appearance="accent"
-        onClick={onFinishRound}
-      >
+      <Button fullWidth onPress={onFinishRound}>
         Завершить партию
-      </wa-button>
+      </Button>
     </div>
   );
 };

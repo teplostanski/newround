@@ -52,7 +52,7 @@ const AppShellView = ({
                   default="none"
                 >
                   <Link
-                    className={styles.iconLink}
+                    className="iconButton"
                     href={backHref}
                     aria-label="Назад"
                     title="Назад"
@@ -74,7 +74,7 @@ const AppShellView = ({
                   default="none"
                 >
                   <Link
-                    className={styles.iconLink}
+                    className="iconButton"
                     href={routes.games}
                     aria-label="Главная"
                     title="Главная"
@@ -92,8 +92,8 @@ const AppShellView = ({
             )}
           </nav>
           <div className={styles.actions}>
-            <InstallApp className="iconButton" />
-            <FullscreenToggle className="iconButton" />
+            <InstallApp />
+            <FullscreenToggle />
           </div>
         </div>
         <h1
@@ -143,7 +143,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       </AppShellView>
     );
   }
-  
+
   if (pathname === '/migration') {
     return (
       <AppShellView

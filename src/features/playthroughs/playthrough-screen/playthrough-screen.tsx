@@ -1,11 +1,13 @@
 'use client';
 
-import cn from 'classnames';
+import { Button, Card } from '@heroui/react';
+import Link from 'next/link';
+import { routes } from '@/shared/lib/routes';
 import {
+  routeTransitionTypes,
   titleTransitionStyle,
   transitionNames,
 } from '@/shared/lib/view-transitions';
-import styles from './playthrough-screen.module.css';
 import type { Game, Playthrough, Round, Scores } from '@/shared/model/types';
 
 type PlaythroughScreenProps = {
@@ -13,7 +15,6 @@ type PlaythroughScreenProps = {
   playthrough: Playthrough;
   rounds: Round[];
   onStartRound: () => void;
-  onOpenRound: (roundId: string) => void;
 };
 
 const formatPlaythroughDate = (createdAt: number) =>
@@ -34,46 +35,50 @@ const PlaythroughScreen = ({
   playthrough,
   rounds,
   onStartRound,
-  onOpenRound,
 }: PlaythroughScreenProps) => {
   return (
     <div className="screen">
-      <p className={styles.summary}>
-        {game.name} · {formatPlaythroughDate(playthrough.createdAt)} ·{' '}
-        {game.players.length} {game.players.length === 1 ? 'игрок' : 'игроков'}
-      </p>
+      <Card className="w-full">
+        <Card.Content>
+          <p className="text-muted m-0 text-[0.95rem]">
+            {game.name} · {formatPlaythroughDate(playthrough.createdAt)} ·{' '}
+            {game.players.length}{' '}
+            {game.players.length === 1 ? 'игрок' : 'игроков'}
+          </p>
+        </Card.Content>
+      </Card>
 
-      <wa-button
-        className="wa-block"
-        type="button"
-        variant="brand"
-        appearance="accent"
-        onClick={onStartRound}
-      >
+      <Button fullWidth onPress={onStartRound}>
         Начать партию
-      </wa-button>
+      </Button>
 
       {rounds.length === 0 ? (
         <p className="empty">Партий пока нет — начните первую</p>
       ) : (
         <ul className="list">
           {rounds.map((round) => (
-            <li
-              className={cn('item', 'itemStacked', styles.linkItem)}
-              key={round.id}
-              onClick={() => onOpenRound(round.id)}
-            >
-              <p
-                className="title"
-                style={titleTransitionStyle(
-                  transitionNames.roundTitle(round.id),
-                )}
+            <li key={round.id}>
+              <Link
+                href={routes.round(game.id, playthrough.id, round.id)}
+                className="listButton"
+                transitionTypes={routeTransitionTypes.forward}
               >
-                Партия {round.sequenceNumber}
-              </p>
-              <p className={styles.scoreSummary}>
-                {formatRoundSummary(game.players, round.scores)}
-              </p>
+                <Card className="w-full">
+                  <Card.Header>
+                    <p
+                      className="titleFly"
+                      style={titleTransitionStyle(
+                        transitionNames.roundTitle(round.id),
+                      )}
+                    >
+                      Партия {round.sequenceNumber}
+                    </p>
+                    <Card.Description>
+                      {formatRoundSummary(game.players, round.scores)}
+                    </Card.Description>
+                  </Card.Header>
+                </Card>
+              </Link>
             </li>
           ))}
         </ul>

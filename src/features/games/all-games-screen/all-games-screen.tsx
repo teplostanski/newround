@@ -1,68 +1,72 @@
 'use client';
 
-import cn from 'classnames';
+import { buttonVariants, Card } from '@heroui/react';
+import Link from 'next/link';
 import type { Game } from '@/shared/model/types';
-import { titleTransitionStyle, transitionNames } from '@/shared/lib/view-transitions';
-import styles from './all-games-screen.module.css';
+import { routes } from '@/shared/lib/routes';
+import {
+  routeTransitionTypes,
+  titleTransitionStyle,
+  transitionNames,
+} from '@/shared/lib/view-transitions';
 
 type AllGamesScreenProps = {
   games: Game[];
-  onCreateNewGame: () => void;
-  onOpenGame: (id: string) => void;
-  onOpenMigration: () => void;
 };
 
-const AllGamesScreen = ({
-  games,
-  onCreateNewGame,
-  onOpenGame,
-  onOpenMigration,
-}: AllGamesScreenProps) => {
+const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
   return (
     <div className="screen">
-      <wa-button
-        className="wa-block"
-        type="button"
-        variant="brand"
-        appearance="accent"
-        onClick={onCreateNewGame}
+      <Link
+        href={routes.newGame}
+        className="ctaLink"
+        transitionTypes={routeTransitionTypes.forward}
       >
         <span style={titleTransitionStyle(transitionNames.newGameTitle)}>
           Новая игра
         </span>
-      </wa-button>
+      </Link>
 
       {games.length === 0 ? (
         <>
           <p className="empty">Пока нет игр — создайте первую</p>
-          <wa-button
-            className="wa-block"
-            type="button"
-            variant="neutral"
-            appearance="outlined"
-            onClick={onOpenMigration}
+          <Link
+            href={routes.migration}
+            className={buttonVariants({
+              fullWidth: true,
+              variant: 'secondary',
+            })}
+            transitionTypes={routeTransitionTypes.forward}
           >
             Перенести старые данные
-          </wa-button>
+          </Link>
         </>
       ) : (
         <ul className="list">
           {games.map((game) => (
-            <li
-              className={cn('item', 'itemStacked', styles.linkItem)}
-              key={game.id}
-              onClick={() => onOpenGame(game.id)}
-            >
-              <p
-                className="title"
-                style={titleTransitionStyle(transitionNames.gameTitle(game.id))}
+            <li key={game.id}>
+              <Link
+                href={routes.playthroughs(game.id)}
+                className="listButton"
+                transitionTypes={routeTransitionTypes.forward}
               >
-                {game.name}
-              </p>
-              <p className="meta">
-                {game.players.length}{' '}
-                {game.players.length === 1 ? 'игрок' : 'игроков'}
-              </p>
+                <Card className="w-full">
+                  <Card.Header>
+                    <p
+                      className="titleFly"
+                      style={titleTransitionStyle(
+                        transitionNames.gameTitle(game.id),
+                      )}
+                    >
+                      {game.name}
+                    </p>
+                    <Card.Description>
+                      {game.players.length}{' '}
+                      {game.players.length === 1 ? 'игрок' : 'игроков'}
+                    </Card.Description>
+                  </Card.Header>
+                </Card>
+              </Link>
             </li>
           ))}
         </ul>

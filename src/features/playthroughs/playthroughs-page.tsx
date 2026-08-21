@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { PlaythroughListScreen } from '@/features/playthroughs/playthroughs-screen/playthroughs-screen';
 import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
 import { routes } from '@/shared/lib/routes';
-import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
 
 export const PlaythroughsPage = () => {
@@ -30,13 +29,6 @@ export const PlaythroughsPage = () => {
     .toSorted((left, right) => left.sequenceNumber - right.sequenceNumber);
 
   return (
-    <PlaythroughListScreen
-      playthroughs={gamePlaythroughs}
-      onOpenPlaythrough={(playthroughId) =>
-        router.push(routes.playthrough(game.id, playthroughId), {
-          transitionTypes: routeTransitionTypes.forward,
-        })
-      }
-    />
+    <PlaythroughListScreen gameId={game.id} playthroughs={gamePlaythroughs} />
   );
 };

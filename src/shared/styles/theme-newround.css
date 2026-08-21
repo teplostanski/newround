@@ -1,92 +1,170 @@
-@layer wa-theme-overrides {
-  :where(:root),
-  .wa-theme-default,
-  .wa-light,
-  .wa-dark .wa-invert {
-    color-scheme: light;
+:root,
+.light,
+[data-theme="light"] {
+  color-scheme: light;
 
-    --wa-color-surface-raised: #f7f9fb;
-    --wa-color-surface-default: #f7f9fb;
-    --wa-color-surface-lowered: #e8edf2;
-    --wa-color-surface-border: #c5d0db;
+  --paper: #f7f9fb;
+  --page: #e8edf2;
+  --wash: #d7e4ef;
+  --line: #c5d0db;
+  --muted: #5c6b7a;
+  --ink: #1a2332;
 
-    --wa-color-text-normal: #1a2332;
-    --wa-color-text-quiet: #5c6b7a;
-    --wa-color-text-link: #2f6f5e;
+  --brand-95: #f4faf7;
+  --brand-90: #e3f0ea;
+  --brand-80: #c5e0d4;
+  --brand-70: #9ec9b8;
+  --brand-60: #6fa896;
+  --brand-50: #2f6f5e;
+  --brand-40: #275c4e;
+  --brand-30: #1f4a3f;
+  --brand-20: #16352d;
+  --brand-10: #0e221c;
+  --brand-05: #081410;
 
-    --wa-color-focus: color-mix(in srgb, #2f6f5e 45%, white);
-    --wa-focus-ring-width: 0.125rem;
-    --wa-focus-ring-offset: 0.0625rem;
-    --wa-focus-ring: var(--wa-focus-ring-style) var(--wa-focus-ring-width)
-      var(--wa-color-focus);
-    --wa-color-overlay-modal: color-mix(in oklab, #1a2332 45%, transparent);
+  --sage: #b8d4c4;
+  --fjord: #a8c0cc;
+  --mauve: #c0bcc4;
 
-    --wa-color-brand-95: #f4faf7;
-    --wa-color-brand-90: #e3f0ea;
-    --wa-color-brand-80: #c5e0d4;
-    --wa-color-brand-70: #9ec9b8;
-    --wa-color-brand-60: #6fa896;
-    --wa-color-brand-50: #2f6f5e;
-    --wa-color-brand-40: #275c4e;
-    --wa-color-brand-30: #1f4a3f;
-    --wa-color-brand-20: #16352d;
-    --wa-color-brand-10: #0e221c;
-    --wa-color-brand-05: #081410;
+  --white: #ffffff;
+  --black: #000000;
+  --snow: var(--brand-95);
+  --eclipse: var(--ink);
 
-    --wa-color-brand-fill-quiet: var(--wa-color-brand-95);
-    --wa-color-brand-fill-normal: var(--wa-color-brand-90);
-    --wa-color-brand-fill-loud: var(--wa-color-brand-50);
-    --wa-color-brand-border-quiet: var(--wa-color-brand-90);
-    --wa-color-brand-border-normal: var(--wa-color-brand-80);
-    --wa-color-brand-border-loud: var(--wa-color-brand-60);
-    --wa-color-brand-on-quiet: var(--wa-color-brand-40);
-    --wa-color-brand-on-normal: var(--wa-color-brand-30);
-    --wa-color-brand-on-loud: #f4faf7;
+  --background: var(--page);
+  --foreground: var(--ink);
+  --background-secondary: var(--wash);
+  --background-tertiary: var(--line);
+  --background-inverse: var(--ink);
 
-    --wa-color-neutral-fill-quiet: #f7f9fb;
-    --wa-color-neutral-fill-normal: #e8edf2;
-    --wa-color-neutral-fill-loud: #1a2332;
-    --wa-color-neutral-border-quiet: #e8edf2;
-    --wa-color-neutral-border-normal: #c5d0db;
-    --wa-color-neutral-border-loud: #c5d0db;
-    --wa-color-neutral-on-quiet: #5c6b7a;
-    --wa-color-neutral-on-normal: #1a2332;
-    --wa-color-neutral-on-loud: #f7f9fb;
+  --surface: var(--paper);
+  --surface-foreground: var(--ink);
+  --surface-hover: color-mix(in oklab, var(--paper) 92%, var(--ink) 8%);
+  --surface-secondary: var(--page);
+  --surface-secondary-foreground: var(--ink);
+  --surface-tertiary: var(--line);
+  --surface-tertiary-foreground: var(--ink);
 
-    --wa-font-family-body: inherit;
-    --wa-font-family-heading: inherit;
-    --wa-font-weight-semibold: 600;
+  --overlay: var(--paper);
+  --overlay-foreground: var(--ink);
 
-    --wa-border-radius-scale: 1.35;
-    --wa-form-control-border-radius: 1rem;
-    --wa-panel-border-radius: 1rem;
+  --default: var(--page);
+  --default-foreground: var(--ink);
+  --default-hover: var(--wash);
+  --default-soft: var(--paper);
+  --default-soft-foreground: var(--muted);
+  --default-soft-hover: var(--page);
 
-    --wa-form-control-background-color: var(--wa-color-surface-default);
-    --wa-form-control-border-color: var(--wa-color-surface-border);
+  --accent: var(--brand-50);
+  --accent-foreground: var(--brand-95);
+  --accent-hover: var(--brand-40);
+  --accent-soft: var(--brand-90);
+  --accent-soft-foreground: var(--brand-40);
+  --accent-soft-hover: var(--brand-80);
 
-    --bg: var(--wa-color-surface-lowered);
-    --surface: var(--wa-color-surface-default);
-    --ink: var(--wa-color-text-normal);
-    --muted: var(--wa-color-text-quiet);
-    --line: var(--wa-color-surface-border);
-    --accent: var(--wa-color-brand-fill-loud);
-    --accent-ink: var(--wa-color-brand-on-loud);
-    --danger-soft: #d9e2ea;
-    --radius: 1rem;
+  --success: color-mix(in srgb, var(--sage) 42%, var(--ink));
+  --success-foreground: var(--brand-95);
+  --success-hover: color-mix(in srgb, var(--sage) 32%, var(--ink));
+  --success-soft: var(--sage);
+  --success-soft-foreground: var(--ink);
+  --success-soft-hover: color-mix(in srgb, var(--sage) 88%, var(--ink));
+
+  --warning: color-mix(in srgb, var(--fjord) 42%, var(--ink));
+  --warning-foreground: var(--paper);
+  --warning-hover: color-mix(in srgb, var(--fjord) 32%, var(--ink));
+  --warning-soft: var(--fjord);
+  --warning-soft-foreground: var(--ink);
+  --warning-soft-hover: color-mix(in srgb, var(--fjord) 88%, var(--ink));
+
+  --danger: color-mix(in srgb, var(--mauve) 42%, var(--ink));
+  --danger-foreground: var(--paper);
+  --danger-hover: color-mix(in srgb, var(--mauve) 32%, var(--ink));
+  --danger-soft: var(--mauve);
+  --danger-soft-foreground: var(--ink);
+  --danger-soft-hover: color-mix(in srgb, var(--mauve) 88%, var(--ink));
+
+  --field-background: var(--paper);
+  --field-foreground: var(--ink);
+  --field-placeholder: var(--muted);
+  --field-border: var(--line);
+  --field-border-width: 1px;
+  --field-hover: var(--page);
+  --field-focus: var(--paper);
+  --field-border-hover: color-mix(in oklab, var(--line) 80%, var(--ink) 20%);
+  --field-border-focus: var(--brand-60);
+
+  --segment: var(--paper);
+  --segment-foreground: var(--ink);
+
+  --border: var(--line);
+  --border-secondary: color-mix(in oklab, var(--paper) 78%, var(--ink) 22%);
+  --border-tertiary: color-mix(in oklab, var(--paper) 66%, var(--ink) 34%);
+  --separator: var(--line);
+  --separator-secondary: color-mix(in oklab, var(--paper) 85%, var(--ink) 15%);
+  --separator-tertiary: color-mix(in oklab, var(--paper) 81%, var(--ink) 19%);
+
+  --focus: color-mix(in srgb, var(--brand-50) 45%, white);
+  --link: var(--brand-50);
+  --backdrop: color-mix(in oklab, var(--ink) 45%, transparent);
+  --ring-offset-width: 1px;
+
+  --radius: 1rem;
+  --field-radius: 1rem;
+
+  --scrollbar-gutter: stable;
+  --scrollbar-thumb: color-mix(in oklch, var(--ink) 15%, transparent);
+  --scrollbar-track: transparent;
+  --scrollbar: var(--scrollbar-thumb);
+
+  --bg: var(--page);
+  --accent-ink: var(--brand-95);
+
+  --surface-shadow: none;
+  --overlay-shadow:
+    0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
+  --field-shadow: none;
+  --skeleton-animation: shimmer;
+}
+
+@layer components {
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
   }
-}
 
-wa-button.wa-block {
-  display: block;
-  width: 100%;
-}
+  .skeleton {
+    border-radius: var(--radius);
+  }
 
-wa-button.wa-block::part(button) {
-  width: 100%;
-  justify-content: center;
-}
+  .card__title {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
 
-wa-input.wa-grow {
-  flex: 1;
-  min-width: 0;
+  .button {
+    height: 2.75rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+  }
+
+  .button--icon-only {
+    width: 2.75rem;
+  }
+
+  .input {
+    height: 2.75rem;
+    border-radius: var(--radius);
+    font-size: 1rem;
+  }
+
+  .button:focus-visible:not(:focus),
+  .button[data-focus-visible="true"],
+  .input:focus,
+  .input[data-focused="true"],
+  .input[data-focus-visible="true"] {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+    box-shadow: none;
+  }
 }

@@ -1,17 +1,8 @@
 'use client';
 
 import ArrowDownToSquare from '@gravity-ui/icons/ArrowDownToSquare';
-import type WaDialog from '@awesome.me/webawesome/dist/components/dialog/dialog.js';
-import {
-  startTransition,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-  ViewTransition,
-} from 'react';
-import { createPortal } from 'react-dom';
-import cn from 'classnames';
+import { Button, Card, Modal, useOverlayState } from '@heroui/react';
+import { useSyncExternalStore } from 'react';
 import {
   defaultInstallGuide,
   detectInstallGuide,
@@ -80,10 +71,6 @@ const getClientSnapshot = () => true;
 
 const fallbackGuide = defaultInstallGuide;
 
-type InstallAppProps = {
-  className: string;
-};
-
 const InstallGuideContent = ({
   guide,
   installEvent,
@@ -95,33 +82,34 @@ const InstallGuideContent = ({
 }) => {
   if (installEvent || guide.native) {
     return (
-      <wa-button
-        variant="brand"
-        appearance="accent"
-        className="wa-block"
-        disabled={!installEvent}
-        onClick={onInstall}
+      <Button
+        fullWidth
+        isDisabled={!installEvent}
+        onPress={onInstall}
       >
         Установить
-      </wa-button>
+      </Button>
     );
   }
 
   return (
-    <div className={styles.howto}>
-      <p className={styles.howtoTitle}>{guide.title}</p>
-      <ol className={styles.steps}>
-        {guide.items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ol>
-    </div>
+    <Card variant="secondary">
+      <Card.Header>
+        <Card.Title className={styles.howtoTitle}>{guide.title}</Card.Title>
+      </Card.Header>
+      <Card.Content>
+        <ol className={styles.steps}>
+          {guide.items.map((item) => (
+            <li key={item}>{item}</li>
+          ))}
+        </ol>
+      </Card.Content>
+    </Card>
   );
 };
 
-const InstallApp = ({ className }: InstallAppProps) => {
-  const dialogRef = useRef<WaDialog | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+const InstallApp = () => {
+  const overlay = useOverlayState();
   const isClient = useSyncExternalStore(
     subscribeClient,
     getClientSnapshot,
@@ -139,24 +127,6 @@ const InstallApp = ({ className }: InstallAppProps) => {
   );
   const guide = isClient ? detectInstallGuide() : fallbackGuide;
 
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) {
-      return;
-    }
-
-    dialog.open = isOpen;
-
-    const onHide = () => {
-      startTransition(() => setIsOpen(false));
-    };
-
-    dialog.addEventListener('wa-hide', onHide);
-    return () => {
-      dialog.removeEventListener('wa-hide', onHide);
-    };
-  }, [isOpen, isClient]);
-
   if (!isBrowserTab) {
     return null;
   }
@@ -170,65 +140,55 @@ const InstallApp = ({ className }: InstallAppProps) => {
     await installEvent.userChoice;
     cachedInstallEvent = null;
     emitInstall();
-    setIsOpen(false);
+    overlay.close();
   };
-
-  const dialog = isClient
-    ? createPortal(
-        <wa-dialog
-          ref={dialogRef as never}
-          label="Установить newround"
-          light-dismiss
-          className={styles.dialog}
-        >
-          <div className={styles.body}>
-            <p className={styles.lead}>{guide.lead}</p>
-            {guide.benefits ? (
-              <ul className={styles.benefits}>
-                <li>Работает без интернета после первого открытия</li>
-                <li>Открывается с иконки, как обычное приложение</li>
-                <li>Быстрый доступ во время партии</li>
-              </ul>
-            ) : null}
-
-            <InstallGuideContent
-              guide={guide}
-              installEvent={installEvent}
-              onInstall={() => {
-                void handleInstall();
-              }}
-            />
-          </div>
-        </wa-dialog>,
-        document.body,
-      )
-    : null;
 
   return (
     <>
-      <ViewTransition
-        enter="header-action-enter"
-        exit="header-action-exit"
-        default="none"
+      <Button
+        isIconOnly
+        variant="secondary"
+        className={`iconButton ${styles.trigger}`}
+        aria-label="Установить приложение"
+        onPress={overlay.open}
       >
-        <wa-button
-          className={cn(className, styles.trigger)}
-          type="button"
-          variant="neutral"
-          appearance="outlined"
-          aria-label="Установить приложение"
-          title="Установить приложение"
-          onClick={() => setIsOpen(true)}
-        >
-          <ArrowDownToSquare
-            width={20}
-            height={20}
-            aria-hidden="true"
-            focusable="false"
-          />
-        </wa-button>
-      </ViewTransition>
-      {dialog}
+        <ArrowDownToSquare
+          width={20}
+          height={20}
+          aria-hidden="true"
+          focusable="false"
+        />
+      </Button>
+      <Modal.Backdrop
+        isOpen={overlay.isOpen}
+        onOpenChange={overlay.setOpen}
+      >
+        <Modal.Container>
+          <Modal.Dialog className="sm:max-w-88">
+            <Modal.CloseTrigger />
+            <Modal.Header>
+              <Modal.Heading>Установить newround</Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <p className={styles.lead}>{guide.lead}</p>
+              {guide.benefits ? (
+                <ul className={styles.benefits}>
+                  <li>Работает без интернета после первого открытия</li>
+                  <li>Открывается с иконки, как обычное приложение</li>
+                  <li>Быстрый доступ во время партии</li>
+                </ul>
+              ) : null}
+              <InstallGuideContent
+                guide={guide}
+                installEvent={installEvent}
+                onInstall={() => {
+                  void handleInstall();
+                }}
+              />
+            </Modal.Body>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </>
   );
 };

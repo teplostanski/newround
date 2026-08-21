@@ -11,9 +11,9 @@ export const legacyGamesToTables = (
   legacyGames: LegacyGame[],
   now: number,
 ): Output => {
-  let games: Game[] = [];
-  let playthroughs: Playthrough[] = [];
-  let rounds: Round[] = [];
+  const games: Game[] = [];
+  const playthroughs: Playthrough[] = [];
+  const rounds: Round[] = [];
 
   for (const game of legacyGames) {
     games.push({

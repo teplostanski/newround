@@ -1,14 +1,18 @@
-import cn from 'classnames';
+'use client';
+
+import { Card } from '@heroui/react';
+import Link from 'next/link';
+import { routes } from '@/shared/lib/routes';
 import {
+  routeTransitionTypes,
   titleTransitionStyle,
   transitionNames,
 } from '@/shared/lib/view-transitions';
 import type { Playthrough } from '@/shared/model/types';
-import styles from './playthroughs-screen.module.css';
 
 type PlaythroughListScreenProps = {
+  gameId: string;
   playthroughs: Playthrough[];
-  onOpenPlaythrough: (playthroughId: string) => void;
 };
 
 const formatPlaythroughDate = (createdAt: number) =>
@@ -20,8 +24,8 @@ const formatPlaythroughDate = (createdAt: number) =>
   });
 
 const PlaythroughListScreen = ({
+  gameId,
   playthroughs,
-  onOpenPlaythrough,
 }: PlaythroughListScreenProps) => {
   return (
     <div className="screen">
@@ -30,20 +34,28 @@ const PlaythroughListScreen = ({
       ) : (
         <ul className="list">
           {playthroughs.map((playthrough) => (
-            <li
-              className={cn('item', 'itemStacked', styles.linkItem)}
-              key={playthrough.id}
-              onClick={() => onOpenPlaythrough(playthrough.id)}
-            >
-              <p
-                className="title"
-                style={titleTransitionStyle(
-                  transitionNames.sessionTitle(playthrough.id),
-                )}
+            <li key={playthrough.id}>
+              <Link
+                href={routes.playthrough(gameId, playthrough.id)}
+                className="listButton"
+                transitionTypes={routeTransitionTypes.forward}
               >
-                Сессия {playthrough.sequenceNumber}
-              </p>
-              <p className="meta">{formatPlaythroughDate(playthrough.createdAt)}</p>
+                <Card className="w-full">
+                  <Card.Header>
+                    <p
+                      className="titleFly"
+                      style={titleTransitionStyle(
+                        transitionNames.sessionTitle(playthrough.id),
+                      )}
+                    >
+                      Сессия {playthrough.sequenceNumber}
+                    </p>
+                    <Card.Description>
+                      {formatPlaythroughDate(playthrough.createdAt)}
+                    </Card.Description>
+                  </Card.Header>
+                </Card>
+              </Link>
             </li>
           ))}
         </ul>

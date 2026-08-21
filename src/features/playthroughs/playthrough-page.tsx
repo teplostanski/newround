@@ -83,11 +83,6 @@ export const PlaythroughPage = () => {
       playthrough={visiblePlaythrough}
       rounds={visibleRounds}
       onStartRound={handleStartRound}
-      onOpenRound={(roundId) =>
-        router.push(routes.round(visibleGame.id, visiblePlaythrough.id, roundId), {
-          transitionTypes: routeTransitionTypes.forward,
-        })
-      }
     />
   );
 };

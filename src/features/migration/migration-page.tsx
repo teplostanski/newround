@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Button, Card } from '@heroui/react';
 import { legacyGamesToTables } from '@/shared/model/legacy-games';
 import { useStore } from '@/shared/model/store';
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ export const MigrationPage = () => {
   const [hasRead, setHasRead] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const { importTables } = useStore();
-  const router = useRouter()
+  const router = useRouter();
 
   let gamesCount = 0;
   let sessionsCount = 0;
@@ -53,28 +54,37 @@ export const MigrationPage = () => {
     }
 
     const tables = legacyGamesToTables(games, Date.now());
-    await importTables(tables)
-    router.push('/')
+    await importTables(tables);
+    router.push('/');
   };
 
   return (
-    <div>
-      {!hasRead && <p>Подождите...</p>}
-      {hasRead && savedText === null && <p>Старых данных нет</p>}
-      {err && <p>{err}</p>}
-      {hasRead && savedText && <p>Нашли сохранённые игры</p>}
-      Игр: {gamesCount} Сессий : {sessionsCount} Раундов: {roundsCount}
+    <div className="screen">
+      {!hasRead && <p className="empty">Подождите...</p>}
+      {hasRead && savedText === null && (
+        <p className="empty">Старых данных нет</p>
+      )}
+      {err && <p className="empty">{err}</p>}
       {hasRead && savedText && (
-        <wa-button
-          className="wa-block"
-          style={{ marginTop: '20px' }}
-          type="button"
-          variant="brand"
-          appearance="accent"
-          onClick={handleTransfer}
+        <Card className="w-full">
+          <Card.Header>
+            <Card.Title>Нашли сохранённые игры</Card.Title>
+            <Card.Description>
+              Игр: {gamesCount} · Сессий: {sessionsCount} · Раундов:{' '}
+              {roundsCount}
+            </Card.Description>
+          </Card.Header>
+        </Card>
+      )}
+      {hasRead && savedText && (
+        <Button
+          fullWidth
+          onPress={() => {
+            void handleTransfer();
+          }}
         >
           Перенести
-        </wa-button>
+        </Button>
       )}
     </div>
   );

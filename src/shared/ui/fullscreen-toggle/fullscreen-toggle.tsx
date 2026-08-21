@@ -2,11 +2,8 @@
 
 import ChevronsCollapseUpRight from '@gravity-ui/icons/ChevronsCollapseUpRight';
 import ChevronsExpandUpRight from '@gravity-ui/icons/ChevronsExpandUpRight';
-import { useSyncExternalStore, ViewTransition } from 'react';
-
-type FullscreenToggleProps = {
-  className: string;
-};
+import { Button } from '@heroui/react';
+import { useSyncExternalStore } from 'react';
 
 const subscribeToFullscreen = (onStoreChange: () => void) => {
   document.addEventListener('fullscreenchange', onStoreChange);
@@ -23,7 +20,7 @@ const getFullscreenSupportSnapshot = () =>
 const getFullscreenSnapshot = () => Boolean(document.fullscreenElement);
 const getServerSnapshot = () => false;
 
-const FullscreenToggle = ({ className }: FullscreenToggleProps) => {
+const FullscreenToggle = () => {
   const isSupported = useSyncExternalStore(
     subscribeToFullscreen,
     getFullscreenSupportSnapshot,
@@ -54,28 +51,20 @@ const FullscreenToggle = ({ className }: FullscreenToggleProps) => {
   };
 
   return (
-    <ViewTransition
-      enter="header-action-enter"
-      exit="header-action-exit"
-      default="none"
+    <Button
+      isIconOnly
+      variant="secondary"
+      className="iconButton"
+      aria-label={label}
+      onPress={handleToggle}
     >
-      <wa-button
-        className={className}
-        type="button"
-        variant="neutral"
-        appearance="outlined"
-        aria-label={label}
-        title={label}
-        onClick={handleToggle}
-      >
-        <FullscreenIcon
-          width={20}
-          height={20}
-          aria-hidden="true"
-          focusable="false"
-        />
-      </wa-button>
-    </ViewTransition>
+      <FullscreenIcon
+        width={20}
+        height={20}
+        aria-hidden="true"
+        focusable="false"
+      />
+    </Button>
   );
 };
 

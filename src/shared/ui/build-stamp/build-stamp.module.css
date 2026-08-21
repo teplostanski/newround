@@ -2,17 +2,17 @@
   margin: 2rem 0 0;
   font-size: 0.8rem;
   line-height: 1.4;
-  color: var(--wa-color-text-quiet);
+  color: var(--muted);
 }
 
 .stamp a {
-  color: var(--wa-color-text-link);
+  color: var(--link);
   text-decoration: underline;
   text-underline-offset: 0.15em;
   font-variant-numeric: tabular-nums;
 }
 
 .stamp a:focus-visible {
-  outline: 2px solid var(--wa-color-focus);
-  outline-offset: 2px;
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
 }

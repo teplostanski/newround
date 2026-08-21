@@ -5,11 +5,7 @@ import { Suspense, type ReactNode } from 'react';
 import { ClientApp } from '@/shared/ui/client-app/client-app';
 import { InitialLoader } from '@/shared/ui/route-loader/route-loader';
 import { ServiceWorkerReset } from '@/shared/ui/service-worker-reset/service-worker-reset';
-import { WebAwesomeRegistry } from '@/shared/ui/web-awesome-registry/web-awesome-registry';
 import { StoreProvider } from '@/shared/model/store';
-import '@awesome.me/webawesome/dist/styles/themes/default.css';
-import '@awesome.me/webawesome/dist/styles/utilities.css';
-import '@/shared/styles/theme-newround.css';
 import '@/shared/styles/global.css';
 
 export const metadata: Metadata = {
@@ -45,11 +41,11 @@ export const viewport: Viewport = {
 const RootLayout = ({ children }: { children: ReactNode }) => (
   <html
     lang="ru"
-    className={`${GeistSans.className} wa-theme-default wa-palette-default wa-brand-green wa-light`}
+    data-theme="light"
+    className={`${GeistSans.className} light`}
   >
-    <body>
+    <body className="bg-background text-foreground">
       <ServiceWorkerReset />
-      <WebAwesomeRegistry />
       <SerwistProvider
         swUrl="/sw.js"
         disable={process.env.NODE_ENV === 'development'}

@@ -9,36 +9,6 @@
   min-height: 100dvh;
 }
 
-.tokens {
-  --bone: var(--wa-color-surface-default);
-  --line-box: var(--wa-line-height-condensed, 1.2);
-}
-
-.tokens :global(.item),
-.summary,
-.roundCard {
-  --bone: var(--wa-color-neutral-fill-normal);
-}
-
-.bone {
-  display: block;
-  background: var(--bone);
-}
-
-.icon {
-  box-sizing: border-box;
-  flex: 0 0 2.75rem;
-  width: 2.75rem;
-  height: 2.75rem;
-  border: var(--wa-border-width-s) solid var(--wa-color-neutral-border-loud);
-  border-radius: var(--wa-form-control-border-radius);
-}
-
-.brand {
-  height: calc(1.75rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
 .brandShort {
   width: 4.25rem;
 }
@@ -52,113 +22,12 @@
   max-width: 100%;
 }
 
-.control {
-  width: 100%;
-  height: var(--wa-form-control-height);
-  border-radius: var(--wa-form-control-border-radius);
-}
-
-.controlGrow {
-  flex: 1;
-  min-width: 0;
-  height: var(--wa-form-control-height);
-  border-radius: var(--wa-form-control-border-radius);
-}
-
-.title {
-  width: 55%;
-  height: calc(1rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.meta {
-  width: 35%;
-  height: calc(0.9rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.metaWide {
-  width: 70%;
-  height: calc(0.9rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.summary {
-  margin: 0;
-  padding: 0.85rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-}
-
-.summaryLine {
-  width: 88%;
-  height: calc(0.95rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.legend {
-  float: left;
-  width: 100%;
-  margin: 0;
-  padding: 0 0 0.5rem;
-  border-bottom: 1px solid var(--wa-color-surface-border);
-}
-
-.legendText {
-  width: 5.5rem;
-  height: calc(0.95rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.emptyLine {
-  width: 70%;
-  height: calc(0.95rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
 .roundList {
   gap: 0.65rem;
 }
 
-.roundCard {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--bg) 72%, var(--surface));
-}
-
-.player {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  min-width: 0;
-}
-
-.avatar {
-  flex-shrink: 0;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 50%;
-}
-
-.playerName {
-  width: 45%;
-  height: calc(1rem * var(--line-box));
-  border-radius: var(--wa-border-radius-pill, 999px);
-}
-
-.stepper {
+.roundStepper {
   display: grid;
   grid-template-columns: 1fr 1.4fr 1fr;
   gap: 0.35rem;
-}
-
-.stepperCell,
-.stepperValue {
-  height: calc(0.7rem * 2 + 1.1rem);
-  border-radius: calc(var(--radius) - 2px);
 }

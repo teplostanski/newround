@@ -2,7 +2,7 @@
 
 import { useId, useState, type SubmitEvent } from 'react';
 import { nanoid } from 'nanoid';
-import type WaInput from '@awesome.me/webawesome/dist/components/input/input.js';
+import { Button, Input } from '@heroui/react';
 import type { NewGameData, Player } from '@/shared/model/game';
 import { PlayersForm } from './players-form/players-form';
 
@@ -29,28 +29,26 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
       <form id={newGameFormId} hidden onSubmit={handleCreateGame} />
 
       <div className="stack">
-        <wa-input
+        <Input
           form={newGameFormId}
+          fullWidth
           type="text"
+          aria-label="Название игры"
           placeholder="Название игры"
           value={gameName}
-          onInput={(event) =>
-            setGameName((event.currentTarget as WaInput).value ?? '')
-          }
+          onChange={(event) => setGameName(event.target.value)}
         />
 
         <PlayersForm players={players} onAddPlayer={handleAddPlayer} />
 
-        <wa-button
+        <Button
           form={newGameFormId}
-          className="wa-block"
+          fullWidth
           type="submit"
-          variant="brand"
-          appearance="accent"
-          disabled={players.length < 1 ? true : undefined}
+          isDisabled={players.length < 1}
         >
           Начать игру
-        </wa-button>
+        </Button>
       </div>
     </div>
   );
