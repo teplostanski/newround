@@ -7,6 +7,7 @@ export default defineConfig([
   ...nextTypeScript,
   globalIgnores([
     '.astro/**',
+    '.heroui-docs/**',
     '.next/**',
     'dist/**',
     'out/**',

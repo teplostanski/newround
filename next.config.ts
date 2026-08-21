@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
   allowedDevOrigins: localDevOrigins,
-  transpilePackages: ['@awesome.me/webawesome'],
   env: {
     NEXT_PUBLIC_GIT_SHA:
       process.env.NEXT_PUBLIC_GIT_SHA || git('rev-parse HEAD'),
