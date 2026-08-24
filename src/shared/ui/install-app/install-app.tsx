@@ -82,11 +82,7 @@ const InstallGuideContent = ({
 }) => {
   if (installEvent || guide.native) {
     return (
-      <Button
-        fullWidth
-        isDisabled={!installEvent}
-        onPress={onInstall}
-      >
+      <Button fullWidth isDisabled={!installEvent} onPress={onInstall}>
         Установить
       </Button>
     );
@@ -160,6 +156,7 @@ const InstallApp = () => {
         />
       </Button>
       <Modal.Backdrop
+        variant="blur"
         isOpen={overlay.isOpen}
         onOpenChange={overlay.setOpen}
       >
