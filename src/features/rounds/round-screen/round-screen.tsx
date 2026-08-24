@@ -2,7 +2,7 @@
 
 import { Button, Card, Chip } from '@heroui/react';
 import type { Player, Scores } from '@/shared/model/types';
-import { getPlayerTone } from '@/shared/lib/player-tone';
+import { getPlayerChipStyle } from '@/shared/lib/player-chip';
 import styles from './round-screen.module.css';
 
 type RoundScreenProps = {
@@ -36,7 +36,12 @@ const RoundScreen = ({
         {players.map((player, index) => (
           <li key={player.id}>
             <Card className={`w-full ${styles.scoreCard}`}>
-              <Chip color={getPlayerTone(index)} variant="soft" size="lg">
+              <Chip
+                variant="soft"
+                size="lg"
+                className="playerChip"
+                style={getPlayerChipStyle(index)}
+              >
                 {player.name}
               </Chip>
               <div className={styles.stepper}>

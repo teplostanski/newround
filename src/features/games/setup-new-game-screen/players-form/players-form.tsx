@@ -4,7 +4,7 @@ import { useId, useState, type SubmitEvent } from 'react';
 import { Button, Chip, Fieldset, Input, Separator } from '@heroui/react';
 import { Plus } from '@gravity-ui/icons';
 import type { Player } from '@/shared/model/types';
-import { getPlayerTone } from '@/shared/lib/player-tone';
+import { getPlayerChipStyle } from '@/shared/lib/player-chip';
 
 type PlayersFormProps = {
   players: Player[];
@@ -67,9 +67,10 @@ const PlayersForm = ({ players, onAddPlayer }: PlayersFormProps) => {
           {players.map((player, index) => (
             <Chip
               key={player.id}
-              color={getPlayerTone(index)}
               variant="soft"
-              size='lg'
+              size="lg"
+              className="playerChip"
+              style={getPlayerChipStyle(index)}
             >
               {player.name}
             </Chip>
