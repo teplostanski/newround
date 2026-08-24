@@ -64,6 +64,7 @@ const HeaderSkeleton = ({ kind }: { kind: RouteKind }) => {
           {showNav && <Skeleton className="size-11" />}
         </nav>
         <div className={appStyles.actions}>
+          <Skeleton className="h-6 w-12 rounded-xl" />
           <Skeleton className="size-11" />
           <Skeleton className="size-11" />
         </div>

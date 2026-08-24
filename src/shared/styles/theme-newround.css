@@ -1,15 +1,4 @@
-:root,
-.light,
-[data-theme="light"] {
-  color-scheme: light;
-
-  --paper: #f7f9fb;
-  --page: #e8edf2;
-  --wash: #d7e4ef;
-  --line: #c5d0db;
-  --muted: #5c6b7a;
-  --ink: #1a2332;
-
+:root {
   --brand-95: #f4faf7;
   --brand-90: #e3f0ea;
   --brand-80: #c5e0d4;
@@ -28,8 +17,17 @@
 
   --white: #ffffff;
   --black: #000000;
-  --snow: var(--brand-95);
-  --eclipse: var(--ink);
+
+  --radius: 1rem;
+  --field-radius: 1rem;
+  --field-border-width: 1px;
+  --ring-offset-width: 1px;
+  --scrollbar-gutter: stable;
+  --skeleton-animation: shimmer;
+  --surface-shadow: none;
+  --field-shadow: none;
+
+  --wash: color-mix(in oklab, var(--haze) 50%, var(--page));
 
   --background: var(--page);
   --foreground: var(--ink);
@@ -55,15 +53,15 @@
   --default-soft-foreground: var(--muted);
   --default-soft-hover: var(--page);
 
-  --accent: var(--brand-50);
-  --accent-foreground: var(--brand-95);
-  --accent-hover: var(--brand-40);
-  --accent-soft: var(--brand-90);
-  --accent-soft-foreground: var(--brand-40);
-  --accent-soft-hover: var(--brand-80);
+  --accent: var(--brand-fill);
+  --accent-foreground: var(--brand-on);
+  --accent-hover: var(--brand-fill-hover);
+  --accent-soft: color-mix(in oklab, var(--brand-fill) 14%, var(--paper));
+  --accent-soft-foreground: var(--brand-fill-hover);
+  --accent-soft-hover: color-mix(in oklab, var(--brand-fill) 22%, var(--paper));
 
   --success: color-mix(in srgb, var(--sage) 42%, var(--ink));
-  --success-foreground: var(--brand-95);
+  --success-foreground: var(--brand-on);
   --success-hover: color-mix(in srgb, var(--sage) 32%, var(--ink));
   --success-soft: var(--sage);
   --success-soft-foreground: var(--ink);
@@ -87,11 +85,10 @@
   --field-foreground: var(--ink);
   --field-placeholder: var(--muted);
   --field-border: var(--line);
-  --field-border-width: 1px;
   --field-hover: var(--page);
   --field-focus: var(--paper);
   --field-border-hover: color-mix(in oklab, var(--line) 80%, var(--ink) 20%);
-  --field-border-focus: var(--brand-60);
+  --field-border-focus: var(--accent);
 
   --segment: var(--paper);
   --segment-foreground: var(--ink);
@@ -103,27 +100,116 @@
   --separator-secondary: color-mix(in oklab, var(--paper) 85%, var(--ink) 15%);
   --separator-tertiary: color-mix(in oklab, var(--paper) 81%, var(--ink) 19%);
 
-  --focus: color-mix(in srgb, var(--brand-50) 45%, white);
-  --link: var(--brand-50);
-  --backdrop: color-mix(in oklab, var(--ink) 45%, transparent);
-  --ring-offset-width: 1px;
+  --focus: color-mix(in srgb, var(--accent) 45%, var(--snow));
+  --link: var(--accent);
+  --backdrop: color-mix(in oklab, var(--eclipse) 45%, transparent);
 
-  --radius: 1rem;
-  --field-radius: 1rem;
-
-  --scrollbar-gutter: stable;
   --scrollbar-thumb: color-mix(in oklch, var(--ink) 15%, transparent);
   --scrollbar-track: transparent;
   --scrollbar: var(--scrollbar-thumb);
 
   --bg: var(--page);
-  --accent-ink: var(--brand-95);
+  --accent-ink: var(--brand-on);
 
-  --surface-shadow: none;
   --overlay-shadow:
-    0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
-  --field-shadow: none;
-  --skeleton-animation: shimmer;
+    0 4px 16px 0 color-mix(in oklab, var(--eclipse) 8%, transparent),
+    0 8px 24px 0 color-mix(in oklab, var(--eclipse) 12%, transparent);
+
+  --player-1-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 165
+  );
+  --player-1-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 165
+  );
+  --player-2-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 210
+  );
+  --player-2-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 210
+  );
+  --player-3-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 255
+  );
+  --player-3-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 255
+  );
+  --player-4-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 300
+  );
+  --player-4-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 300
+  );
+  --player-5-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 345
+  );
+  --player-5-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 345
+  );
+  --player-6-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 30
+  );
+  --player-6-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 30
+  );
+  --player-7-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 75
+  );
+  --player-7-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 75
+  );
+  --player-8-fill: oklch(
+    var(--player-fill-lightness) var(--player-fill-chroma) 120
+  );
+  --player-8-text: oklch(
+    var(--player-text-lightness) var(--player-text-chroma) 120
+  );
+}
+
+:root,
+.light,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --paper: #f7f9fb;
+  --page: #e8edf2;
+  --haze: var(--fjord);
+  --line: #c5d0db;
+  --muted: #5c6b7a;
+  --ink: #1a2332;
+  --snow: var(--brand-95);
+  --eclipse: var(--ink);
+
+  --brand-fill: var(--brand-50);
+  --brand-fill-hover: var(--brand-40);
+  --brand-on: var(--brand-95);
+
+  --player-fill-lightness: 0.78;
+  --player-fill-chroma: 0.055;
+  --player-text-lightness: 0.32;
+  --player-text-chroma: 0.05;
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #161d28;
+  --page: #0c1219;
+  --haze: var(--brand-30);
+  --line: #2c3a4a;
+  --muted: #8e9eae;
+  --ink: #e8edf2;
+  --snow: var(--ink);
+  --eclipse: var(--page);
+
+  --brand-fill: var(--brand-70);
+  --brand-fill-hover: var(--brand-80);
+  --brand-on: var(--brand-10);
+
+  --player-fill-lightness: 0.4;
+  --player-fill-chroma: 0.055;
+  --player-text-lightness: 0.92;
+  --player-text-chroma: 0.04;
 }
 
 @layer components {
@@ -140,6 +226,11 @@
     font-weight: 600;
     font-size: 1rem;
     line-height: 1.2;
+  }
+
+  .chip.playerChip {
+    font-size: 1rem;
+    line-height: 1.25;
   }
 
   .button {

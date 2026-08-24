@@ -7,9 +7,6 @@
   max-width: 28rem;
   padding: 1.25rem 1rem 2.5rem;
   overflow: visible;
-  background:
-    radial-gradient(120% 80% at 50% -10%, var(--wash) 0%, transparent 55%),
-    var(--background);
 }
 
 .header {

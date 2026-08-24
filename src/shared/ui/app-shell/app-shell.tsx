@@ -14,6 +14,7 @@ import { findById, useStore } from '@/shared/model/store';
 import { BuildStamp } from '../build-stamp/build-stamp';
 import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
 import { InstallApp } from '../install-app/install-app';
+import { ThemeSwitch } from '../theme-switch/theme-switch';
 import styles from './app-shell.module.css';
 
 type AppShellViewProps = {
@@ -92,6 +93,7 @@ const AppShellView = ({
             )}
           </nav>
           <div className={styles.actions}>
+            <ThemeSwitch />
             <InstallApp />
             <FullscreenToggle />
           </div>

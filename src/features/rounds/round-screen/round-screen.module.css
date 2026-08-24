@@ -14,9 +14,9 @@
 
 .stepperTile,
 .stepper :global(.button).stepperTile {
-  --button-bg: #ffffff;
-  --button-bg-hover: #ffffff;
-  --button-bg-pressed: #f4f6f8;
+  --button-bg: var(--surface);
+  --button-bg-hover: var(--surface);
+  --button-bg-pressed: var(--surface-hover);
   box-sizing: border-box;
   height: 2.75rem;
   min-height: 2.75rem;
@@ -25,7 +25,7 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius);
-  background: #ffffff;
+  background: var(--surface);
   color: var(--foreground);
   font-size: 1.1rem;
   font-weight: 600;
