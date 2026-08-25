@@ -10,10 +10,12 @@ import {
   titleTransitionStyle,
   transitionNames,
 } from '@/shared/lib/view-transitions';
+import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import { findById, useStore } from '@/shared/model/store';
 import { BuildStamp } from '../build-stamp/build-stamp';
 import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
 import { InstallApp } from '../install-app/install-app';
+import { RouteLoader } from '../route-loader/route-loader';
 import { ThemeSwitch } from '../theme-switch/theme-switch';
 import styles from './app-shell.module.css';
 
@@ -21,6 +23,7 @@ type AppShellViewProps = {
   title: string;
   transitionName: string;
   backHref?: string;
+  onion?: OnionMode | false;
   children: ReactNode;
 };
 
@@ -28,6 +31,7 @@ const AppShellView = ({
   title,
   transitionName,
   backHref,
+  onion,
   children,
 }: AppShellViewProps) => {
   const pathname = usePathname();
@@ -109,11 +113,18 @@ const AppShellView = ({
       <footer>
         <BuildStamp />
       </footer>
+      {onion ? <RouteLoader onion={onion} title={title} /> : null}
     </div>
   );
 };
 
-export const AppShell = ({ children }: { children: ReactNode }) => {
+export const AppShell = ({
+  children,
+  onion = false,
+}: {
+  children: ReactNode;
+  onion?: OnionMode | false;
+}) => {
   const currentPathname = usePathname();
   const pathname =
     currentPathname !== '/' ? currentPathname.replace(/\/$/, '') : '/';
@@ -128,7 +139,11 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
 
   if (pathname === '/') {
     return (
-      <AppShellView title="Игры" transitionName={transitionNames.pageTitle}>
+      <AppShellView
+        title="Игры"
+        transitionName={transitionNames.pageTitle}
+        onion={onion}
+      >
         {children}
       </AppShellView>
     );
@@ -140,6 +155,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
         title="Новая игра"
         transitionName={transitionNames.newGameTitle}
         backHref={routes.home}
+        onion={onion}
       >
         {children}
       </AppShellView>
@@ -154,6 +170,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
           gameId ? transitionNames.gameTitle(gameId) : transitionNames.pageTitle
         }
         backHref={routes.home}
+        onion={onion}
       >
         {children}
       </AppShellView>
@@ -172,6 +189,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
             : transitionNames.pageTitle
         }
         backHref={game ? routes.game(game.id) : routes.home}
+        onion={onion}
       >
         {children}
       </AppShellView>
@@ -195,6 +213,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
             : transitionNames.pageTitle
         }
         backHref={backHref}
+        onion={onion}
       >
         {children}
       </AppShellView>
@@ -206,6 +225,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
       title="newround"
       transitionName={transitionNames.pageTitle}
       backHref={routes.home}
+      onion={onion}
     >
       {children}
     </AppShellView>

@@ -3,11 +3,14 @@
 import { Card, Fieldset, Skeleton } from '@heroui/react';
 import { usePathname } from 'next/navigation';
 import { ViewTransition, type ComponentProps } from 'react';
+import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
 
 type RouteLoaderProps = {
   fullscreen?: boolean;
+  onion?: OnionMode;
+  title?: string;
 };
 
 type RouteKind =
@@ -47,7 +50,13 @@ const routeKind = (pathname: string): RouteKind => {
   }
 };
 
-const HeaderSkeleton = ({ kind }: { kind: RouteKind }) => {
+const HeaderSkeleton = ({
+  kind,
+  title,
+}: {
+  kind: RouteKind;
+  title?: string;
+}) => {
   const showNav = kind !== 'games';
   const brandWidth =
     kind === 'games'
@@ -64,12 +73,19 @@ const HeaderSkeleton = ({ kind }: { kind: RouteKind }) => {
           {showNav && <Skeleton className="size-11" />}
         </nav>
         <div className={appStyles.actions}>
-          <Skeleton className="h-6 w-12 rounded-xl" />
+          <Skeleton className={styles.themeSwitchBone} />
           <Skeleton className="size-11" />
           <Skeleton className="size-11" />
         </div>
       </div>
-      <Skeleton className={`h-8 ${brandWidth}`} />
+      {title ? (
+        <div className={`${appStyles.brand} ${styles.brandSlot}`}>
+          <span className={styles.brandMeasure}>{title}</span>
+          <Skeleton className={styles.brandFill} />
+        </div>
+      ) : (
+        <Skeleton className={`${styles.brandBone} ${brandWidth}`} />
+      )}
     </header>
   );
 };
@@ -80,15 +96,15 @@ const ListSkeleton = ({ metaWide = false }: { metaWide?: boolean }) => (
       <li key={key}>
         <Card className="w-full">
           <Card.Header>
-            <Card.Title>
+            <p className="titleFly">
               <Skeleton
-                className="inline-block h-4 w-[55%]"
+                className="inline-block h-[1em] w-24"
                 render={asSpan}
               />
-            </Card.Title>
+            </p>
             <Card.Description>
               <Skeleton
-                className={`inline-block h-3.5 ${metaWide ? 'w-[70%]' : 'w-[35%]'}`}
+                className={`inline-block h-[1em] ${metaWide ? 'w-40' : 'w-20'}`}
                 render={asSpan}
               />
             </Card.Description>
@@ -180,9 +196,26 @@ const ContentSkeleton = ({ kind }: { kind: RouteKind }) => {
   }
 };
 
-export const RouteLoader = ({ fullscreen = false }: RouteLoaderProps) => {
+export const RouteLoader = ({
+  fullscreen = false,
+  onion,
+  title,
+}: RouteLoaderProps) => {
   const pathname = normalizePath(usePathname());
   const kind = routeKind(pathname);
+
+  if (onion) {
+    const onionClass = `${styles.onionLayer} ${onion === 'ghost' ? styles.onionGhost : styles.onionDiff}`;
+
+    return (
+      <div className={onionClass} aria-hidden="true">
+        <HeaderSkeleton kind={kind} title={title} />
+        <div className={appStyles.main}>
+          <ContentSkeleton kind={kind} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -193,7 +226,7 @@ export const RouteLoader = ({ fullscreen = false }: RouteLoaderProps) => {
     >
       {fullscreen ? (
         <div className={appStyles.shell} aria-hidden="true">
-          <HeaderSkeleton kind={kind} />
+          <HeaderSkeleton kind={kind} title={title} />
           <div className={appStyles.main}>
             <ContentSkeleton kind={kind} />
           </div>

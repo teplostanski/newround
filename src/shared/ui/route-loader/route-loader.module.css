@@ -9,17 +9,70 @@
   min-height: 100dvh;
 }
 
+.onionLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: inherit;
+  pointer-events: none;
+  background: transparent;
+  --skeleton-animation: none;
+}
+
+.onionLayer :global(.card),
+.onionLayer :global(.fieldset),
+.onionLayer :global(.bg-background) {
+  background: transparent;
+  box-shadow: none;
+}
+
+.onionGhost :global(.skeleton) {
+  opacity: 0.55;
+}
+
+.onionDiff {
+  mix-blend-mode: difference;
+}
+
+.brandSlot {
+  position: relative;
+}
+
+.brandMeasure {
+  display: block;
+  visibility: hidden;
+}
+
+.brandFill {
+  position: absolute;
+  inset: 0;
+}
+
+.brandBone {
+  height: 2.1rem;
+}
+
 .brandShort {
-  width: 4.25rem;
+  width: 3.6rem;
 }
 
 .brandMedium {
-  width: 9.5rem;
+  width: 8.75rem;
 }
 
 .brandLong {
-  width: 11rem;
+  width: 10rem;
   max-width: 100%;
+}
+
+.themeSwitchBone {
+  width: 3rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border-radius: 0.75rem;
 }
 
 .roundList {
