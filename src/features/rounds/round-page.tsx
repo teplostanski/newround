@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
-import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
+import { RoundSkeleton } from '@/features/rounds/round-screen/round-skeleton';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
@@ -40,7 +40,7 @@ export const RoundPage = () => {
   }, [game, isReady, playthrough, round, router]);
 
   if (!isReady || !game || !playthrough || !round) {
-    return <RouteLoader />;
+    return <RoundSkeleton />;
   }
 
   return (

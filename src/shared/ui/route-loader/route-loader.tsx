@@ -1,29 +1,22 @@
 'use client';
 
-import { Card, Fieldset, Skeleton } from '@heroui/react';
 import { usePathname } from 'next/navigation';
-import { ViewTransition, type ComponentProps } from 'react';
+import { ViewTransition, type ReactNode } from 'react';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
+import {
+  AppHeaderSkeleton,
+  type BrandSize,
+} from '../app-header/app-header-skeleton';
 import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
 
-type RouteLoaderProps = {
-  fullscreen?: boolean;
-  onion?: OnionMode;
-  title?: string;
-};
-
-type RouteKind =
+export type RouteKind =
   | 'games'
   | 'newGame'
   | 'playthroughs'
   | 'playthrough'
   | 'round'
   | 'fallback';
-
-const LIST_KEYS = [0, 1, 2] as const;
-
-const asSpan = (props: ComponentProps<'span'>) => <span {...props} />;
 
 const normalizePath = (pathname: string | null) => {
   if (!pathname || pathname === '/') {
@@ -50,168 +43,57 @@ const routeKind = (pathname: string): RouteKind => {
   }
 };
 
-const HeaderSkeleton = ({
+const brandSize = (kind: RouteKind): BrandSize => {
+  if (kind === 'games') {
+    return 'short';
+  }
+
+  if (kind === 'newGame') {
+    return 'medium';
+  }
+
+  return 'long';
+};
+
+type RouteLoaderProps = {
+  fullscreen?: boolean;
+  onion?: OnionMode;
+  title?: string;
+  contents?: Partial<Record<RouteKind, ReactNode>>;
+};
+
+const ContentSkeleton = ({
   kind,
-  title,
+  contents,
 }: {
   kind: RouteKind;
-  title?: string;
-}) => {
-  const showNav = kind !== 'games';
-  const brandWidth =
-    kind === 'games'
-      ? styles.brandShort
-      : kind === 'newGame'
-        ? styles.brandMedium
-        : styles.brandLong;
-
-  return (
-    <header className={appStyles.header}>
-      <div className={appStyles.headerBar}>
-        <nav className={appStyles.nav} aria-hidden="true">
-          {showNav && <Skeleton className="size-11" />}
-          {showNav && <Skeleton className="size-11" />}
-        </nav>
-        <div className={appStyles.actions}>
-          <Skeleton className={styles.themeSwitchBone} />
-          <Skeleton className="size-11" />
-          <Skeleton className="size-11" />
-        </div>
-      </div>
-      {title ? (
-        <div className={`${appStyles.brand} ${styles.brandSlot}`}>
-          <span className={styles.brandMeasure}>{title}</span>
-          <Skeleton className={styles.brandFill} />
-        </div>
-      ) : (
-        <Skeleton className={`${styles.brandBone} ${brandWidth}`} />
-      )}
-    </header>
-  );
-};
-
-const ListSkeleton = ({ metaWide = false }: { metaWide?: boolean }) => (
-  <ul className="list">
-    {LIST_KEYS.map((key) => (
-      <li key={key}>
-        <Card className="w-full">
-          <Card.Header>
-            <p className="titleFly">
-              <Skeleton
-                className="inline-block h-[1em] w-24"
-                render={asSpan}
-              />
-            </p>
-            <Card.Description>
-              <Skeleton
-                className={`inline-block h-[1em] ${metaWide ? 'w-40' : 'w-20'}`}
-                render={asSpan}
-              />
-            </Card.Description>
-          </Card.Header>
-        </Card>
-      </li>
-    ))}
-  </ul>
-);
-
-const GamesContent = () => (
-  <div className="screen">
-    <Skeleton className="buttonBone" />
-    <ListSkeleton />
-  </div>
-);
-
-const PlaythroughsContent = () => (
-  <div className="screen">
-    <ListSkeleton metaWide />
-  </div>
-);
-
-const PlaythroughContent = () => (
-  <div className="screen">
-    <Card className="w-full">
-      <Card.Content>
-        <Skeleton className="h-4 w-[88%]" />
-      </Card.Content>
-    </Card>
-    <Skeleton className="h-11 w-full" />
-    <ListSkeleton metaWide />
-  </div>
-);
-
-const RoundContent = () => (
-  <div className="screen">
-    <ul className={`list ${styles.roundList}`}>
-      {LIST_KEYS.map((key) => (
-        <li key={key}>
-          <Card className="w-full bg-background">
-            <Skeleton className="h-7 w-[40%]" />
-            <div className={styles.roundStepper}>
-              <Skeleton className="h-11" />
-              <Skeleton className="h-11" />
-              <Skeleton className="h-11" />
-            </div>
-          </Card>
-        </li>
-      ))}
-    </ul>
-    <Skeleton className="h-11 w-full" />
-  </div>
-);
-
-const NewGameContent = () => (
-  <div className="screen">
-    <div className="stack">
-      <Skeleton className="h-11 w-full" />
-      <Fieldset>
-        <Fieldset.Legend>
-          <Skeleton className="inline-block h-4 w-24" render={asSpan} />
-        </Fieldset.Legend>
-        <div className="row">
-          <Skeleton className="h-11 min-w-0 flex-1" />
-          <Skeleton className="size-11 shrink-0" />
-        </div>
-        <Skeleton className="h-4 w-[70%]" />
-      </Fieldset>
-      <Skeleton className="h-11 w-full" />
-    </div>
-  </div>
-);
-
-const ContentSkeleton = ({ kind }: { kind: RouteKind }) => {
-  switch (kind) {
-    case 'newGame':
-      return <NewGameContent />;
-    case 'playthroughs':
-      return <PlaythroughsContent />;
-    case 'playthrough':
-      return <PlaythroughContent />;
-    case 'round':
-      return <RoundContent />;
-    case 'games':
-    case 'fallback':
-    default:
-      return <GamesContent />;
-  }
-};
+  contents?: Partial<Record<RouteKind, ReactNode>>;
+}) => contents?.[kind] ?? contents?.games ?? <div className="screen" />;
 
 export const RouteLoader = ({
   fullscreen = false,
   onion,
   title,
+  contents,
 }: RouteLoaderProps) => {
   const pathname = normalizePath(usePathname());
   const kind = routeKind(pathname);
+  const header = (
+    <AppHeaderSkeleton
+      title={title}
+      showBack={kind !== 'games'}
+      brandSize={brandSize(kind)}
+    />
+  );
 
   if (onion) {
     const onionClass = `${styles.onionLayer} ${onion === 'ghost' ? styles.onionGhost : styles.onionDiff}`;
 
     return (
       <div className={onionClass} aria-hidden="true">
-        <HeaderSkeleton kind={kind} title={title} />
+        {header}
         <div className={appStyles.main}>
-          <ContentSkeleton kind={kind} />
+          <ContentSkeleton kind={kind} contents={contents} />
         </div>
       </div>
     );
@@ -226,22 +108,26 @@ export const RouteLoader = ({
     >
       {fullscreen ? (
         <div className={appStyles.shell} aria-hidden="true">
-          <HeaderSkeleton kind={kind} title={title} />
+          {header}
           <div className={appStyles.main}>
-            <ContentSkeleton kind={kind} />
+            <ContentSkeleton kind={kind} contents={contents} />
           </div>
         </div>
       ) : (
         <div aria-hidden="true">
-          <ContentSkeleton kind={kind} />
+          <ContentSkeleton kind={kind} contents={contents} />
         </div>
       )}
     </div>
   );
 };
 
-export const InitialLoader = () => (
+export const InitialLoader = ({
+  contents,
+}: {
+  contents?: Partial<Record<RouteKind, ReactNode>>;
+}) => (
   <ViewTransition exit="initial-loader-exit" default="none">
-    <RouteLoader fullscreen />
+    <RouteLoader fullscreen contents={contents} />
   </ViewTransition>
 );

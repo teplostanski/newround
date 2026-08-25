@@ -1,37 +1,28 @@
 'use client';
 
-import { ChevronLeft, House } from '@gravity-ui/icons';
-import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { useLayoutEffect, ViewTransition, type ReactNode } from 'react';
+import { useLayoutEffect, type ReactNode } from 'react';
 import { routes } from '@/shared/lib/routes';
-import {
-  routeTransitionTypes,
-  titleTransitionStyle,
-  transitionNames,
-} from '@/shared/lib/view-transitions';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import { findById, useStore } from '@/shared/model/store';
+import { AppHeader } from '../app-header/app-header';
 import { BuildStamp } from '../build-stamp/build-stamp';
-import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
-import { InstallApp } from '../install-app/install-app';
-import { RouteLoader } from '../route-loader/route-loader';
-import { ThemeSwitch } from '../theme-switch/theme-switch';
+import { RouteLoader, type RouteKind } from '../route-loader/route-loader';
 import styles from './app-shell.module.css';
 
 type AppShellViewProps = {
   title: string;
-  transitionName: string;
   backHref?: string;
   onion?: OnionMode | false;
+  skeletons?: Partial<Record<RouteKind, ReactNode>>;
   children: ReactNode;
 };
 
 const AppShellView = ({
   title,
-  transitionName,
   backHref,
   onion,
+  skeletons,
   children,
 }: AppShellViewProps) => {
   const pathname = usePathname();
@@ -44,76 +35,14 @@ const AppShellView = ({
 
   return (
     <div className={styles.shell}>
-      <header className={styles.header}>
-        <div className={styles.headerBar}>
-          <nav className={styles.nav} aria-label="Основная навигация">
-            {backHref && (
-              <>
-                <ViewTransition
-                  name="header-back"
-                  enter="header-action-enter"
-                  exit="header-action-exit"
-                  share="header-action-share"
-                  default="none"
-                >
-                  <Link
-                    className="iconButton"
-                    href={backHref}
-                    aria-label="Назад"
-                    title="Назад"
-                    transitionTypes={routeTransitionTypes.back}
-                  >
-                    <ChevronLeft
-                      width={20}
-                      height={20}
-                      aria-hidden="true"
-                      focusable="false"
-                    />
-                  </Link>
-                </ViewTransition>
-                <ViewTransition
-                  name="header-home"
-                  enter="header-action-enter"
-                  exit="header-action-exit"
-                  share="header-action-share"
-                  default="none"
-                >
-                  <Link
-                    className="iconButton"
-                    href={routes.home}
-                    aria-label="Главная"
-                    title="Главная"
-                    transitionTypes={routeTransitionTypes.back}
-                  >
-                    <House
-                      width={20}
-                      height={20}
-                      aria-hidden="true"
-                      focusable="false"
-                    />
-                  </Link>
-                </ViewTransition>
-              </>
-            )}
-          </nav>
-          <div className={styles.actions}>
-            <ThemeSwitch />
-            <InstallApp />
-            <FullscreenToggle />
-          </div>
-        </div>
-        <h1
-          className={styles.brand}
-          style={titleTransitionStyle(transitionName)}
-        >
-          {title}
-        </h1>
-      </header>
+      <AppHeader title={title} backHref={backHref} />
       <main className={styles.main}>{children}</main>
       <footer>
         <BuildStamp />
       </footer>
-      {onion ? <RouteLoader onion={onion} title={title} /> : null}
+      {onion ? (
+        <RouteLoader onion={onion} title={title} contents={skeletons} />
+      ) : null}
     </div>
   );
 };
@@ -121,9 +50,11 @@ const AppShellView = ({
 export const AppShell = ({
   children,
   onion = false,
+  skeletons,
 }: {
   children: ReactNode;
   onion?: OnionMode | false;
+  skeletons?: Partial<Record<RouteKind, ReactNode>>;
 }) => {
   const currentPathname = usePathname();
   const pathname =
@@ -139,11 +70,7 @@ export const AppShell = ({
 
   if (pathname === '/') {
     return (
-      <AppShellView
-        title="Игры"
-        transitionName={transitionNames.pageTitle}
-        onion={onion}
-      >
+      <AppShellView title="Игры" onion={onion} skeletons={skeletons}>
         {children}
       </AppShellView>
     );
@@ -153,9 +80,9 @@ export const AppShell = ({
     return (
       <AppShellView
         title="Новая игра"
-        transitionName={transitionNames.newGameTitle}
         backHref={routes.home}
         onion={onion}
+        skeletons={skeletons}
       >
         {children}
       </AppShellView>
@@ -166,11 +93,9 @@ export const AppShell = ({
     return (
       <AppShellView
         title={game?.name ?? 'Партии'}
-        transitionName={
-          gameId ? transitionNames.gameTitle(gameId) : transitionNames.pageTitle
-        }
         backHref={routes.home}
         onion={onion}
+        skeletons={skeletons}
       >
         {children}
       </AppShellView>
@@ -183,13 +108,9 @@ export const AppShell = ({
         title={
           playthrough ? `Партия ${playthrough.sequenceNumber}` : 'Партия'
         }
-        transitionName={
-          playthroughId
-            ? transitionNames.playthroughTitle(playthroughId)
-            : transitionNames.pageTitle
-        }
         backHref={game ? routes.game(game.id) : routes.home}
         onion={onion}
+        skeletons={skeletons}
       >
         {children}
       </AppShellView>
@@ -207,13 +128,9 @@ export const AppShell = ({
     return (
       <AppShellView
         title={round ? `Раунд ${round.sequenceNumber}` : 'Раунд'}
-        transitionName={
-          roundId
-            ? transitionNames.roundTitle(roundId)
-            : transitionNames.pageTitle
-        }
         backHref={backHref}
         onion={onion}
+        skeletons={skeletons}
       >
         {children}
       </AppShellView>
@@ -223,9 +140,9 @@ export const AppShell = ({
   return (
     <AppShellView
       title="newround"
-      transitionName={transitionNames.pageTitle}
       backHref={routes.home}
       onion={onion}
+      skeletons={skeletons}
     >
       {children}
     </AppShellView>

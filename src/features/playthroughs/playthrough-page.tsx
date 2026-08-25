@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PlaythroughScreen } from '@/features/playthroughs/playthrough-screen/playthrough-screen';
-import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
+import { PlaythroughSkeleton } from '@/features/playthroughs/playthrough-screen/playthrough-skeleton';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
@@ -70,7 +70,7 @@ export const PlaythroughPage = () => {
   };
 
   if (!isReady || !game || !playthrough) {
-    return <RouteLoader />;
+    return <PlaythroughSkeleton />;
   }
 
   const visibleGame = navigationSnapshot?.game ?? game;

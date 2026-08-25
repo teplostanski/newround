@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PlaythroughListScreen } from '@/features/playthroughs/playthroughs-screen/playthroughs-screen';
-import { RouteLoader } from '@/shared/ui/route-loader/route-loader';
+import { PlaythroughsSkeleton } from '@/features/playthroughs/playthroughs-screen/playthroughs-skeleton';
 import { routes } from '@/shared/lib/routes';
 import { findById, useStore } from '@/shared/model/store';
 
@@ -21,7 +21,7 @@ export const PlaythroughsPage = () => {
   }, [game, isReady, router]);
 
   if (!isReady || !game) {
-    return <RouteLoader />;
+    return <PlaythroughsSkeleton />;
   }
 
   const gamePlaythroughs = playthroughs

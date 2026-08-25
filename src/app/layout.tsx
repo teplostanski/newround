@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { SerwistProvider } from '@serwist/next/react';
 import { GeistSans } from 'geist/font/sans';
 import { Suspense, type ReactNode } from 'react';
+import { routeSkeletons } from './route-skeletons';
 import { ClientApp } from '@/shared/ui/client-app/client-app';
 import { InitialLoader } from '@/shared/ui/route-loader/route-loader';
 import { ServiceWorkerReset } from '@/shared/ui/service-worker-reset/service-worker-reset';
@@ -55,8 +56,8 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
           options={{ type: 'classic' }}
         >
           <StoreProvider>
-            <Suspense fallback={<InitialLoader />}>
-              <ClientApp>{children}</ClientApp>
+            <Suspense fallback={<InitialLoader contents={routeSkeletons} />}>
+              <ClientApp skeletons={routeSkeletons}>{children}</ClientApp>
             </Suspense>
           </StoreProvider>
         </SerwistProvider>
