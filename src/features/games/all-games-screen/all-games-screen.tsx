@@ -4,11 +4,7 @@ import { Card } from '@heroui/react';
 import Link from 'next/link';
 import type { Game } from '@/shared/model/types';
 import { routes } from '@/shared/lib/routes';
-import {
-  routeTransitionTypes,
-  titleTransitionStyle,
-  transitionNames,
-} from '@/shared/lib/view-transitions';
+import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 
 type AllGamesScreenProps = {
   games: Game[];
@@ -22,9 +18,7 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
         className="ctaLink"
         transitionTypes={routeTransitionTypes.forward}
       >
-        <span style={titleTransitionStyle(transitionNames.newGameTitle)}>
-          Новая игра
-        </span>
+        Новая игра
       </Link>
 
       {games.length === 0 ? (
@@ -40,14 +34,7 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
               >
                 <Card className="w-full">
                   <Card.Header>
-                    <p
-                      className="titleFly"
-                      style={titleTransitionStyle(
-                        transitionNames.gameTitle(game.id),
-                      )}
-                    >
-                      {game.name}
-                    </p>
+                    <Card.Title>{game.name}</Card.Title>
                     <Card.Description>
                       {game.players.length}{' '}
                       {game.players.length === 1 ? 'игрок' : 'игроков'}

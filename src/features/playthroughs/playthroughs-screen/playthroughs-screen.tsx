@@ -3,11 +3,7 @@
 import { Card } from '@heroui/react';
 import Link from 'next/link';
 import { routes } from '@/shared/lib/routes';
-import {
-  routeTransitionTypes,
-  titleTransitionStyle,
-  transitionNames,
-} from '@/shared/lib/view-transitions';
+import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import type { Playthrough } from '@/shared/model/types';
 
 type PlaythroughListScreenProps = {
@@ -42,14 +38,7 @@ const PlaythroughListScreen = ({
               >
                 <Card className="w-full">
                   <Card.Header>
-                    <p
-                      className="titleFly"
-                      style={titleTransitionStyle(
-                        transitionNames.playthroughTitle(playthrough.id),
-                      )}
-                    >
-                      Партия {playthrough.sequenceNumber}
-                    </p>
+                    <Card.Title>Партия {playthrough.sequenceNumber}</Card.Title>
                     <Card.Description>
                       {formatPlaythroughDate(playthrough.createdAt)}
                     </Card.Description>

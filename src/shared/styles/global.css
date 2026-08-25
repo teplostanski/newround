@@ -163,14 +163,6 @@ body {
   }
 }
 
-.titleFly {
-  width: fit-content;
-  max-width: 100%;
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
 .ctaLink,
 .buttonBone {
   box-sizing: border-box;
@@ -282,12 +274,6 @@ body {
   animation: 320ms cubic-bezier(0.2, 0.8, 0.2, 1) both
     route-enter-back-slide-edge;
   z-index: 1;
-}
-
-::view-transition-group(.title-fly) {
-  z-index: 20;
-  animation-duration: 420ms;
-  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes initial-loader-exit {

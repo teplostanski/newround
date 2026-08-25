@@ -3,11 +3,7 @@
 import { Button, Card } from '@heroui/react';
 import Link from 'next/link';
 import { routes } from '@/shared/lib/routes';
-import {
-  routeTransitionTypes,
-  titleTransitionStyle,
-  transitionNames,
-} from '@/shared/lib/view-transitions';
+import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import type { Game, Playthrough, Round, Scores } from '@/shared/model/types';
 
 type PlaythroughScreenProps = {
@@ -65,14 +61,7 @@ const PlaythroughScreen = ({
               >
                 <Card className="w-full">
                   <Card.Header>
-                    <p
-                      className="titleFly"
-                      style={titleTransitionStyle(
-                        transitionNames.roundTitle(round.id),
-                      )}
-                    >
-                      Раунд {round.sequenceNumber}
-                    </p>
+                    <Card.Title>Раунд {round.sequenceNumber}</Card.Title>
                     <Card.Description>
                       {formatRoundSummary(game.players, round.scores)}
                     </Card.Description>
