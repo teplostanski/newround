@@ -1,6 +1,6 @@
 'use client';
 
-import { Fieldset, Skeleton } from '@heroui/react';
+import { Fieldset, Separator, Skeleton } from '@heroui/react';
 import type { ComponentProps } from 'react';
 
 const asSpan = (props: ComponentProps<'span'>) => <span {...props} />;
@@ -18,13 +18,18 @@ const PlayerNameRowBone = () => (
   </div>
 );
 
-const PlayersHintBone = () => <Skeleton className="h-4 w-[70%]" />;
+const PlayersHintBone = () => (
+  <p className="empty">
+    <Skeleton className="inline-block h-[1em] w-[70%]" render={asSpan} />
+  </p>
+);
 
 const PlayersFieldsetBone = () => (
   <Fieldset>
     <Fieldset.Legend>
       <PlayersLegendBone />
     </Fieldset.Legend>
+    <Separator className="mt-2" />
     <PlayerNameRowBone />
     <PlayersHintBone />
   </Fieldset>
