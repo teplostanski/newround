@@ -2,7 +2,7 @@
 
 import { Moon, Sun } from '@gravity-ui/icons';
 import { Switch } from '@heroui/react';
-import { useTheme } from '@/shared/lib/use-theme';
+import { useTheme } from 'next-themes';
 import styles from './theme-switch.module.css';
 
 const ThemeSwitch = () => {
