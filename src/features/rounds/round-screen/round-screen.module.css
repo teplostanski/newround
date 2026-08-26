@@ -3,7 +3,7 @@
 }
 
 .scoreCard {
-  background-color: var(--background);
+  user-select: none;
 }
 
 .stepper {
@@ -14,28 +14,22 @@
 
 .stepperTile,
 .stepper :global(.button).stepperTile {
-  --button-bg: var(--surface);
-  --button-bg-hover: var(--surface);
-  --button-bg-pressed: var(--surface-hover);
   box-sizing: border-box;
   height: 2.75rem;
   min-height: 2.75rem;
   width: 100%;
   margin: 0;
   padding: 0;
-  border: 0;
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--foreground);
-  font-size: 1.1rem;
-  font-weight: 600;
-  box-shadow: none;
 }
 
 .stepperValue {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: var(--radius);
+  background: var(--line);
+  color: var(--foreground);
+  font-family: var(--font-mono);
   font-size: 1.5rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
