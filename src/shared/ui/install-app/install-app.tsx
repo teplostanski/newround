@@ -3,6 +3,7 @@
 import ArrowDownToSquare from '@gravity-ui/icons/ArrowDownToSquare';
 import { Button, Card, Modal, useOverlayState } from '@heroui/react';
 import { useSyncExternalStore } from 'react';
+import { cn } from '@/shared/lib/cn';
 import {
   defaultInstallGuide,
   detectInstallGuide,
@@ -144,7 +145,7 @@ const InstallApp = () => {
       <Button
         isIconOnly
         variant="secondary"
-        className={`iconButton ${styles.trigger}`}
+        className={cn('iconButton', styles.trigger)}
         aria-label="Установить приложение"
         onPress={overlay.open}
       >

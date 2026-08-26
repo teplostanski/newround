@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { ViewTransition, type ReactNode } from 'react';
+import { cn } from '@/shared/lib/cn';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import {
   AppHeaderSkeleton,
@@ -68,7 +69,13 @@ const ContentSkeleton = ({
 }: {
   kind: RouteKind;
   contents?: Partial<Record<RouteKind, ReactNode>>;
-}) => contents?.[kind] ?? contents?.games ?? <div className="screen" />;
+}) => {
+  if (kind === 'fallback') {
+    return contents?.fallback ?? <div className="screen" />;
+  }
+
+  return contents?.[kind] ?? contents?.games ?? <div className="screen" />;
+};
 
 export const RouteLoader = ({
   fullscreen = false,
@@ -87,10 +94,14 @@ export const RouteLoader = ({
   );
 
   if (onion) {
-    const onionClass = `${styles.onionLayer} ${onion === 'ghost' ? styles.onionGhost : styles.onionDiff}`;
-
     return (
-      <div className={onionClass} aria-hidden="true">
+      <div
+        className={cn(
+          styles.onionLayer,
+          onion === 'ghost' ? styles.onionGhost : styles.onionDiff,
+        )}
+        aria-hidden="true"
+      >
         {header}
         <div className={appStyles.main}>
           <ContentSkeleton kind={kind} contents={contents} />
@@ -101,7 +112,7 @@ export const RouteLoader = ({
 
   return (
     <div
-      className={`${styles.loader} ${fullscreen ? styles.fullscreen : ''}`}
+      className={cn(styles.loader, fullscreen && styles.fullscreen)}
       role="status"
       aria-label="Загрузка"
       aria-live="polite"

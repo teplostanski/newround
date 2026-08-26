@@ -1,6 +1,7 @@
 'use client';
 
 import { Skeleton } from '@heroui/react';
+import { cn } from '@/shared/lib/cn';
 import styles from './app-header.module.css';
 
 export type BrandSize = 'short' | 'medium' | 'long';
@@ -35,12 +36,12 @@ export const AppHeaderSkeleton = ({
       </div>
     </div>
     {title ? (
-      <div className={`${styles.brand} ${styles.brandSlot}`}>
+      <div className={cn(styles.brand, styles.brandSlot)}>
         <span className={styles.brandMeasure}>{title}</span>
         <Skeleton className={styles.brandFill} />
       </div>
     ) : (
-      <Skeleton className={`${styles.brandBone} ${brandSizeClass[brandSize]}`} />
+      <Skeleton className={cn(styles.brandBone, brandSizeClass[brandSize])} />
     )}
   </header>
 );

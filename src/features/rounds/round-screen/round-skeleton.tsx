@@ -1,6 +1,7 @@
 'use client';
 
 import { Card, Skeleton } from '@heroui/react';
+import { cn } from '@/shared/lib/cn';
 import styles from './round-screen.module.css';
 
 const PLAYER_KEYS = [0, 1, 2] as const;
@@ -18,7 +19,7 @@ const ScoreStepperBone = () => (
 );
 
 const ScoreCardBone = () => (
-  <Card className={`w-full ${styles.scoreCard}`}>
+  <Card className={cn('w-full', styles.scoreCard)}>
     <PlayerChipBone />
     <ScoreStepperBone />
   </Card>
@@ -28,7 +29,7 @@ const FinishRoundBone = () => <Skeleton className="h-11 w-full" />;
 
 export const RoundSkeleton = () => (
   <div className="screen">
-    <ul className={`list ${styles.list}`}>
+    <ul className={cn('list', styles.list)}>
       {PLAYER_KEYS.map((key) => (
         <li key={key}>
           <ScoreCardBone />

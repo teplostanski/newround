@@ -2,6 +2,7 @@
 
 import { Button, Card, Chip } from '@heroui/react';
 import type { Player, Scores } from '@/shared/model/types';
+import { cn } from '@/shared/lib/cn';
 import { getPlayerChipStyle } from '@/shared/lib/player-chip';
 import styles from './round-screen.module.css';
 
@@ -32,10 +33,10 @@ const RoundScreen = ({
 
   return (
     <div className="screen">
-      <ul className={`list ${styles.list}`}>
+      <ul className={cn('list', styles.list)}>
         {players.map((player, index) => (
           <li key={player.id}>
-            <Card className={`w-full ${styles.scoreCard}`}>
+            <Card className={cn('w-full', styles.scoreCard)}>
               <Chip
                 variant="soft"
                 size="lg"
@@ -46,7 +47,7 @@ const RoundScreen = ({
               </Chip>
               <div className={styles.stepper}>
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   className={styles.stepperTile}
                   isDisabled={scores[player.id] === 0}
                   aria-label={`Уменьшить счёт ${player.name}`}
@@ -57,12 +58,12 @@ const RoundScreen = ({
                   −
                 </Button>
                 <output
-                  className={`${styles.stepperTile} ${styles.stepperValue}`}
+                  className={cn(styles.stepperTile, styles.stepperValue)}
                 >
                   {scores[player.id]}
                 </output>
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   className={styles.stepperTile}
                   aria-label={`Увеличить счёт ${player.name}`}
                   onPress={() =>
