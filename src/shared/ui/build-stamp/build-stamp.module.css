@@ -9,6 +9,7 @@
   color: var(--link);
   text-decoration: underline;
   text-underline-offset: 0.15em;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
