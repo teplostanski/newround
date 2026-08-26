@@ -14,7 +14,18 @@ class Database extends Dexie {
       playthroughs: 'id, gameId, createdAt, updatedAt',
       rounds: 'id, gameId, playthroughId, createdAt, updatedAt',
     });
+
+    this.version(2).stores({
+      games: 'id, name, createdAt, updatedAt, isTestData',
+      playthroughs: 'id, gameId, createdAt, updatedAt, isTestData',
+      rounds: 'id, gameId, playthroughId, createdAt, updatedAt, isTestData',
+    });
   }
 }
 
 export const db = new Database();
+
+export const wipeDatabase = async () => {
+  await db.delete();
+  await db.open();
+};

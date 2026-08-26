@@ -10,7 +10,8 @@ import {
   type ReactNode,
 } from 'react';
 import { nanoid } from 'nanoid';
-import { db } from './db';
+import { db, wipeDatabase } from './db';
+import { deleteTestData, insertTestData } from './test-data';
 import type { Game, NewGameData, Playthrough, Round } from './types';
 
 type CreatedGame = {
@@ -26,6 +27,9 @@ type StoreValue = {
   addGame: (data: NewGameData) => CreatedGame;
   addRound: (gameId: string, playthroughId: string) => string | null;
   updateScore: (roundId: string, playerId: string, score: number) => void;
+  seedTestData: () => Promise<void>;
+  removeTestData: () => Promise<void>;
+  clearAll: () => Promise<void>;
 };
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -35,23 +39,33 @@ export const findById = <T extends { id: string }>(
   id: string | null,
 ) => (id ? items.find((item) => item.id === id) : undefined);
 
+const loadTables = () =>
+  Promise.all([
+    db.games.orderBy('createdAt').reverse().toArray(),
+    db.playthroughs.orderBy('createdAt').reverse().toArray(),
+    db.rounds.orderBy('createdAt').reverse().toArray(),
+  ]);
+
 export const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [isReady, setIsReady] = useState(false);
   const [games, setGames] = useState<Game[]>([]);
   const [playthroughs, setPlaythroughs] = useState<Playthrough[]>([]);
   const [rounds, setRounds] = useState<Round[]>([]);
 
+  const refreshFromDb = useCallback(async () => {
+    const [loadedGames, loadedPlaythroughs, loadedRounds] = await loadTables();
+
+    setGames(loadedGames);
+    setPlaythroughs(loadedPlaythroughs);
+    setRounds(loadedRounds);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
-      const [loadedGames, loadedPlaythroughs, loadedRounds] = await Promise.all(
-        [
-          db.games.orderBy('createdAt').reverse().toArray(),
-          db.playthroughs.orderBy('createdAt').reverse().toArray(),
-          db.rounds.orderBy('createdAt').reverse().toArray(),
-        ],
-      );
+      const [loadedGames, loadedPlaythroughs, loadedRounds] =
+        await loadTables();
 
       if (cancelled) {
         return;
@@ -155,6 +169,23 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     [rounds],
   );
 
+  const seedTestData = useCallback(async () => {
+    await insertTestData();
+    await refreshFromDb();
+  }, [refreshFromDb]);
+
+  const removeTestData = useCallback(async () => {
+    await deleteTestData();
+    await refreshFromDb();
+  }, [refreshFromDb]);
+
+  const clearAll = useCallback(async () => {
+    await wipeDatabase();
+    setGames([]);
+    setPlaythroughs([]);
+    setRounds([]);
+  }, []);
+
   const value = useMemo(
     () => ({
       isReady,
@@ -164,8 +195,22 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       addGame,
       addRound,
       updateScore,
+      seedTestData,
+      removeTestData,
+      clearAll,
     }),
-    [addGame, addRound, games, isReady, playthroughs, rounds, updateScore],
+    [
+      addGame,
+      addRound,
+      clearAll,
+      games,
+      isReady,
+      playthroughs,
+      removeTestData,
+      rounds,
+      seedTestData,
+      updateScore,
+    ],
   );
 
   return (

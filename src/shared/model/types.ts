@@ -1,7 +1,10 @@
+export const TEST_DATA_FLAG = 1;
+
 type Entity = {
   id: string;
   createdAt: number;
   updatedAt: number;
+  isTestData?: typeof TEST_DATA_FLAG;
 };
 
 export type Player = {
