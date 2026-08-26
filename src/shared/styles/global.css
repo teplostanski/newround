@@ -52,7 +52,7 @@ body {
 
 body {
   background:
-    radial-gradient(120% 80% at 50% -10%, var(--wash) 0%, transparent 55%),
+    radial-gradient(120vw 80dvh at 50% -10dvh, var(--wash) 0%, transparent 55%),
     var(--background);
 }
 
