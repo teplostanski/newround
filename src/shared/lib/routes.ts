@@ -8,6 +8,7 @@ const withQuery = (
 
 export const routes = {
   home: '/',
+  dev: '/dev',
   gameCreate: '/game/create',
   game: (gameId: string) => withQuery('/game', { gameId }),
   playthrough: (gameId: string, playthroughId: string) =>

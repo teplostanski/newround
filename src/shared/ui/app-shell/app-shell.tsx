@@ -76,6 +76,19 @@ export const AppShell = ({
     );
   }
 
+  if (pathname === '/dev') {
+    return (
+      <AppShellView
+        title="Разработка"
+        backHref={routes.home}
+        onion={false}
+        skeletons={skeletons}
+      >
+        {children}
+      </AppShellView>
+    );
+  }
+
   if (pathname === '/game/create') {
     return (
       <AppShellView
