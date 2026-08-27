@@ -9,6 +9,7 @@ import { FullscreenToggle } from '../fullscreen-toggle/fullscreen-toggle';
 import { InstallApp } from '../install-app/install-app';
 import { ThemeSwitch } from '../theme-switch/theme-switch';
 import styles from './app-header.module.css';
+import { OfflineStatus } from '../offline-status/offline-status';
 
 type AppHeaderProps = {
   title: string;
@@ -69,6 +70,7 @@ export const AppHeader = ({ title, backHref }: AppHeaderProps) => (
         )}
       </nav>
       <div className={styles.actions}>
+        <OfflineStatus />
         <ThemeSwitch />
         <InstallApp />
         <FullscreenToggle />
