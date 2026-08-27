@@ -28,11 +28,25 @@
 @import "@heroui/styles/components/alert.css" layer(components);
 @import "@heroui/styles/components/alert-dialog.css" layer(components);
 @import "@heroui/styles/components/switch.css" layer(components);
+@import "@heroui/styles/components/popover.css" layer(components);
+@import "@heroui/styles/components/tooltip.css" layer(components);
 
 @import "@heroui/styles/utilities";
 @import "@heroui/styles/variants";
 
 @import "./theme-newround.css";
+
+@layer components {
+  .popover,
+  .tooltip {
+    border: 1px solid var(--border);
+  }
+
+  .tooltip {
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+}
 
 @theme {
   --font-sans: var(--font-geist-sans);

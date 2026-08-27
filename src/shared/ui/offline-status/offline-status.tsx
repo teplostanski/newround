@@ -2,14 +2,19 @@
 
 import { useOnlineStatus } from '@/shared/lib/use-online-status';
 import { Chip } from '@heroui/react';
+import { AppTooltip } from '../app-tooltip/app-tooltip';
 
 const OfflineStatus = () => {
   const isOnline = useOnlineStatus();
 
+  if (isOnline) {
+    return null;
+  }
+
   return (
-    <>
-      {!isOnline && <Chip>Offline</Chip>}
-    </>
+    <AppTooltip>
+      <Chip className='cursor-pointer select-none'>Offline</Chip>
+    </AppTooltip>
   );
 };
 

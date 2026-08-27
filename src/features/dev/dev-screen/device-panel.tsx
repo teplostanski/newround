@@ -1,33 +1,18 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
 import { Chip } from '@heroui/react';
-import { detectDevice } from 'undevice';
+import { type DeviceFlags } from 'undevice';
 import styles from './device-panel.module.css';
+import { useDetectDevice } from '@/shared/lib/use-detect-device';
 
-const subscribe = () => () => undefined;
-
-const readUserAgent = () => navigator.userAgent;
-
-const emptyUserAgent = () => '';
-
-const activeFlags = (userAgent: string) => {
-  const device = detectDevice({
-    userAgent: userAgent || undefined,
-  });
-
-  return Object.entries(device)
+const activeFlags = (device: DeviceFlags) =>
+  Object.entries(device)
     .filter(([, isOn]) => isOn)
     .map(([flag]) => flag);
-};
 
 export const DevicePanel = () => {
-  const userAgent = useSyncExternalStore(
-    subscribe,
-    readUserAgent,
-    emptyUserAgent,
-  );
-  const flags = activeFlags(userAgent);
+  const { device, userAgent } = useDetectDevice();
+  const flags = activeFlags(device);
 
   return (
     <>
