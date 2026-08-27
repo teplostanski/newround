@@ -1,16 +1,19 @@
 'use client';
 
-import { Card } from '@heroui/react';
+import { Card, CloseButton } from '@heroui/react';
 import Link from 'next/link';
 import type { Game } from '@/shared/model/types';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
+import { useStore } from '@/shared/model/store';
 
 type AllGamesScreenProps = {
   games: Game[];
 };
 
 const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
+  const { deleteGame } = useStore();
+
   return (
     <div className="screen">
       <Link
@@ -27,21 +30,26 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
         <ul className="list">
           {games.map((game) => (
             <li key={game.id}>
-              <Link
-                href={routes.game(game.id)}
-                className="listButton"
-                transitionTypes={routeTransitionTypes.forward}
-              >
-                <Card className="w-full">
-                  <Card.Header>
+              <Card className="w-full">
+                <Card.Header className="flex-row items-start gap-2">
+                  <Link
+                    href={routes.game(game.id)}
+                    className="listButton min-w-0 flex-1"
+                    transitionTypes={routeTransitionTypes.forward}
+                  >
                     <Card.Title>{game.name}</Card.Title>
                     <Card.Description>
                       {game.players.length}{' '}
                       {game.players.length === 1 ? 'игрок' : 'игроков'}
                     </Card.Description>
-                  </Card.Header>
-                </Card>
-              </Link>
+                  </Link>
+                  <CloseButton
+                    aria-label="Удалить игру"
+                    className="shrink-0"
+                    onPress={() => deleteGame(game.id)}
+                  />
+                </Card.Header>
+              </Card>
             </li>
           ))}
         </ul>

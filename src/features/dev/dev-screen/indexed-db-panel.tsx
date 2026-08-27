@@ -6,7 +6,7 @@ import { cn } from '@/shared/lib/cn';
 import { useStore } from '@/shared/model/store';
 
 export const IndexedDbPanel = () => {
-  const { games, playthroughs, rounds, clearAll } = useStore();
+  const { games, playthroughs, rounds, resetAll } = useStore();
   const [isOpen, setOpen] = useState(false);
   const [isPending, setPending] = useState(false);
   const isEmpty =
@@ -20,7 +20,7 @@ export const IndexedDbPanel = () => {
     setPending(true);
 
     try {
-      await clearAll();
+      await resetAll();
       setOpen(false);
     } finally {
       setPending(false);

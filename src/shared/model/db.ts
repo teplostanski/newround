@@ -25,7 +25,27 @@ class Database extends Dexie {
 
 export const db = new Database();
 
-export const wipeDatabase = async () => {
+const setupCascadeDeleteHooks = (db: Database) => {
+  db.playthroughs.hook('deleting', function (playthroughId, _, transaction) {
+    return transaction
+      .table('rounds')
+      .where('playthroughId')
+      .equals(playthroughId)
+      .delete();
+  });
+  
+  db.games.hook('deleting', function (gameId, _, transaction) {
+    return transaction
+      .table('playthroughs')
+      .where('gameId')
+      .equals(gameId)
+      .delete();
+  });
+}
+
+setupCascadeDeleteHooks(db);
+
+export const resetDatabase = async () => {
   await db.delete();
   await db.open();
 };

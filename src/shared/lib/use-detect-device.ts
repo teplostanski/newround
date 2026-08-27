@@ -16,9 +16,7 @@ export const useDetectDevice = () => {
     emptyUserAgent,
   );
 
-  const device = detectDevice({
-    userAgent: userAgent || undefined,
-  });
+  const device = detectDevice({ userAgent });
 
-  return {device, userAgent};
+  return { device, userAgent };
 };

@@ -10,7 +10,7 @@ import {
   type ReactNode,
 } from 'react';
 import { nanoid } from 'nanoid';
-import { db, wipeDatabase } from './db';
+import { db, resetDatabase } from './db';
 import { deleteTestData, insertTestData } from './test-data';
 import type { Game, NewGameData, Playthrough, Round } from './types';
 
@@ -25,11 +25,12 @@ type StoreValue = {
   playthroughs: Playthrough[];
   rounds: Round[];
   addGame: (data: NewGameData) => CreatedGame;
+  deleteGame: (gameId: string) => Promise<void>;
   addRound: (gameId: string, playthroughId: string) => string | null;
   updateScore: (roundId: string, playerId: string, score: number) => void;
   seedTestData: () => Promise<void>;
   removeTestData: () => Promise<void>;
-  clearAll: () => Promise<void>;
+  resetAll: () => Promise<void>;
 };
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -113,6 +114,24 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     return { gameId, playthroughId };
   }, []);
 
+  const deleteGame = useCallback(async (gameId: string) => {
+    try {
+      await db.transaction('rw', db.games, db.playthroughs, db.rounds, () =>
+        db.games.delete(gameId),
+      );
+
+      setGames((current) => current.filter((game) => game.id !== gameId));
+      setPlaythroughs((current) =>
+        current.filter((playthrough) => playthrough.gameId !== gameId),
+      );
+      setRounds((current) =>
+        current.filter((round) => round.gameId !== gameId),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   const addRound = useCallback(
     (gameId: string, playthroughId: string) => {
       const game = findById(games, gameId);
@@ -179,8 +198,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     await refreshFromDb();
   }, [refreshFromDb]);
 
-  const clearAll = useCallback(async () => {
-    await wipeDatabase();
+  const resetAll = useCallback(async () => {
+    await resetDatabase();
     setGames([]);
     setPlaythroughs([]);
     setRounds([]);
@@ -193,16 +212,18 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       playthroughs,
       rounds,
       addGame,
+      deleteGame,
       addRound,
       updateScore,
       seedTestData,
       removeTestData,
-      clearAll,
+      resetAll,
     }),
     [
       addGame,
+      deleteGame,
       addRound,
-      clearAll,
+      resetAll,
       games,
       isReady,
       playthroughs,
@@ -214,9 +235,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <StoreContext.Provider value={value}>
-      {children}
-    </StoreContext.Provider>
+    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
   );
 };
 
