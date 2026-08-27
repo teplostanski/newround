@@ -19,6 +19,7 @@
   --black: #000000;
 
   --radius: 1rem;
+  --card-radius: 1.5rem;
   --field-radius: 1rem;
   --field-border-width: 1px;
   --ring-offset-width: 1px;
@@ -223,7 +224,7 @@
 @layer components {
   .card {
     border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border-radius: var(--card-radius);
   }
 
   .skeleton {

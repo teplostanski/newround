@@ -26,7 +26,10 @@ type StoreValue = {
   rounds: Round[];
   addGame: (data: NewGameData) => CreatedGame;
   deleteGame: (gameId: string) => Promise<void>;
+  addPlaythrough: (gameId: string) => string | null;
+  deletePlaythrough: (playthroughId: string) => Promise<void>;
   addRound: (gameId: string, playthroughId: string) => string | null;
+  deleteRound: (roundId: string) => Promise<void>;
   updateScore: (roundId: string, playerId: string, score: number) => void;
   seedTestData: () => Promise<void>;
   removeTestData: () => Promise<void>;
@@ -132,6 +135,60 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const addPlaythrough = useCallback(
+    (gameId: string) => {
+      const game = findById(games, gameId);
+
+      if (!game) {
+        return null;
+      }
+
+      const id = nanoid();
+      const now = Date.now();
+
+      const gamePlaythroughs = playthroughs.filter(
+        (playthrough) => playthrough.gameId === gameId,
+      );
+
+      const lastNumber = gamePlaythroughs.reduce((max, playthrough) => {
+        return Math.max(max, playthrough.sequenceNumber);
+      }, 0);
+
+      const playthrough: Playthrough = {
+        id,
+        gameId,
+        sequenceNumber: lastNumber + 1,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      setPlaythroughs((current) => [playthrough, ...current]);
+      void db.transaction('rw', db.playthroughs, async () => {
+        await db.playthroughs.add(playthrough);
+      });
+
+      return playthrough.id;
+    },
+    [games, playthroughs, rounds],
+  );
+
+  const deletePlaythrough = useCallback(async (playthroughId: string) => {
+    try {
+      await db.transaction('rw', db.playthroughs, db.rounds, () =>
+        db.playthroughs.delete(playthroughId),
+      );
+
+      setPlaythroughs((current) =>
+        current.filter((playthrough) => playthrough.id !== playthroughId),
+      );
+      setRounds((current) =>
+        current.filter((round) => round.playthroughId !== playthroughId),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   const addRound = useCallback(
     (gameId: string, playthroughId: string) => {
       const game = findById(games, gameId);
@@ -145,11 +202,16 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       const playthroughRounds = rounds.filter(
         (round) => round.playthroughId === playthroughId,
       );
+
+      const lastNumber = playthroughRounds.reduce((max, round) => {
+        return Math.max(max, round.sequenceNumber);
+      }, 0);
+
       const round: Round = {
         id: nanoid(),
         gameId,
         playthroughId,
-        sequenceNumber: playthroughRounds.length + 1,
+        sequenceNumber: lastNumber + 1,
         scores: Object.fromEntries(
           game.players.map((player) => [player.id, 0]),
         ),
@@ -164,6 +226,16 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     },
     [games, playthroughs, rounds],
   );
+
+  const deleteRound = useCallback(async (roundId: string) => {
+    try {
+      await db.transaction('rw', db.rounds, () => db.rounds.delete(roundId));
+
+      setRounds((current) => current.filter((round) => round.id !== roundId));
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
 
   const updateScore = useCallback(
     (roundId: string, playerId: string, score: number) => {
@@ -213,24 +285,30 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       rounds,
       addGame,
       deleteGame,
+      addPlaythrough,
+      deletePlaythrough,
       addRound,
+      deleteRound,
       updateScore,
       seedTestData,
       removeTestData,
       resetAll,
     }),
     [
+      isReady,
+      games,
+      playthroughs,
+      rounds,
       addGame,
       deleteGame,
+      addPlaythrough,
+      deletePlaythrough,
       addRound,
-      resetAll,
-      games,
-      isReady,
-      playthroughs,
-      removeTestData,
-      rounds,
-      seedTestData,
+      deleteRound,
       updateScore,
+      seedTestData,
+      removeTestData,
+      resetAll,
     ],
   );
 

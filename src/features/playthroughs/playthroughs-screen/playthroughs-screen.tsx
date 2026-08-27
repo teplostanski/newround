@@ -1,10 +1,9 @@
 'use client';
 
-import { Card } from '@heroui/react';
-import Link from 'next/link';
 import { routes } from '@/shared/lib/routes';
-import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import type { Playthrough } from '@/shared/model/types';
+import { useStore } from '@/shared/model/store';
+import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 
 type PlaythroughListScreenProps = {
   gameId: string;
@@ -23,6 +22,8 @@ const PlaythroughListScreen = ({
   gameId,
   playthroughs,
 }: PlaythroughListScreenProps) => {
+  const { deletePlaythrough } = useStore();
+  
   return (
     <div className="screen">
       {playthroughs.length === 0 ? (
@@ -31,20 +32,15 @@ const PlaythroughListScreen = ({
         <ul className="list">
           {playthroughs.map((playthrough) => (
             <li key={playthrough.id}>
-              <Link
+              <ListItemCard
                 href={routes.playthrough(gameId, playthrough.id)}
-                className="listButton"
-                transitionTypes={routeTransitionTypes.forward}
-              >
-                <Card className="w-full">
-                  <Card.Header>
-                    <Card.Title>Партия {playthrough.sequenceNumber}</Card.Title>
-                    <Card.Description>
-                      {formatPlaythroughDate(playthrough.createdAt)}
-                    </Card.Description>
-                  </Card.Header>
-                </Card>
-              </Link>
+                title={`Партия ${playthrough.sequenceNumber}`}
+                description={formatPlaythroughDate(playthrough.createdAt)}
+                deleteLabel="Удалить партию"
+                onDelete={() => {
+                  void deletePlaythrough(playthrough.id);
+                }}
+              />
             </li>
           ))}
         </ul>

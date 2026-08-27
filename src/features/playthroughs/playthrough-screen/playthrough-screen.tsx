@@ -1,10 +1,10 @@
 'use client';
 
 import { Button, Card } from '@heroui/react';
-import Link from 'next/link';
 import { routes } from '@/shared/lib/routes';
-import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import type { Game, Playthrough, Round, Scores } from '@/shared/model/types';
+import { useStore } from '@/shared/model/store';
+import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 
 type PlaythroughScreenProps = {
   game: Game;
@@ -32,6 +32,8 @@ const PlaythroughScreen = ({
   rounds,
   onStartRound,
 }: PlaythroughScreenProps) => {
+  const { deleteRound } = useStore();
+
   return (
     <div className="screen">
       <Card className="w-full">
@@ -54,20 +56,15 @@ const PlaythroughScreen = ({
         <ul className="list">
           {rounds.map((round) => (
             <li key={round.id}>
-              <Link
+              <ListItemCard
                 href={routes.round(game.id, playthrough.id, round.id)}
-                className="listButton"
-                transitionTypes={routeTransitionTypes.forward}
-              >
-                <Card className="w-full">
-                  <Card.Header>
-                    <Card.Title>Раунд {round.sequenceNumber}</Card.Title>
-                    <Card.Description>
-                      {formatRoundSummary(game.players, round.scores)}
-                    </Card.Description>
-                  </Card.Header>
-                </Card>
-              </Link>
+                title={`Раунд ${round.sequenceNumber}`}
+                description={formatRoundSummary(game.players, round.scores)}
+                deleteLabel="Удалить раунд"
+                onDelete={() => {
+                  void deleteRound(round.id);
+                }}
+              />
             </li>
           ))}
         </ul>
