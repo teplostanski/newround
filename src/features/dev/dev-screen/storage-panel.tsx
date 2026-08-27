@@ -2,7 +2,6 @@
 
 import { useState, useSyncExternalStore } from 'react';
 import {
-  AlertDialog,
   Button,
   Card,
   Input,
@@ -23,6 +22,7 @@ import {
   writeStorageEntry,
   type BrowserStorageKind,
 } from '@/shared/lib/browser-storage';
+import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
 import styles from './storage-panel.module.css';
 
 type Draft = {
@@ -203,35 +203,18 @@ export const StoragePanel = ({ kind }: StoragePanelProps) => {
         </Modal.Container>
       </Modal.Backdrop>
 
-      <AlertDialog.Backdrop
+      <ConfirmDialog
         isOpen={wipe !== null}
+        heading={wipeHeading}
+        body={wipeBody}
+        confirmLabel={wipe?.type === 'all' ? 'Очистить' : 'Удалить'}
         onOpenChange={(isOpen) => {
           if (!isOpen) {
             setWipe(null);
           }
         }}
-      >
-        <AlertDialog.Container>
-          <AlertDialog.Dialog className="sm:max-w-[400px]">
-            <AlertDialog.CloseTrigger />
-            <AlertDialog.Header>
-              <AlertDialog.Icon status="danger" />
-              <AlertDialog.Heading>{wipeHeading}</AlertDialog.Heading>
-            </AlertDialog.Header>
-            <AlertDialog.Body>
-              <p>{wipeBody}</p>
-            </AlertDialog.Body>
-            <AlertDialog.Footer>
-              <Button slot="close" variant="tertiary">
-                Отмена
-              </Button>
-              <Button variant="danger" onPress={handleWipe}>
-                {wipe?.type === 'all' ? 'Очистить' : 'Удалить'}
-              </Button>
-            </AlertDialog.Footer>
-          </AlertDialog.Dialog>
-        </AlertDialog.Container>
-      </AlertDialog.Backdrop>
+        onConfirm={handleWipe}
+      />
     </>
   );
 };

@@ -4,6 +4,7 @@ import { Button, Card } from '@heroui/react';
 import { routes } from '@/shared/lib/routes';
 import type { Game, Playthrough, Round, Scores } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
+import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
 import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 
 type PlaythroughScreenProps = {
@@ -60,10 +61,16 @@ const PlaythroughScreen = ({
                 href={routes.round(game.id, playthrough.id, round.id)}
                 title={`Раунд ${round.sequenceNumber}`}
                 description={formatRoundSummary(game.players, round.scores)}
-                deleteLabel="Удалить раунд"
-                onDelete={() => {
-                  void deleteRound(round.id);
-                }}
+                action={
+                  <ConfirmDeleteButton
+                    deleteLabel="Удалить раунд"
+                    confirmHeading={`Удалить раунд ${round.sequenceNumber}?`}
+                    confirmBody="Счёт этого раунда пропадёт. Это нельзя отменить."
+                    onConfirm={() => {
+                      void deleteRound(round.id);
+                    }}
+                  />
+                }
               />
             </li>
           ))}

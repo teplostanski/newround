@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { AlertDialog, Button } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { cn } from '@/shared/lib/cn';
 import { useStore } from '@/shared/model/store';
+import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
 
 export const IndexedDbPanel = () => {
   const { games, playthroughs, rounds, resetAll } = useStore();
@@ -43,36 +44,17 @@ export const IndexedDbPanel = () => {
         Очистить
       </Button>
 
-      <AlertDialog.Backdrop isOpen={isOpen} onOpenChange={setOpen}>
-        <AlertDialog.Container>
-          <AlertDialog.Dialog className="sm:max-w-[400px]">
-            <AlertDialog.CloseTrigger />
-            <AlertDialog.Header>
-              <AlertDialog.Icon status="danger" />
-              <AlertDialog.Heading>
-                Удалить все игры, партии и раунды?
-              </AlertDialog.Heading>
-            </AlertDialog.Header>
-            <AlertDialog.Body>
-              <p>База IndexedDB будет стерта. Это нельзя отменить.</p>
-            </AlertDialog.Body>
-            <AlertDialog.Footer>
-              <Button slot="close" variant="tertiary" isDisabled={isPending}>
-                Отмена
-              </Button>
-              <Button
-                variant="danger"
-                isPending={isPending}
-                onPress={() => {
-                  void handleWipe();
-                }}
-              >
-                Очистить
-              </Button>
-            </AlertDialog.Footer>
-          </AlertDialog.Dialog>
-        </AlertDialog.Container>
-      </AlertDialog.Backdrop>
+      <ConfirmDialog
+        isOpen={isOpen}
+        heading="Удалить все игры, партии и раунды?"
+        body="База IndexedDB будет стерта. Это нельзя отменить."
+        confirmLabel="Очистить"
+        isPending={isPending}
+        onOpenChange={setOpen}
+        onConfirm={() => {
+          void handleWipe();
+        }}
+      />
     </>
   );
 };

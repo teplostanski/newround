@@ -3,6 +3,7 @@
 import { routes } from '@/shared/lib/routes';
 import type { Playthrough } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
+import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
 import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 
 type PlaythroughListScreenProps = {
@@ -23,7 +24,7 @@ const PlaythroughListScreen = ({
   playthroughs,
 }: PlaythroughListScreenProps) => {
   const { deletePlaythrough } = useStore();
-  
+
   return (
     <div className="screen">
       {playthroughs.length === 0 ? (
@@ -36,10 +37,16 @@ const PlaythroughListScreen = ({
                 href={routes.playthrough(gameId, playthrough.id)}
                 title={`Партия ${playthrough.sequenceNumber}`}
                 description={formatPlaythroughDate(playthrough.createdAt)}
-                deleteLabel="Удалить партию"
-                onDelete={() => {
-                  void deletePlaythrough(playthrough.id);
-                }}
+                action={
+                  <ConfirmDeleteButton
+                    deleteLabel="Удалить партию"
+                    confirmHeading={`Удалить партию ${playthrough.sequenceNumber}?`}
+                    confirmBody="Раунды этой партии пропадут. Это нельзя отменить."
+                    onConfirm={() => {
+                      void deletePlaythrough(playthrough.id);
+                    }}
+                  />
+                }
               />
             </li>
           ))}

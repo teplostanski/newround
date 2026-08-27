@@ -1,6 +1,7 @@
 'use client';
 
-import { Card, CloseButton } from '@heroui/react';
+import type { ReactNode } from 'react';
+import { Card } from '@heroui/react';
 import Link from 'next/link';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 
@@ -8,16 +9,14 @@ type ListItemCardProps = {
   href: string;
   title: string;
   description: string;
-  deleteLabel: string;
-  onDelete: () => void;
+  action: ReactNode;
 };
 
 const ListItemCard = ({
   href,
   title,
   description,
-  deleteLabel,
-  onDelete,
+  action,
 }: ListItemCardProps) => {
   return (
     <Card className="w-full">
@@ -30,11 +29,7 @@ const ListItemCard = ({
           <Card.Title>{title}</Card.Title>
           <Card.Description>{description}</Card.Description>
         </Link>
-        <CloseButton
-          aria-label={deleteLabel}
-          className="shrink-0"
-          onPress={onDelete}
-        />
+        <div className="shrink-0">{action}</div>
       </Card.Header>
     </Card>
   );
