@@ -1,18 +1,18 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { PlaythroughsSkeleton } from '@/features/playthroughs/playthroughs-screen/playthroughs-skeleton';
+import { GamePage } from '@/features/game/game-page';
 import { RouteTransition } from '@/shared/ui/route-transition/route-transition';
-import { PlaythroughsPage } from '@/features/playthroughs/playthroughs-page';
+import { routeSkeletons } from '../route-skeletons';
 
 export const metadata: Metadata = {
   title: 'Партии',
 };
 
-export default function GamePage() {
+export default function AppGamePage() {
   return (
     <RouteTransition>
-      <Suspense fallback={<PlaythroughsSkeleton />}>
-        <PlaythroughsPage />
+      <Suspense fallback={routeSkeletons.playthroughs}>
+        <GamePage />
       </Suspense>
     </RouteTransition>
   );

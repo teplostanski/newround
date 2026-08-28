@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { PlaythroughSkeleton } from '@/features/playthroughs/playthrough-screen/playthrough-skeleton';
+import { PlaythroughPage } from '@/features/playthrough/playthrough-page';
 import { RouteTransition } from '@/shared/ui/route-transition/route-transition';
-import { PlaythroughPage } from '@/features/playthroughs/playthrough-page';
+import { routeSkeletons } from '../route-skeletons';
 
 export const metadata: Metadata = {
   title: 'Партия',
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function CurrentPlaythroughPage() {
   return (
     <RouteTransition>
-      <Suspense fallback={<PlaythroughSkeleton />}>
+      <Suspense fallback={routeSkeletons.playthrough}>
         <PlaythroughPage />
       </Suspense>
     </RouteTransition>

@@ -6,12 +6,12 @@ import { useStore } from '@/shared/model/store';
 import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
 import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 
-type PlaythroughListScreenProps = {
+type PlaythroughsListProps = {
   gameId: string;
   playthroughs: Playthrough[];
 };
 
-const formatPlaythroughDate = (createdAt: number) =>
+const formatDate = (createdAt: number) =>
   new Date(createdAt).toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'long',
@@ -19,10 +19,10 @@ const formatPlaythroughDate = (createdAt: number) =>
     minute: '2-digit',
   });
 
-const PlaythroughListScreen = ({
+const PlaythroughsList = ({
   gameId,
   playthroughs,
-}: PlaythroughListScreenProps) => {
+}: PlaythroughsListProps) => {
   const { deletePlaythrough } = useStore();
 
   return (
@@ -34,9 +34,9 @@ const PlaythroughListScreen = ({
           {playthroughs.map((playthrough) => (
             <li key={playthrough.id}>
               <ListItemCard
-                href={routes.playthrough(gameId, playthrough.id)}
+                link={routes.playthrough(gameId, playthrough.id)}
                 title={`Партия ${playthrough.sequenceNumber}`}
-                description={formatPlaythroughDate(playthrough.createdAt)}
+                description={formatDate(playthrough.createdAt)}
                 action={
                   <ConfirmDeleteButton
                     deleteLabel="Удалить партию"
@@ -56,4 +56,4 @@ const PlaythroughListScreen = ({
   );
 };
 
-export { PlaythroughListScreen };
+export { PlaythroughsList };

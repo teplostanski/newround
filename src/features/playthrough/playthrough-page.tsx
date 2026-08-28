@@ -1,27 +1,20 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { PlaythroughScreen } from '@/features/playthroughs/playthrough-screen/playthrough-screen';
-import { PlaythroughSkeleton } from '@/features/playthroughs/playthrough-screen/playthrough-skeleton';
+import { RoundsList } from '@/features/playthrough/rounds-list';
+import { PlaythroughSkeleton } from '@/features/playthrough/playthrough-skeleton';
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
-import type { Game, Playthrough, Round } from '@/shared/model/types';
-
-type NavigationSnapshot = {
-  game: Game;
-  playthrough: Playthrough;
-  rounds: Round[];
-};
+import { Button, Card } from '@heroui/react';
+import { formatDate } from '@/shared/utils';
 
 export const PlaythroughPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { addRound, games, isReady, playthroughs, rounds } = useStore();
   const [, startNavigation] = useTransition();
-  const [navigationSnapshot, setNavigationSnapshot] =
-    useState<NavigationSnapshot | null>(null);
   const gameId = searchParams.get('gameId');
   const playthroughId = searchParams.get('playthroughId');
   const game = findById(games, gameId);
@@ -50,22 +43,16 @@ export const PlaythroughPage = () => {
       return;
     }
 
-    setNavigationSnapshot({
-      game,
-      playthrough,
-      rounds: playthroughRounds,
-    });
-
     startNavigation(() => {
       const roundId = addRound(game.id, playthrough.id);
 
-      if (roundId) {
-        router.push(routes.round(game.id, playthrough.id, roundId), {
-          transitionTypes: routeTransitionTypes.forward,
-        });
-      } else {
-        setNavigationSnapshot(null);
+      if (!roundId) {
+        return;
       }
+
+      router.push(routes.round(game.id, playthrough.id, roundId), {
+        transitionTypes: routeTransitionTypes.forward,
+      });
     });
   };
 
@@ -73,16 +60,26 @@ export const PlaythroughPage = () => {
     return <PlaythroughSkeleton />;
   }
 
-  const visibleGame = navigationSnapshot?.game ?? game;
-  const visiblePlaythrough = navigationSnapshot?.playthrough ?? playthrough;
-  const visibleRounds = navigationSnapshot?.rounds ?? playthroughRounds;
-
   return (
-    <PlaythroughScreen
-      game={visibleGame}
-      playthrough={visiblePlaythrough}
-      rounds={visibleRounds}
-      onStartRound={handleStartRound}
-    />
+    <div className="screen">
+      <Card className="w-full">
+        <Card.Content>
+          <p className="text-muted m-0 text-[0.95rem]">
+            {game.name} · {formatDate(playthrough.createdAt)} ·{' '}
+            {game.players.length}{' '}
+            {game.players.length === 1 ? 'игрок' : 'игроков'}
+          </p>
+        </Card.Content>
+      </Card>
+
+      <Button fullWidth onPress={handleStartRound}>
+        Начать раунд
+      </Button>
+      <RoundsList
+        game={game}
+        playthrough={playthrough}
+        rounds={playthroughRounds}
+      />
+    </div>
   );
 };
