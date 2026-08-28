@@ -2,46 +2,47 @@
 
 import { Skeleton } from '@heroui/react';
 import { cn } from '@/shared/lib/cn';
-import styles from './app-header.module.css';
+import headerStyles from './app-header.module.css';
+import styles from './app-header-skeleton.module.css';
 
-export type BrandSize = 'short' | 'medium' | 'long';
+export type TitleSize = 'short' | 'medium' | 'long';
 
 type AppHeaderSkeletonProps = {
   title?: string;
   showBack?: boolean;
-  brandSize?: BrandSize;
+  titleSize?: TitleSize;
 };
 
-const brandSizeClass = {
-  short: styles.brandShort,
-  medium: styles.brandMedium,
-  long: styles.brandLong,
+const titleSizeClass = {
+  short: styles.titleShort,
+  medium: styles.titleMedium,
+  long: styles.titleLong,
 } as const;
 
 export const AppHeaderSkeleton = ({
   title,
   showBack = false,
-  brandSize = 'long',
+  titleSize = 'long',
 }: AppHeaderSkeletonProps) => (
-  <header className={styles.header}>
-    <div className={styles.headerBar}>
-      <nav className={styles.nav} aria-hidden="true">
+  <header className={headerStyles.header}>
+    <div className={headerStyles.headerBar}>
+      <nav className={headerStyles.nav} aria-hidden="true">
         {showBack && <Skeleton className="size-11" />}
         {showBack && <Skeleton className="size-11" />}
       </nav>
-      <div className={styles.actions}>
+      <div className={headerStyles.actions}>
         <Skeleton className={styles.themeSwitchBone} />
         <Skeleton className="size-11" />
         <Skeleton className="size-11" />
       </div>
     </div>
     {title ? (
-      <div className={cn(styles.brand, styles.brandSlot)}>
-        <span className={styles.brandMeasure}>{title}</span>
-        <Skeleton className={styles.brandFill} />
+      <div className={cn(headerStyles.title, styles.titleSlot)}>
+        <span className={styles.titleMeasure}>{title}</span>
+        <Skeleton className={styles.titleFill} />
       </div>
     ) : (
-      <Skeleton className={cn(styles.brandBone, brandSizeClass[brandSize])} />
+      <Skeleton className={cn(styles.titleBone, titleSizeClass[titleSize])} />
     )}
   </header>
 );

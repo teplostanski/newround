@@ -76,6 +76,6 @@ export const AppHeader = ({ title, backHref }: AppHeaderProps) => (
         <FullscreenToggle />
       </div>
     </div>
-    <h1 className={styles.brand}>{title}</h1>
+    <h1 className={styles.title}>{title}</h1>
   </header>
 );

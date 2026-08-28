@@ -1,0 +1,37 @@
+.titleSlot {
+  position: relative;
+}
+
+.titleMeasure {
+  display: block;
+  visibility: hidden;
+}
+
+.titleFill {
+  position: absolute;
+  inset: 0;
+}
+
+.titleBone {
+  height: 2.1rem;
+}
+
+.titleShort {
+  width: 3.6rem;
+}
+
+.titleMedium {
+  width: 8.75rem;
+}
+
+.titleLong {
+  width: 10rem;
+  max-width: 100%;
+}
+
+.themeSwitchBone {
+  width: 3rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  border-radius: 0.75rem;
+}

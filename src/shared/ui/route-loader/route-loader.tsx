@@ -6,7 +6,7 @@ import { cn } from '@/shared/lib/cn';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import {
   AppHeaderSkeleton,
-  type BrandSize,
+  type TitleSize,
 } from '../app-header/app-header-skeleton';
 import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
@@ -44,7 +44,7 @@ const routeKind = (pathname: string): RouteKind => {
   }
 };
 
-const brandSize = (kind: RouteKind): BrandSize => {
+const titleSize = (kind: RouteKind): TitleSize => {
   if (kind === 'games') {
     return 'short';
   }
@@ -89,7 +89,7 @@ export const RouteLoader = ({
     <AppHeaderSkeleton
       title={title}
       showBack={kind !== 'games'}
-      brandSize={brandSize(kind)}
+      titleSize={titleSize(kind)}
     />
   );
 
