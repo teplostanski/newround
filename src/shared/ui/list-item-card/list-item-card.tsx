@@ -4,33 +4,50 @@ import type { ReactNode } from 'react';
 import { Card } from '@heroui/react';
 import Link from 'next/link';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
+import styles from './list-item-card.module.css';
 
 type ListItemCardProps = {
-  href: string;
   title: string;
-  description: string;
-  action: ReactNode;
+  link?: string;
+  description?: string;
+  action?: ReactNode;
+  content?: ReactNode;
+  footer?: ReactNode;
 };
 
 const ListItemCard = ({
-  href,
   title,
+  link,
   description,
   action,
+  content,
+  footer,
 }: ListItemCardProps) => {
+  const main = (
+    <>
+      <Card.Header>
+        <Card.Title>{title}</Card.Title>
+        {description && <Card.Description>{description}</Card.Description>}
+      </Card.Header>
+      {content && <Card.Content>{content}</Card.Content>}
+      {footer && <Card.Footer>{footer}</Card.Footer>}
+    </>
+  );
+
   return (
-    <Card className="w-full">
-      <Card.Header className="flex-row items-start gap-2">
+    <Card className={styles.card}>
+      {link ? (
         <Link
-          href={href}
-          className="listButton min-w-0 flex-1"
+          href={link}
+          className={styles.main}
           transitionTypes={routeTransitionTypes.forward}
         >
-          <Card.Title>{title}</Card.Title>
-          <Card.Description>{description}</Card.Description>
+          {main}
         </Link>
-        <div className="shrink-0">{action}</div>
-      </Card.Header>
+      ) : (
+        <div className={styles.main}>{main}</div>
+      )}
+      {action && <div className={styles.action}>{action}</div>}
     </Card>
   );
 };

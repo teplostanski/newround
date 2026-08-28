@@ -32,7 +32,7 @@ const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
           {games.map((game) => (
             <li key={game.id}>
               <ListItemCard
-                href={routes.game(game.id)}
+                link={routes.game(game.id)}
                 title={game.name}
                 description={`${game.players.length} ${
                   game.players.length === 1 ? 'игрок' : 'игроков'

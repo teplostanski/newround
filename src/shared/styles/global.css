@@ -127,21 +127,7 @@ body {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-}
-
-.listButton {
-  display: block;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
+  gap: 0.5rem;
 }
 
 .iconButton {

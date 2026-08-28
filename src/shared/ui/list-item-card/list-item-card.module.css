@@ -1,0 +1,17 @@
+.card {
+  width: 100%;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+}
+
+.action {
+  flex-shrink: 0;
+}
