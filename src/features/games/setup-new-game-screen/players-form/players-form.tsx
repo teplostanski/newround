@@ -1,10 +1,11 @@
 'use client';
 
 import { useId, useState, type SubmitEvent } from 'react';
-import { Button, Chip, Fieldset, Input, Separator } from '@heroui/react';
+import { Chip, Fieldset, Input, Separator } from '@heroui/react';
 import { Plus } from '@gravity-ui/icons';
 import type { Player } from '@/shared/model/types';
 import { getPlayerChipStyle } from '@/shared/lib/player-chip';
+import { IconAction } from '@/shared/ui/icon-action/icon-action';
 
 type PlayersFormProps = {
   players: Player[];
@@ -49,15 +50,9 @@ const PlayersForm = ({ players, onAddPlayer }: PlayersFormProps) => {
           onChange={(event) => setPlayerName(event.target.value)}
         />
 
-        <Button
-          isIconOnly
-          type="submit"
-          variant="secondary"
-          className="iconButton"
-          aria-label={addPlayerLabel}
-        >
+        <IconAction type="submit" aria-label={addPlayerLabel}>
           <Plus width={20} height={20} aria-hidden="true" focusable="false" />
-        </Button>
+        </IconAction>
       </form>
 
       {players.length === 0 ? (

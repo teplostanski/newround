@@ -1,6 +1,7 @@
 'use client';
 
 import { Button, Card, Chip } from '@heroui/react';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import type { Player, Scores } from '@/shared/model/types';
 import { cn } from '@/shared/lib/cn';
 import { getPlayerChipStyle } from '@/shared/lib/player-chip';
@@ -78,9 +79,7 @@ const RoundScreen = ({
         ))}
       </ul>
 
-      <Button fullWidth onPress={onFinishRound}>
-        Завершить раунд
-      </Button>
+      <PrimaryAction onPress={onFinishRound}>Завершить раунд</PrimaryAction>
     </div>
   );
 };

@@ -6,7 +6,8 @@ import { PlaythroughsList } from '@/features/playthroughs/playthroughs-list/play
 import { GameSkeleton } from '@/features/game/game-skeleton';
 import { routes } from '@/shared/lib/routes';
 import { findById, useStore } from '@/shared/model/store';
-import { Button, Card, Separator } from '@heroui/react';
+import { Card } from '@heroui/react';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { formatDate } from '@/shared/utils';
 
@@ -74,9 +75,7 @@ export const GamePage = () => {
           </p>
         }
       />
-      <Button fullWidth onPress={handleStartPlaythrough}>
-        Начать партию
-      </Button>
+      <PrimaryAction onPress={handleStartPlaythrough}>Начать партию</PrimaryAction>
       <PlaythroughsList gameId={game.id} playthroughs={gamePlaythroughs} />
     </div>
   );

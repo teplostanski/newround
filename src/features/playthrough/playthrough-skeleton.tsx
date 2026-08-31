@@ -6,6 +6,7 @@ import {
   ListItemCardSkeleton,
   ListItemTextBone,
 } from '@/shared/ui/list-item-card/list-item-card-skeleton';
+import { PrimaryActionBone } from '@/shared/ui/primary-action/primary-action';
 
 const ROUND_KEYS = [0, 1, 2] as const;
 const CHIP_NAMES = ['Игрок 1', 'Игрок 2', 'Игрок 3', 'Игрок 4'] as const;
@@ -22,7 +23,7 @@ const PlaythroughMetaBone = () => (
   </Card>
 );
 
-const StartRoundBone = () => <Skeleton className="buttonBone" />;
+const StartRoundBone = () => <PrimaryActionBone />;
 
 const RoundChipBone = ({ name }: { name: string }) => (
   <Chip variant="soft" size="md" className="relative overflow-hidden px-2">

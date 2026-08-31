@@ -22,14 +22,14 @@
   margin-top: 0.75rem;
 }
 
-.actions :global(.button),
-.toolbar :global(.button) {
-  flex: 1;
-}
-
 .toolbar {
   display: flex;
   gap: 0.5rem;
+}
+
+.toolbar .grow,
+.actions .grow {
+  flex: 1;
 }
 
 .editor {

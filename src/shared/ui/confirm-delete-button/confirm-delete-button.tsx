@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { CloseButton } from '@heroui/react';
+import { Button } from '@heroui/react';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
+import { TrashBin } from '@gravity-ui/icons';
 
 type ConfirmDeleteButtonProps = {
   deleteLabel: string;
@@ -21,10 +22,15 @@ const ConfirmDeleteButton = ({
 
   return (
     <>
-      <CloseButton
+      <Button
+        variant="ghost"
+        size="sm"
         aria-label={deleteLabel}
         onPress={() => setOpen(true)}
-      />
+        isIconOnly
+      >
+        <TrashBin className='text-danger'/>
+      </Button>
       <ConfirmDialog
         isOpen={isOpen}
         heading={confirmHeading}
