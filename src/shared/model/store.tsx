@@ -169,7 +169,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
       return playthrough.id;
     },
-    [games, playthroughs, rounds],
+    [games, playthroughs],
   );
 
   const deletePlaythrough = useCallback(async (playthroughId: string) => {

@@ -1,7 +1,6 @@
 'use client';
 
 import { useDetectDevice } from '@/shared/lib/use-detect-device';
-import { useOnlineStatus } from '@/shared/lib/use-online-status';
 import { Popover, Tooltip } from '@heroui/react';
 import { ReactNode } from 'react';
 
