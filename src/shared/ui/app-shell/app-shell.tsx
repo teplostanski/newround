@@ -6,7 +6,6 @@ import { routes } from '@/shared/lib/routes';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import { findById, useStore } from '@/shared/model/store';
 import { AppHeader } from '../app-header/app-header';
-import { BuildStamp } from '../build-stamp/build-stamp';
 import { RouteLoader, type RouteKind } from '../route-loader/route-loader';
 import styles from './app-shell.module.css';
 
@@ -37,9 +36,7 @@ const AppShellView = ({
     <div className={styles.shell}>
       <AppHeader title={title} backHref={backHref} />
       <main className={styles.main}>{children}</main>
-      <footer>
-        <BuildStamp />
-      </footer>
+
       {onion ? (
         <RouteLoader onion={onion} title={title} contents={skeletons} />
       ) : null}
