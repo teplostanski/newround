@@ -42,7 +42,7 @@ const ListItemCard = ({
           className={styles.main}
           transitionTypes={routeTransitionTypes.forward}
         >
-          {main}
+          <div className={styles.main}>{main}</div>
         </Link>
       ) : (
         <div className={styles.main}>{main}</div>
