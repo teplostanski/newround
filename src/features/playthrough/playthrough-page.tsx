@@ -7,7 +7,8 @@ import { PlaythroughSkeleton } from '@/features/playthrough/playthrough-skeleton
 import { routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
-import { Button, Card } from '@heroui/react';
+import { Card } from '@heroui/react';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import { formatDate } from '@/shared/utils';
 
 export const PlaythroughPage = () => {
@@ -72,9 +73,7 @@ export const PlaythroughPage = () => {
         </Card.Content>
       </Card>
 
-      <Button fullWidth onPress={handleStartRound}>
-        Начать раунд
-      </Button>
+      <PrimaryAction onPress={handleStartRound}>Начать раунд</PrimaryAction>
       <RoundsList
         game={game}
         playthrough={playthrough}

@@ -189,6 +189,8 @@
   --player-fill-chroma: 0.055;
   --player-text-lightness: 0.32;
   --player-text-chroma: 0.05;
+  
+  --popover-bg: color-mix(in oklab, var(--paper) 80%, var(--line) 20%);
 }
 
 .dark,
@@ -219,9 +221,15 @@
   --player-fill-chroma: 0.055;
   --player-text-lightness: 0.92;
   --player-text-chroma: 0.04;
+  
+  --popover-bg: color-mix(in oklab, var(--paper) 80%, var(--page) 20%);
 }
 
 @layer components {
+  .dropdown__popover {
+    background-color: var(--popover-bg);
+  }
+  
   .card {
     border: 1px solid var(--border);
     border-radius: var(--card-radius);
@@ -244,8 +252,6 @@
   }
 
   .button {
-    height: 2.75rem;
-    border-radius: var(--radius);
     font-size: 1rem;
   }
 
@@ -268,4 +274,5 @@
     outline-offset: 1px;
     box-shadow: none;
   }
+  
 }

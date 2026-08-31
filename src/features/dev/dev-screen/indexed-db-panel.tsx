@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@heroui/react';
 import { cn } from '@/shared/lib/cn';
 import { useStore } from '@/shared/model/store';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 
 export const IndexedDbPanel = () => {
   const { games, playthroughs, rounds, resetAll } = useStore();
@@ -35,14 +35,13 @@ export const IndexedDbPanel = () => {
           ? 'Пусто'
           : `Игры: ${games.length} · Партии: ${playthroughs.length} · Раунды: ${rounds.length}`}
       </p>
-      <Button
-        fullWidth
+      <PrimaryAction
         variant="danger"
         isDisabled={isEmpty || isPending}
         onPress={() => setOpen(true)}
       >
         Очистить
-      </Button>
+      </PrimaryAction>
 
       <ConfirmDialog
         isOpen={isOpen}

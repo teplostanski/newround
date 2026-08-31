@@ -31,7 +31,6 @@ export const AppHeaderSkeleton = ({
         {showBack && <Skeleton className="size-11" />}
       </nav>
       <div className={headerStyles.actions}>
-        <Skeleton className={styles.themeSwitchBone} />
         <Skeleton className="size-11" />
         <Skeleton className="size-11" />
       </div>

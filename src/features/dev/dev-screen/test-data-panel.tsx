@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@heroui/react';
 import { cn } from '@/shared/lib/cn';
 import { TEST_DATA_FLAG } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import styles from './test-data-panel.module.css';
 
 type Pending = 'seed' | 'remove' | null;
@@ -53,8 +53,7 @@ export const TestDataPanel = () => {
           : `Тестовых игр: ${testCount}`}
       </p>
       <div className={styles.stack}>
-        <Button
-          fullWidth
+        <PrimaryAction
           variant="secondary"
           isDisabled={isPending}
           isPending={pending === 'seed'}
@@ -63,9 +62,8 @@ export const TestDataPanel = () => {
           }}
         >
           Добавить 10×10×10
-        </Button>
-        <Button
-          fullWidth
+        </PrimaryAction>
+        <PrimaryAction
           variant="danger"
           isDisabled={testCount === 0 || isPending}
           isPending={pending === 'remove'}
@@ -74,7 +72,7 @@ export const TestDataPanel = () => {
           }}
         >
           Удалить тестовые
-        </Button>
+        </PrimaryAction>
       </div>
     </>
   );

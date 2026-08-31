@@ -2,6 +2,7 @@
 
 import { Fieldset, Separator, Skeleton } from '@heroui/react';
 import type { ComponentProps } from 'react';
+import { PrimaryActionBone } from '@/shared/ui/primary-action/primary-action';
 
 const asSpan = (props: ComponentProps<'span'>) => <span {...props} />;
 
@@ -35,7 +36,7 @@ const PlayersFieldsetBone = () => (
   </Fieldset>
 );
 
-const StartGameBone = () => <Skeleton className="buttonBone" />;
+const StartGameBone = () => <PrimaryActionBone />;
 
 export const SetupNewGameSkeleton = () => (
   <div className="screen">

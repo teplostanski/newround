@@ -2,7 +2,8 @@
 
 import { useId, useState, type SubmitEvent } from 'react';
 import { nanoid } from 'nanoid';
-import { Button, Input } from '@heroui/react';
+import { Input } from '@heroui/react';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import type { NewGameData, Player } from '@/shared/model/types';
 import { PlayersForm } from './players-form/players-form';
 
@@ -41,14 +42,13 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
 
         <PlayersForm players={players} onAddPlayer={handleAddPlayer} />
 
-        <Button
+        <PrimaryAction
           form={newGameFormId}
-          fullWidth
           type="submit"
           isDisabled={players.length < 1}
         >
           Начать игру
-        </Button>
+        </PrimaryAction>
       </div>
     </div>
   );

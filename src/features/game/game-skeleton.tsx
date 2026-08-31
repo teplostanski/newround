@@ -6,6 +6,7 @@ import {
   ListItemCardSkeleton,
   ListItemTextBone,
 } from '@/shared/ui/list-item-card/list-item-card-skeleton';
+import { PrimaryActionBone } from '@/shared/ui/primary-action/primary-action';
 
 const PLAYTHROUGH_KEYS = [0, 1, 2] as const;
 
@@ -21,7 +22,7 @@ const GameMetaBone = () => (
   </Card>
 );
 
-const StartPlaythroughBone = () => <Skeleton className="buttonBone" />;
+const StartPlaythroughBone = () => <PrimaryActionBone />;
 
 export const GameSkeleton = () => (
   <div className="screen">

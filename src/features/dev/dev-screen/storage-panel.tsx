@@ -23,6 +23,7 @@ import {
   type BrowserStorageKind,
 } from '@/shared/lib/browser-storage';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
+import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import styles from './storage-panel.module.css';
 
 type Draft = {
@@ -101,16 +102,21 @@ export const StoragePanel = ({ kind }: StoragePanelProps) => {
   return (
     <>
       <div className={styles.toolbar}>
-        <Button variant="secondary" onPress={openCreate}>
+        <PrimaryAction
+          className={styles.grow}
+          variant="secondary"
+          onPress={openCreate}
+        >
           Добавить
-        </Button>
-        <Button
+        </PrimaryAction>
+        <PrimaryAction
+          className={styles.grow}
           variant="danger"
           isDisabled={entries.length === 0}
           onPress={() => setWipe({ type: 'all' })}
         >
           Очистить
-        </Button>
+        </PrimaryAction>
       </div>
 
       {entries.length === 0 ? (
@@ -132,20 +138,22 @@ export const StoragePanel = ({ kind }: StoragePanelProps) => {
                     </pre>
                   )}
                   <div className={styles.actions}>
-                    <Button
+                    <PrimaryAction
+                      className={styles.grow}
                       size="sm"
                       variant="secondary"
                       onPress={() => openEdit(entry.key, entry.value)}
                     >
                       Изменить
-                    </Button>
-                    <Button
+                    </PrimaryAction>
+                    <PrimaryAction
+                      className={styles.grow}
                       size="sm"
                       variant="danger-soft"
                       onPress={() => setWipe({ type: 'key', key: entry.key })}
                     >
                       Удалить
-                    </Button>
+                    </PrimaryAction>
                   </div>
                 </Card.Content>
               </Card>

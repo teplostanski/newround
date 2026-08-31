@@ -2,8 +2,9 @@
 
 import ChevronsCollapseUpRight from '@gravity-ui/icons/ChevronsCollapseUpRight';
 import ChevronsExpandUpRight from '@gravity-ui/icons/ChevronsExpandUpRight';
-import { Button } from '@heroui/react';
+import { Switch } from '@heroui/react';
 import { useSyncExternalStore } from 'react';
+import styles from './fullscreen-toggle.module.css';
 
 const subscribeToFullscreen = (onStoreChange: () => void) => {
   document.addEventListener('fullscreenchange', onStoreChange);
@@ -20,52 +21,70 @@ const getFullscreenSupportSnapshot = () =>
 const getFullscreenSnapshot = () => Boolean(document.fullscreenElement);
 const getServerSnapshot = () => false;
 
-const FullscreenToggle = () => {
-  const isSupported = useSyncExternalStore(
+const useFullscreenSupported = () =>
+  useSyncExternalStore(
     subscribeToFullscreen,
     getFullscreenSupportSnapshot,
     getServerSnapshot,
   );
+
+const FullscreenToggle = () => {
+  const isSupported = useFullscreenSupported();
   const isFullscreen = useSyncExternalStore(
     subscribeToFullscreen,
     getFullscreenSnapshot,
     getServerSnapshot,
   );
-  const label = isFullscreen
-    ? 'Выйти из полноэкранного режима'
-    : 'Открыть на весь экран';
-  const FullscreenIcon = isFullscreen
-    ? ChevronsCollapseUpRight
-    : ChevronsExpandUpRight;
 
   if (!isSupported) {
     return null;
   }
 
-  const handleToggle = () => {
-    const action = isFullscreen
-      ? document.exitFullscreen()
-      : document.documentElement.requestFullscreen();
-
-    void action.catch(() => undefined);
-  };
-
   return (
-    <Button
-      isIconOnly
-      variant="secondary"
-      className="iconButton"
-      aria-label={label}
-      onPress={handleToggle}
+    <Switch
+      aria-label={
+        isFullscreen
+          ? 'Выйти из полноэкранного режима'
+          : 'Открыть на весь экран'
+      }
+      className={styles.switch}
+      isSelected={isFullscreen}
+      size="lg"
+      onChange={(selected) => {
+        const action = selected
+          ? document.documentElement.requestFullscreen()
+          : document.exitFullscreen();
+
+        void action.catch(() => undefined);
+      }}
     >
-      <FullscreenIcon
-        width={20}
-        height={20}
-        aria-hidden="true"
-        focusable="false"
-      />
-    </Button>
+      {({ isSelected }) => (
+        <Switch.Content>
+          <Switch.Control>
+            <Switch.Thumb>
+              <Switch.Icon>
+                {isSelected ? (
+                  <ChevronsCollapseUpRight
+                    width={12}
+                    height={12}
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                ) : (
+                  <ChevronsExpandUpRight
+                    width={12}
+                    height={12}
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                )}
+              </Switch.Icon>
+            </Switch.Thumb>
+          </Switch.Control>
+        </Switch.Content>
+      )}
+    </Switch>
   );
 };
 
-export { FullscreenToggle };
+export { FullscreenToggle, useFullscreenSupported };
