@@ -27,6 +27,14 @@ const serwist = new Serwist({
   clientsClaim: true,
   navigationPreload: false,
   runtimeCaching: defaultCache,
+  fallbacks: {
+    entries: [
+      {
+        url: '/404',
+        matcher: ({ request }) => request.mode === 'navigate',
+      },
+    ],
+  },
 });
 
 serwist.addEventListeners();

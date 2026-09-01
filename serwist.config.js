@@ -25,18 +25,10 @@ const ensureLeadingSlash = (/** @type {import('@serwist/build').ManifestEntry[]}
   warnings: /** @type {string[]} */ ([]),
 });
 
-const dropErrorPages = (/** @type {import('@serwist/build').ManifestEntry[]} */ manifestEntries) => ({
+const dropInternalNotFound = (/** @type {import('@serwist/build').ManifestEntry[]} */ manifestEntries) => ({
   manifest: manifestEntries.filter((entry) => {
     const url = entry.url.replace(/^\//, '');
-    return (
-      url !== '404' &&
-      url !== '404/' &&
-      url !== '404.html' &&
-      !url.startsWith('404/') &&
-      url !== '_not-found' &&
-      url !== '_not-found/' &&
-      !url.startsWith('_not-found/')
-    );
+    return url !== '_not-found' && url !== '_not-found/' && !url.startsWith('_not-found/');
   }),
   warnings: /** @type {string[]} */ ([]),
 });
@@ -51,8 +43,6 @@ export default serwist({
   globIgnores: [
     'sw.js',
     'sw.js.map',
-    '404.html',
-    '404/**',
     '_not-found/**',
   ],
   precachePrerendered: false,
@@ -62,6 +52,6 @@ export default serwist({
     ...(base.manifestTransforms ?? []),
     remapRootIndex,
     ensureLeadingSlash,
-    dropErrorPages,
+    dropInternalNotFound,
   ],
 }));
