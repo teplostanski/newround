@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { ViewTransition, type ReactNode } from 'react';
 import { cn } from '@/shared/lib/cn';
+import { Paths } from '@/shared/lib/routes';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import {
   AppHeaderSkeleton,
@@ -11,50 +12,9 @@ import {
 import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
 
-export type RouteKind =
-  | 'games'
-  | 'newGame'
-  | 'playthroughs'
-  | 'playthrough'
-  | 'round'
-  | 'fallback';
+export type RouteKind = (typeof KindByPath)[keyof typeof KindByPath] | 'fallback';
 
-const normalizePath = (pathname: string | null) => {
-  if (!pathname || pathname === '/') {
-    return '/';
-  }
-
-  return pathname.replace(/\/$/, '') || '/';
-};
-
-const routeKind = (pathname: string): RouteKind => {
-  switch (pathname) {
-    case '/':
-      return 'games';
-    case '/game/create':
-      return 'newGame';
-    case '/game':
-      return 'playthroughs';
-    case '/playthrough':
-      return 'playthrough';
-    case '/round':
-      return 'round';
-    default:
-      return 'fallback';
-  }
-};
-
-const titleSize = (kind: RouteKind): TitleSize => {
-  if (kind === 'games') {
-    return 'short';
-  }
-
-  if (kind === 'newGame') {
-    return 'medium';
-  }
-
-  return 'long';
-};
+type RoutePath = keyof typeof KindByPath;
 
 type RouteLoaderProps = {
   fullscreen?: boolean;
@@ -63,32 +23,69 @@ type RouteLoaderProps = {
   contents?: Partial<Record<RouteKind, ReactNode>>;
 };
 
+type ContentSkeletonProps = {
+  kind: RouteKind;
+  contents?: Partial<Record<RouteKind, ReactNode>>;
+};
+
+const normalizePath = (pathname: string | null) => {
+  if (!pathname || pathname === Paths.Root) {
+    return Paths.Root;
+  }
+
+  return pathname.replace(/\/$/, '') || Paths.Root;
+};
+
+const KindByPath = {
+  [Paths.Root]: 'root',
+  [Paths.Game]: 'game',
+  [Paths.GameCreate]: 'createGame',
+  [Paths.GameEdit]: 'editGame',
+  [Paths.Playthrough]: 'playthrough',
+  [Paths.Round]: 'round',
+} as const;
+
+const isRoutePath = (pathname: string): pathname is RoutePath =>
+  pathname in KindByPath;
+
+const toRouteKind = (pathname: string): RouteKind =>
+  isRoutePath(pathname) ? KindByPath[pathname] : 'fallback';
+
+const titleSize = (kind: RouteKind): TitleSize => {
+  if (kind === KindByPath[Paths.Root]) {
+    return 'short';
+  }
+
+  if (kind === KindByPath[Paths.GameCreate]) {
+    return 'medium';
+  }
+
+  return 'long';
+};
+
 const ContentSkeleton = ({
   kind,
   contents,
-}: {
-  kind: RouteKind;
-  contents?: Partial<Record<RouteKind, ReactNode>>;
-}) => {
+}: ContentSkeletonProps) => {
   if (kind === 'fallback') {
     return contents?.fallback ?? <div className="screen" />;
   }
 
-  return contents?.[kind] ?? contents?.games ?? <div className="screen" />;
+  return contents?.[kind] ?? contents?.root ?? <div className="screen" />;
 };
 
-export const RouteLoader = ({
+const RouteLoader = ({
   fullscreen = false,
   onion,
   title,
   contents,
 }: RouteLoaderProps) => {
   const pathname = normalizePath(usePathname());
-  const kind = routeKind(pathname);
+  const kind = toRouteKind(pathname);
   const header = (
     <AppHeaderSkeleton
       title={title}
-      showBack={kind !== 'games'}
+      showBack={kind !== KindByPath[Paths.Root]}
       titleSize={titleSize(kind)}
     />
   );
@@ -133,12 +130,12 @@ export const RouteLoader = ({
   );
 };
 
-export const InitialLoader = ({
+const InitialLoader = ({
   contents,
-}: {
-  contents?: Partial<Record<RouteKind, ReactNode>>;
-}) => (
+}: Pick<RouteLoaderProps, 'contents'>) => (
   <ViewTransition exit="initial-loader-exit" default="none">
     <RouteLoader fullscreen contents={contents} />
   </ViewTransition>
 );
+
+export { RouteLoader, InitialLoader };

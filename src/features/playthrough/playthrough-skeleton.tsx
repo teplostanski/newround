@@ -45,7 +45,7 @@ const RoundChipsBone = () => (
   </ul>
 );
 
-export const PlaythroughSkeleton = () => (
+const PlaythroughSkeleton = () => (
   <div className="screen">
     <PlaythroughMetaBone />
     <StartRoundBone />
@@ -61,3 +61,5 @@ export const PlaythroughSkeleton = () => (
     </ul>
   </div>
 );
+
+export { PlaythroughSkeleton };

@@ -1,6 +1,6 @@
 'use client';
 
-import { I18nProvider } from '@heroui/react';
+import { I18nProvider, Toast } from '@heroui/react';
 import type { ReactNode } from 'react';
 import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
 import { useOnionMode } from '@/shared/lib/use-onion-mode';
@@ -13,7 +13,7 @@ import {
 
 const FORCE_SKELETON = false;
 
-export const ClientApp = ({
+const AppGate = ({
   children,
   skeletons,
 }: {
@@ -30,9 +30,12 @@ export const ClientApp = ({
 
   return (
     <I18nProvider locale="ru-RU">
+      <Toast.Provider />
       <AppShell onion={onionMode} skeletons={skeletons}>
         {children}
       </AppShell>
     </I18nProvider>
   );
 };
+
+export { AppGate };

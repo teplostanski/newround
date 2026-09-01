@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useLayoutEffect, type ReactNode } from 'react';
-import { routes } from '@/shared/lib/routes';
+import { Paths, Routes } from '@/shared/lib/routes';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import { findById, useStore } from '@/shared/model/store';
 import { AppHeader } from '../app-header/app-header';
@@ -44,7 +44,7 @@ const AppShellView = ({
   );
 };
 
-export const AppShell = ({
+const AppShell = ({
   children,
   onion = false,
   skeletons,
@@ -55,7 +55,9 @@ export const AppShell = ({
 }) => {
   const currentPathname = usePathname();
   const pathname =
-    currentPathname !== '/' ? currentPathname.replace(/\/$/, '') : '/';
+    currentPathname !== Paths.Root
+      ? currentPathname.replace(/\/$/, '')
+      : Paths.Root;
   const searchParams = useSearchParams();
   const { games, playthroughs, rounds } = useStore();
   const gameId = searchParams?.get('gameId') ?? null;
@@ -65,7 +67,7 @@ export const AppShell = ({
   const playthrough = findById(playthroughs, playthroughId);
   const round = findById(rounds, roundId);
 
-  if (pathname === '/') {
+  if (pathname === Paths.Root) {
     return (
       <AppShellView title="Игры" onion={onion} skeletons={skeletons}>
         {children}
@@ -73,11 +75,11 @@ export const AppShell = ({
     );
   }
 
-  if (pathname === '/dev') {
+  if (pathname === Paths.Dev) {
     return (
       <AppShellView
         title="Разработка"
-        backHref={routes.home}
+        backHref={Routes.Root}
         onion={false}
         skeletons={skeletons}
       >
@@ -86,11 +88,11 @@ export const AppShell = ({
     );
   }
 
-  if (pathname === '/game/create') {
+  if (pathname === Paths.GameCreate) {
     return (
       <AppShellView
         title="Новая игра"
-        backHref={routes.home}
+        backHref={Routes.Root}
         onion={onion}
         skeletons={skeletons}
       >
@@ -99,11 +101,24 @@ export const AppShell = ({
     );
   }
 
-  if (pathname === '/game') {
+  if (pathname === Paths.GameEdit) {
+    return (
+      <AppShellView
+        title="Редактирование игры"
+        backHref={Routes.Root}
+        onion={onion}
+        skeletons={skeletons}
+      >
+        {children}
+      </AppShellView>
+    );
+  }
+
+  if (pathname === Paths.Game) {
     return (
       <AppShellView
         title={game?.name ?? 'Партии'}
-        backHref={routes.home}
+        backHref={Routes.Root}
         onion={onion}
         skeletons={skeletons}
       >
@@ -112,13 +127,13 @@ export const AppShell = ({
     );
   }
 
-  if (pathname === '/playthrough') {
+  if (pathname === Paths.Playthrough) {
     return (
       <AppShellView
         title={
           playthrough ? `Партия ${playthrough.sequenceNumber}` : 'Партия'
         }
-        backHref={game ? routes.game(game.id) : routes.home}
+        backHref={game ? Routes.Game(game.id) : Routes.Root}
         onion={onion}
         skeletons={skeletons}
       >
@@ -127,13 +142,13 @@ export const AppShell = ({
     );
   }
 
-  if (pathname === '/round') {
+  if (pathname === Paths.Round) {
     const backHref =
       game && playthrough
-        ? routes.playthrough(game.id, playthrough.id)
+        ? Routes.Playthrough(game.id, playthrough.id)
         : game
-          ? routes.game(game.id)
-          : routes.home;
+          ? Routes.Game(game.id)
+          : Routes.Root;
 
     return (
       <AppShellView
@@ -149,12 +164,14 @@ export const AppShell = ({
 
   return (
     <AppShellView
-      title="newround"
-      backHref={routes.home}
-      onion={onion}
+      title="404"
+      backHref={Routes.Root}
+      onion={false}
       skeletons={skeletons}
     >
       {children}
     </AppShellView>
   );
 };
+
+export { AppShell };

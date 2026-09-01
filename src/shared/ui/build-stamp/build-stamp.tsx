@@ -1,7 +1,7 @@
 import { buildInfo } from '@/shared/lib/build-info';
 import styles from './build-stamp.module.css';
 
-export const BuildStamp = () => {
+const BuildStamp = () => {
   if (!buildInfo) {
     return null;
   }
@@ -16,3 +16,5 @@ export const BuildStamp = () => {
     </p>
   );
 };
+
+export { BuildStamp };

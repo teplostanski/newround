@@ -4,15 +4,15 @@ import { useId, useState, type SubmitEvent } from 'react';
 import { nanoid } from 'nanoid';
 import { Input } from '@heroui/react';
 import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
-import type { NewGameData, Player } from '@/shared/model/types';
+import type { CreateGameData, Player } from '@/shared/model/types';
 import { PlayersForm } from './players-form/players-form';
 
-type SetupNewGameScreenProps = {
-  onCreateGame: (formData: NewGameData) => void;
+type CreateGameScreenProps = {
+  onCreateGame: (data: CreateGameData) => void;
 };
 
-const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
-  const newGameFormId = useId();
+const CreateGameScreen = ({ onCreateGame }: CreateGameScreenProps) => {
+  const mainFormId = useId();
   const [gameName, setGameName] = useState('');
   const [players, setPlayers] = useState<Player[]>([]);
 
@@ -27,11 +27,11 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
 
   return (
     <div className="screen">
-      <form id={newGameFormId} hidden onSubmit={handleCreateGame} />
+      <form id={mainFormId} hidden onSubmit={handleCreateGame} />
 
       <div className="stack">
         <Input
-          form={newGameFormId}
+          form={mainFormId}
           fullWidth
           type="text"
           aria-label="Название игры"
@@ -43,7 +43,7 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
         <PlayersForm players={players} onAddPlayer={handleAddPlayer} />
 
         <PrimaryAction
-          form={newGameFormId}
+          form={mainFormId}
           type="submit"
           isDisabled={players.length < 1}
         >
@@ -54,4 +54,4 @@ const SetupNewGameScreen = ({ onCreateGame }: SetupNewGameScreenProps) => {
   );
 };
 
-export { SetupNewGameScreen };
+export { CreateGameScreen };

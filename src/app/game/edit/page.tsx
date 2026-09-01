@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { RouteTransition } from '@/shared/ui/route-transition/route-transition';
-import { CreateGamePage } from '@/features/create-game/create-game-page';
+import { EditGamePage } from '@/features/edit-game/edit-game-page';
 import { routeSkeletons } from '../../route-skeletons';
 
 export const metadata: Metadata = {
-  title: 'Новая игра',
+  title: 'Редактирование игры',
 };
 
-const AppCreateGamePage = () => (
+const AppEditGamePage = () => (
   <RouteTransition>
-    <Suspense fallback={routeSkeletons.createGame}>
-      <CreateGamePage />
+    <Suspense fallback={routeSkeletons.editGame}>
+      <EditGamePage />
     </Suspense>
   </RouteTransition>
 );
 
-export default AppCreateGamePage;
+export default AppEditGamePage;

@@ -48,7 +48,7 @@ const OnionOption = ({
   </Radio>
 );
 
-export const DevScreen = () => {
+const DevScreen = () => {
   const current = useOnionMode();
 
   return (
@@ -128,3 +128,5 @@ export const DevScreen = () => {
     </div>
   );
 };
+
+export { DevScreen };

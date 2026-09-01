@@ -1,15 +1,15 @@
 import type { Metadata } from 'next';
 import { RouteTransition } from '@/shared/ui/route-transition/route-transition';
-import { DevPage } from '@/features/dev/dev-page';
+import { NotFoundScreen } from '@/shared/ui/not-found-screen/not-found-screen';
 
 export const metadata: Metadata = {
-  title: 'Разработка',
+  title: '404',
 };
 
-const AppDevPage = () => (
+const AppNotFoundPage = () => (
   <RouteTransition>
-    <DevPage />
+    <NotFoundScreen />
   </RouteTransition>
 );
 
-export default AppDevPage;
+export default AppNotFoundPage;

@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: 'Партии',
 };
 
-export default function AppGamePage() {
-  return (
-    <RouteTransition>
-      <Suspense fallback={routeSkeletons.playthroughs}>
-        <GamePage />
-      </Suspense>
-    </RouteTransition>
-  );
-}
+const AppGamePage = () => (
+  <RouteTransition>
+    <Suspense fallback={routeSkeletons.game}>
+      <GamePage />
+    </Suspense>
+  </RouteTransition>
+);
+
+export default AppGamePage;

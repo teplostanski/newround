@@ -24,7 +24,7 @@ const GameMetaBone = () => (
 
 const StartPlaythroughBone = () => <PrimaryActionBone />;
 
-export const GameSkeleton = () => (
+const GameSkeleton = () => (
   <div className="screen">
     <GameMetaBone />
     <StartPlaythroughBone />
@@ -39,3 +39,5 @@ export const GameSkeleton = () => (
     </ul>
   </div>
 );
+
+export { GameSkeleton };

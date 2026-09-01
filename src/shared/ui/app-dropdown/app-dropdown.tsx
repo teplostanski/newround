@@ -4,9 +4,11 @@ import styles from './app-dropdown.module.css';
 import { Placement } from 'react-aria';
 import { cn } from '@/shared/lib/cn';
 
-type AppDropdownProps = {
-  items: DropdownItem[];
-  onAction: (key: Key) => void;
+type Key = string | number;
+
+type AppDropdownProps<K extends Key> = {
+  items: DropdownItem<K>[];
+  onAction: (key: K) => void;
   children: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
@@ -14,8 +16,8 @@ type AppDropdownProps = {
   className?: string;
 };
 
-export type DropdownItem = {
-  key: Key;
+export type DropdownItem<K extends Key = Key> = {
+  key: K;
   textValue: string;
   slot: ReactNode;
   isDanger: boolean;
@@ -26,9 +28,7 @@ export type DropdownItem = {
   rel?: string;
 };
 
-type Key = string | number;
-
-const AppDropdown = ({
+const AppDropdown = <K extends Key>({
   items,
   onAction,
   children,
@@ -36,7 +36,7 @@ const AppDropdown = ({
   footer,
   placement,
   className,
-}: AppDropdownProps) => {
+}: AppDropdownProps<K>) => {
   const disabledKeys = items
     .filter((item) => item.disabled)
     .map((item) => item.key);
@@ -52,7 +52,7 @@ const AppDropdown = ({
         <Dropdown.Menu
           className={styles.menu}
           disabledKeys={disabledKeys}
-          onAction={(key) => onAction(key)}
+          onAction={(key) => onAction(key as K)}
         >
           {items.map((item) => (
             <Dropdown.Item

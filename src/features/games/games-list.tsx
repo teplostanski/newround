@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Pencil, TrashBin, EllipsisVertical } from '@gravity-ui/icons';
 import { Button, Label } from '@heroui/react';
 import type { Game } from '@/shared/model/types';
-import { routes } from '@/shared/lib/routes';
+import { Routes } from '@/shared/lib/routes';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { useStore } from '@/shared/model/store';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
@@ -14,8 +14,9 @@ import {
   AppDropdown,
   DropdownItem,
 } from '@/shared/ui/app-dropdown/app-dropdown';
+import { useRouter } from 'next/navigation';
 
-type AllGamesScreenProps = {
+type GamesListProps = {
   games: Game[];
 };
 
@@ -26,8 +27,17 @@ type GameItemActionsProps = {
 
 const GameItemActions = ({ game, onDelete }: GameItemActionsProps) => {
   const [isConfirmOpen, setConfirmOpen] = useState(false);
+  const router = useRouter();
 
-  const items: DropdownItem[] = [
+  const actions = {
+    delete: () => setConfirmOpen(true),
+    edit: () =>
+      router.push(Routes.GameEdit(game.id), {
+        transitionTypes: routeTransitionTypes.forward,
+      }),
+  };
+
+  const items: DropdownItem<keyof typeof actions>[] = [
     {
       key: 'edit',
       textValue: 'Изменить',
@@ -38,7 +48,7 @@ const GameItemActions = ({ game, onDelete }: GameItemActionsProps) => {
         </>
       ),
       isDanger: false,
-      disabled: true,
+      disabled: false,
     },
     {
       key: 'delete',
@@ -58,11 +68,7 @@ const GameItemActions = ({ game, onDelete }: GameItemActionsProps) => {
     <>
       <AppDropdown
         items={items}
-        onAction={(key) => {
-          if (key === 'delete') {
-            setConfirmOpen(true);
-          }
-        }}
+        onAction={(key) => actions[key]()}
       >
         <Button
           isIconOnly
@@ -88,46 +94,40 @@ const GameItemActions = ({ game, onDelete }: GameItemActionsProps) => {
   );
 };
 
-const AllGamesScreen = ({ games }: AllGamesScreenProps) => {
+const GamesList = ({ games }: GamesListProps) => {
   const { deleteGame } = useStore();
 
-  return (
-    <div className="screen">
-      <Link
-        href={routes.gameCreate}
-        className="primaryActionLink"
-        transitionTypes={routeTransitionTypes.forward}
-      >
-        Новая игра
-      </Link>
+  if (games.length === 0) {
+    return <p className="empty">Пока нет игр — создайте первую</p>;
+  }
 
-      {games.length === 0 ? (
-        <p className="empty">Пока нет игр — создайте первую</p>
-      ) : (
-        <ul className="list">
-          {games.map((game) => (
-            <li key={game.id}>
-              <ListItemCard
-                link={routes.game(game.id)}
-                title={game.name}
-                description={`${game.players.length} ${
-                  game.players.length === 1 ? 'игрок' : 'игроков'
-                }`}
-                action={
-                  <GameItemActions
-                    game={game}
-                    onDelete={(gameId) => {
-                      void deleteGame(gameId);
-                    }}
-                  />
-                }
+  return (
+    <ul className="list">
+      {games.map((game) => (
+        <li key={game.id}>
+          <ListItemCard
+            link={Routes.Game(game.id)}
+            title={game.name}
+            description={`${game.players.length} ${
+              game.players.length === 1 ? 'игрок' : 'игроков'
+            }`}
+            action={
+              <GameItemActions
+                game={game}
+                onDelete={async (gameId) => {
+                  try {
+                    await deleteGame(gameId);
+                  } catch (error) {
+                    toastStorageDanger('Не удалось удалить игру', error);
+                  }
+                }}
               />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+            }
+          />
+        </li>
+      ))}
+    </ul>
   );
 };
 
-export { AllGamesScreen };
+export { GamesList };

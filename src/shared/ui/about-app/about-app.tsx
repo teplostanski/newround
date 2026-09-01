@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Modal } from '@heroui/react';
 import { appVersion, buildInfo } from '@/shared/lib/build-info';
-import { routes } from '@/shared/lib/routes';
+import { Routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import styles from './about-app.module.css';
 
@@ -55,7 +55,7 @@ const AboutApp = ({ isOpen, onOpenChange }: AboutAppProps) => (
         <Modal.Footer className={styles.footer}>
           <Link
             className={styles.devLink}
-            href={routes.dev}
+            href={Routes.Dev}
             transitionTypes={routeTransitionTypes.forward}
             onClick={() => onOpenChange(false)}
           >

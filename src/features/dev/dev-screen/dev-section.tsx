@@ -7,7 +7,7 @@ type DevSectionProps = {
   children: ReactNode;
 };
 
-export const DevSection = ({ title, description, children }: DevSectionProps) => (
+const DevSection = ({ title, description, children }: DevSectionProps) => (
   <Fieldset>
     <Fieldset.Legend>{title}</Fieldset.Legend>
     <Separator className="mt-2" />
@@ -15,3 +15,5 @@ export const DevSection = ({ title, description, children }: DevSectionProps) =>
     {children}
   </Fieldset>
 );
+
+export { DevSection };

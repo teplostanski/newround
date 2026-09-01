@@ -6,7 +6,7 @@ import { useStore } from '@/shared/model/store';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
 import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 
-export const IndexedDbPanel = () => {
+const IndexedDbPanel = () => {
   const { games, playthroughs, rounds, resetAll } = useStore();
   const [isOpen, setOpen] = useState(false);
   const [isPending, setPending] = useState(false);
@@ -57,3 +57,5 @@ export const IndexedDbPanel = () => {
     </>
   );
 };
+
+export { IndexedDbPanel };

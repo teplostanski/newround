@@ -27,7 +27,7 @@ const ScoreCardBone = () => (
 
 const FinishRoundBone = () => <Skeleton className="h-11 w-full" />;
 
-export const RoundSkeleton = () => (
+const RoundSkeleton = () => (
   <div className="screen">
     <ul className={cn('list', styles.list)}>
       {PLAYER_KEYS.map((key) => (
@@ -39,3 +39,5 @@ export const RoundSkeleton = () => (
     <FinishRoundBone />
   </div>
 );
+
+export { RoundSkeleton };

@@ -4,9 +4,9 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import { Suspense, type ReactNode } from 'react';
 import { routeSkeletons } from './route-skeletons';
-import { ClientApp } from '@/shared/ui/client-app/client-app';
+import { AppGate } from '@/shared/ui/app-gate/app-gate';
 import { InitialLoader } from '@/shared/ui/route-loader/route-loader';
-import { ServiceWorkerReset } from '@/shared/ui/service-worker-reset/service-worker-reset';
+import { ServiceWorkerReset } from '@/shared/lib/service-worker-reset';
 import { ThemeProvider } from '@/shared/ui/theme-provider/theme-provider';
 import { StoreProvider } from '@/shared/model/store';
 import { cn } from '@/shared/lib/cn';
@@ -63,7 +63,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
         >
           <StoreProvider>
             <Suspense fallback={<InitialLoader contents={routeSkeletons} />}>
-              <ClientApp skeletons={routeSkeletons}>{children}</ClientApp>
+              <AppGate skeletons={routeSkeletons}>{children}</AppGate>
             </Suspense>
           </StoreProvider>
         </SerwistProvider>

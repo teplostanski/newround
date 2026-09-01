@@ -166,7 +166,7 @@
 
 :root,
 .light,
-[data-theme="light"] {
+[data-theme='light'] {
   color-scheme: light;
 
   --paper: #f6f8fa;
@@ -189,12 +189,12 @@
   --player-fill-chroma: 0.055;
   --player-text-lightness: 0.32;
   --player-text-chroma: 0.05;
-  
+
   --popover-bg: color-mix(in oklab, var(--paper) 80%, var(--line) 20%);
 }
 
 .dark,
-[data-theme="dark"] {
+[data-theme='dark'] {
   color-scheme: dark;
 
   --paper: #161d28;
@@ -221,7 +221,7 @@
   --player-fill-chroma: 0.055;
   --player-text-lightness: 0.92;
   --player-text-chroma: 0.04;
-  
+
   --popover-bg: color-mix(in oklab, var(--paper) 80%, var(--page) 20%);
 }
 
@@ -229,7 +229,7 @@
   .dropdown__popover {
     background-color: var(--popover-bg);
   }
-  
+
   .card {
     border: 1px solid var(--border);
     border-radius: var(--card-radius);
@@ -259,20 +259,17 @@
     width: 2.75rem;
   }
 
-  .input {
+  .input,
+  .input-group__input {
     height: 2.75rem;
     border-radius: var(--radius);
     font-size: 1rem;
   }
 
   .button:focus-visible:not(:focus),
-  .button[data-focus-visible="true"],
-  .input:focus,
-  .input[data-focused="true"],
-  .input[data-focus-visible="true"] {
+  .button[data-focus-visible='true'] {
     outline: 2px solid var(--focus);
-    outline-offset: 1px;
+    outline-offset: 2px;
     box-shadow: none;
   }
-  
 }

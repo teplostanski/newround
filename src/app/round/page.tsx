@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: 'Раунд',
 };
 
-export default function CurrentRoundPage() {
-  return (
-    <RouteTransition>
-      <Suspense fallback={routeSkeletons.round}>
-        <RoundPage />
-      </Suspense>
-    </RouteTransition>
-  );
-}
+const AppRoundPage = () => (
+  <RouteTransition>
+    <Suspense fallback={routeSkeletons.round}>
+      <RoundPage />
+    </Suspense>
+  </RouteTransition>
+);
+
+export default AppRoundPage;

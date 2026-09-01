@@ -1,15 +1,17 @@
 'use client';
 
-import { AllGamesScreen } from '@/features/games/all-games-screen/all-games-screen';
-import { AllGamesSkeleton } from '@/features/games/all-games-screen/all-games-skeleton';
+import { GamesScreen } from '@/features/games/games-screen';
+import { GamesSkeleton } from '@/features/games/games-skeleton';
 import { useStore } from '@/shared/model/store';
 
-export const GamesPage = () => {
+const GamesPage = () => {
   const { games, isReady } = useStore();
 
   if (!isReady) {
-    return <AllGamesSkeleton />;
+    return <GamesSkeleton />;
   }
 
-  return <AllGamesScreen games={games} />;
+  return <GamesScreen games={games} />;
 };
+
+export { GamesPage };

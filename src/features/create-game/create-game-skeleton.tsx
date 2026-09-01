@@ -38,7 +38,7 @@ const PlayersFieldsetBone = () => (
 
 const StartGameBone = () => <PrimaryActionBone />;
 
-export const SetupNewGameSkeleton = () => (
+const CreateGameSkeleton = () => (
   <div className="screen">
     <div className="stack">
       <GameNameFieldBone />
@@ -47,3 +47,5 @@ export const SetupNewGameSkeleton = () => (
     </div>
   </div>
 );
+
+export { CreateGameSkeleton };

@@ -4,7 +4,7 @@ import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import type { ReactNode } from 'react';
 import { themeStorageKey } from '@/shared/lib/theme';
 
-export const ThemeProvider = ({ children }: { children: ReactNode }) => (
+const ThemeProvider = ({ children }: { children: ReactNode }) => (
   <NextThemesProvider
     attribute={['class', 'data-theme']}
     defaultTheme="system"
@@ -15,3 +15,5 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => (
     {children}
   </NextThemesProvider>
 );
+
+export { ThemeProvider };

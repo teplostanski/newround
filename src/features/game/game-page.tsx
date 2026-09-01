@@ -1,31 +1,15 @@
 'use client';
 
-import { ReactNode, useEffect, useTransition } from 'react';
+import { useEffect, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { PlaythroughsList } from '@/features/playthroughs/playthroughs-list/playthroughs-list';
+import { GameScreen } from '@/features/game/game-screen';
 import { GameSkeleton } from '@/features/game/game-skeleton';
-import { routes } from '@/shared/lib/routes';
+import { Routes } from '@/shared/lib/routes';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { findById, useStore } from '@/shared/model/store';
-import { Card } from '@heroui/react';
-import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
-import { formatDate } from '@/shared/utils';
 
-type SummaryCardProps = {
-  slot: ReactNode;
-};
-
-const SummaryCard = ({ slot }: SummaryCardProps) => {
-  return (
-    <Card className="w-full">
-      <Card.Content>
-        {slot}
-      </Card.Content>
-    </Card>
-  );
-};
-
-export const GamePage = () => {
+const GamePage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { games, isReady, playthroughs, addPlaythrough } = useStore();
@@ -35,7 +19,7 @@ export const GamePage = () => {
 
   useEffect(() => {
     if (isReady && !game) {
-      router.replace(routes.home);
+      router.replace(Routes.Root);
     }
   }, [game, isReady, router]);
 
@@ -52,31 +36,31 @@ export const GamePage = () => {
       return;
     }
 
-    startNavigation(() => {
-      const playthroughId = addPlaythrough(game.id);
+    startNavigation(async () => {
+      try {
+        const playthroughId = await addPlaythrough(game.id);
 
-      if (!playthroughId) {
-        return;
+        if (!playthroughId) {
+          toastStorageDanger('Не удалось начать партию');
+          return;
+        }
+
+        router.push(Routes.Playthrough(game.id, playthroughId), {
+          transitionTypes: routeTransitionTypes.forward,
+        });
+      } catch (error) {
+        toastStorageDanger('Не удалось начать партию', error);
       }
-
-      router.push(routes.playthrough(game.id, playthroughId), {
-        transitionTypes: routeTransitionTypes.forward,
-      });
     });
   };
 
   return (
-    <div className="screen">
-      <SummaryCard
-        slot={
-          <p className="text-muted m-0 text-[0.95rem] font-mono">
-            {formatDate(game.createdAt)} · {gamePlaythroughs.length}{' '}
-            {gamePlaythroughs.length === 1 ? 'партия' : 'партий'}
-          </p>
-        }
-      />
-      <PrimaryAction onPress={handleStartPlaythrough}>Начать партию</PrimaryAction>
-      <PlaythroughsList gameId={game.id} playthroughs={gamePlaythroughs} />
-    </div>
+    <GameScreen
+      game={game}
+      playthroughs={gamePlaythroughs}
+      onStartPlaythrough={handleStartPlaythrough}
+    />
   );
 };
+
+export { GamePage };

@@ -17,9 +17,13 @@ export type Game = Entity & {
   players: Player[];
 };
 
-export type NewGameData = {
+export type CreateGameData = {
   name: string;
   players: Player[];
+};
+
+export type EditGameData = {
+  name: string;
 };
 
 export type Playthrough = Entity & {

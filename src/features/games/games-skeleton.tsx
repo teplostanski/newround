@@ -8,11 +8,11 @@ import { PrimaryActionBone } from '@/shared/ui/primary-action/primary-action';
 
 const GAME_KEYS = [0, 1, 2] as const;
 
-const NewGameCtaBone = () => <PrimaryActionBone />;
+const CreateGameBone = () => <PrimaryActionBone />;
 
-export const AllGamesSkeleton = () => (
+const GamesSkeleton = () => (
   <div className="screen">
-    <NewGameCtaBone />
+    <CreateGameBone />
     <ul className="list">
       {GAME_KEYS.map((key) => (
         <li key={key}>
@@ -24,3 +24,5 @@ export const AllGamesSkeleton = () => (
     </ul>
   </div>
 );
+
+export { GamesSkeleton };
