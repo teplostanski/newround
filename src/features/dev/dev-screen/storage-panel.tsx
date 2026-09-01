@@ -42,7 +42,7 @@ type StoragePanelProps = {
   kind: BrowserStorageKind;
 };
 
-export const StoragePanel = ({ kind }: StoragePanelProps) => {
+const StoragePanel = ({ kind }: StoragePanelProps) => {
   const editor = useOverlayState();
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [wipe, setWipe] = useState<Wipe | null>(null);
@@ -226,3 +226,5 @@ export const StoragePanel = ({ kind }: StoragePanelProps) => {
     </>
   );
 };
+
+export { StoragePanel };

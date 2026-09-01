@@ -9,7 +9,7 @@ import styles from './test-data-panel.module.css';
 
 type Pending = 'seed' | 'remove' | null;
 
-export const TestDataPanel = () => {
+const TestDataPanel = () => {
   const { games, seedTestData, removeTestData } = useStore();
   const [pending, setPending] = useState<Pending>(null);
   const testCount = games.filter(
@@ -77,3 +77,5 @@ export const TestDataPanel = () => {
     </>
   );
 };
+
+export { TestDataPanel };

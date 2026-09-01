@@ -10,7 +10,7 @@ const activeFlags = (device: DeviceFlags) =>
     .filter(([, isOn]) => isOn)
     .map(([flag]) => flag);
 
-export const DevicePanel = () => {
+const DevicePanel = () => {
   const { device, userAgent } = useDetectDevice();
   const flags = activeFlags(device);
 
@@ -35,3 +35,5 @@ export const DevicePanel = () => {
     </>
   );
 };
+
+export { DevicePanel };

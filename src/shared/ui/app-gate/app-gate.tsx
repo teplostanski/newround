@@ -13,7 +13,7 @@ import {
 
 const FORCE_SKELETON = false;
 
-export const ClientApp = ({
+const AppGate = ({
   children,
   skeletons,
 }: {
@@ -36,3 +36,5 @@ export const ClientApp = ({
     </I18nProvider>
   );
 };
+
+export { AppGate };

@@ -19,7 +19,7 @@ const titleSizeClass = {
   long: styles.titleLong,
 } as const;
 
-export const AppHeaderSkeleton = ({
+const AppHeaderSkeleton = ({
   title,
   showBack = false,
   titleSize = 'long',
@@ -45,3 +45,5 @@ export const AppHeaderSkeleton = ({
     )}
   </header>
 );
+
+export { AppHeaderSkeleton };

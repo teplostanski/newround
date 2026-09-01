@@ -6,10 +6,10 @@ export const metadata: Metadata = {
   title: 'Разработка',
 };
 
-export default function DevRoutePage() {
-  return (
-    <RouteTransition>
-      <DevPage />
-    </RouteTransition>
-  );
-}
+const AppDevPage = () => (
+  <RouteTransition>
+    <DevPage />
+  </RouteTransition>
+);
+
+export default AppDevPage;

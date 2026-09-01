@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-export const ServiceWorkerReset = () => {
+const ServiceWorkerReset = () => {
   useEffect(() => {
     if (
       process.env.NODE_ENV !== 'development' ||
@@ -44,3 +44,5 @@ export const ServiceWorkerReset = () => {
 
   return null;
 };
+
+export { ServiceWorkerReset };

@@ -6,7 +6,7 @@ const directionalTransitions = {
   default: 'none',
 };
 
-export const RouteTransition = ({ children }: { children: ReactNode }) => (
+const RouteTransition = ({ children }: { children: ReactNode }) => (
   <ViewTransition
     enter={directionalTransitions}
     exit={directionalTransitions}
@@ -15,3 +15,5 @@ export const RouteTransition = ({ children }: { children: ReactNode }) => (
     <div className="route">{children}</div>
   </ViewTransition>
 );
+
+export { RouteTransition };
