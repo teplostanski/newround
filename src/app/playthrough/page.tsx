@@ -8,12 +8,12 @@ export const metadata: Metadata = {
   title: 'Партия',
 };
 
-export default function CurrentPlaythroughPage() {
-  return (
-    <RouteTransition>
-      <Suspense fallback={routeSkeletons.playthrough}>
-        <PlaythroughPage />
-      </Suspense>
-    </RouteTransition>
-  );
-}
+const AppPlaythroughPage = () => (
+  <RouteTransition>
+    <Suspense fallback={routeSkeletons.playthrough}>
+      <PlaythroughPage />
+    </Suspense>
+  </RouteTransition>
+);
+
+export default AppPlaythroughPage;

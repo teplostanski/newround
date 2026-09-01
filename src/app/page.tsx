@@ -6,10 +6,10 @@ export const metadata: Metadata = {
   title: 'Игры',
 };
 
-export default function HomePage() {
-  return (
-    <RouteTransition>
-      <GamesPage />
-    </RouteTransition>
-  );
-}
+const AppHomePage = () => (
+  <RouteTransition>
+    <GamesPage />
+  </RouteTransition>
+);
+
+export default AppHomePage;

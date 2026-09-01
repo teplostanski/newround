@@ -4,11 +4,11 @@ import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
 import { RoundSkeleton } from '@/features/rounds/round-screen/round-skeleton';
-import { routes } from '@/shared/lib/routes';
+import { Routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
 
-export const RoundPage = () => {
+const RoundPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { games, isReady, playthroughs, rounds, updateScore } = useStore();
@@ -25,17 +25,17 @@ export const RoundPage = () => {
     }
 
     if (!game) {
-      router.replace(routes.home);
+      router.replace(Routes.Root);
       return;
     }
 
     if (!playthrough) {
-      router.replace(routes.game(game.id));
+      router.replace(Routes.Game(game.id));
       return;
     }
 
     if (!round) {
-      router.replace(routes.playthrough(game.id, playthrough.id));
+      router.replace(Routes.Playthrough(game.id, playthrough.id));
     }
   }, [game, isReady, playthrough, round, router]);
 
@@ -51,10 +51,12 @@ export const RoundPage = () => {
         updateScore(round.id, playerId, score)
       }
       onFinishRound={() =>
-        router.push(routes.playthrough(game.id, playthrough.id), {
+        router.push(Routes.Playthrough(game.id, playthrough.id), {
           transitionTypes: routeTransitionTypes.back,
         })
       }
     />
   );
 };
+
+export { RoundPage };

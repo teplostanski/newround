@@ -10,9 +10,16 @@ import {
   type ReactNode,
 } from 'react';
 import { nanoid } from 'nanoid';
+import { defu } from 'defu';
 import { db, resetDatabase } from './db';
 import { deleteTestData, insertTestData } from './test-data';
-import type { Game, NewGameData, Playthrough, Round } from './types';
+import type {
+  EditGameData,
+  Game,
+  CreateGameData,
+  Playthrough,
+  Round,
+} from './types';
 
 type CreatedGame = {
   gameId: string;
@@ -24,7 +31,8 @@ type StoreValue = {
   games: Game[];
   playthroughs: Playthrough[];
   rounds: Round[];
-  addGame: (data: NewGameData) => CreatedGame;
+  createGame: (data: CreateGameData) => CreatedGame;
+  editGame: (data: EditGameData, id: string) => void;
   deleteGame: (gameId: string) => Promise<void>;
   addPlaythrough: (gameId: string) => string | null;
   deletePlaythrough: (playthroughId: string) => Promise<void>;
@@ -50,7 +58,7 @@ const loadTables = () =>
     db.rounds.orderBy('createdAt').reverse().toArray(),
   ]);
 
-export const StoreProvider = ({ children }: { children: ReactNode }) => {
+const StoreProvider = ({ children }: { children: ReactNode }) => {
   const [isReady, setIsReady] = useState(false);
   const [games, setGames] = useState<Game[]>([]);
   const [playthroughs, setPlaythroughs] = useState<Playthrough[]>([]);
@@ -88,7 +96,7 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  const addGame = useCallback((data: NewGameData): CreatedGame => {
+  const createGame = useCallback((data: CreateGameData): CreatedGame => {
     const gameId = nanoid();
     const playthroughId = nanoid();
     const now = Date.now();
@@ -116,6 +124,27 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
 
     return { gameId, playthroughId };
   }, []);
+
+  const editGame = useCallback(
+    (data: EditGameData, id: string) => {
+      const game = findById(games, id);
+
+      if (!game) {
+        return null;
+      }
+
+      const patchedGame = defu(data, game);
+
+      setGames((current) => [
+        patchedGame,
+        ...current.filter((game) => game.id !== id),
+      ]);
+      void db.transaction('rw', db.games, async () => {
+        await db.games.put(patchedGame);
+      });
+    },
+    [games],
+  );
 
   const deleteGame = useCallback(async (gameId: string) => {
     try {
@@ -283,7 +312,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       games,
       playthroughs,
       rounds,
-      addGame,
+      createGame,
+      editGame,
       deleteGame,
       addPlaythrough,
       deletePlaythrough,
@@ -299,7 +329,8 @@ export const StoreProvider = ({ children }: { children: ReactNode }) => {
       games,
       playthroughs,
       rounds,
-      addGame,
+      createGame,
+      editGame,
       deleteGame,
       addPlaythrough,
       deletePlaythrough,
@@ -326,3 +357,5 @@ export const useStore = () => {
 
   return store;
 };
+
+export { StoreProvider };

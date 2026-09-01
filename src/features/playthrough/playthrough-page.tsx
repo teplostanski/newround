@@ -2,16 +2,13 @@
 
 import { useEffect, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { RoundsList } from '@/features/playthrough/rounds-list';
+import { PlaythroughScreen } from '@/features/playthrough/playthrough-screen';
 import { PlaythroughSkeleton } from '@/features/playthrough/playthrough-skeleton';
-import { routes } from '@/shared/lib/routes';
+import { Routes } from '@/shared/lib/routes';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
-import { Card } from '@heroui/react';
-import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
-import { formatDate } from '@/shared/utils';
 
-export const PlaythroughPage = () => {
+const PlaythroughPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { addRound, games, isReady, playthroughs, rounds } = useStore();
@@ -30,12 +27,12 @@ export const PlaythroughPage = () => {
     }
 
     if (!game) {
-      router.replace(routes.home);
+      router.replace(Routes.Root);
       return;
     }
 
     if (!playthrough) {
-      router.replace(routes.game(game.id));
+      router.replace(Routes.Game(game.id));
     }
   }, [game, isReady, playthrough, router]);
 
@@ -51,7 +48,7 @@ export const PlaythroughPage = () => {
         return;
       }
 
-      router.push(routes.round(game.id, playthrough.id, roundId), {
+      router.push(Routes.Round(game.id, playthrough.id, roundId), {
         transitionTypes: routeTransitionTypes.forward,
       });
     });
@@ -62,23 +59,13 @@ export const PlaythroughPage = () => {
   }
 
   return (
-    <div className="screen">
-      <Card className="w-full">
-        <Card.Content>
-          <p className="text-muted m-0 text-[0.95rem]">
-            {game.name} · {formatDate(playthrough.createdAt)} ·{' '}
-            {game.players.length}{' '}
-            {game.players.length === 1 ? 'игрок' : 'игроков'}
-          </p>
-        </Card.Content>
-      </Card>
-
-      <PrimaryAction onPress={handleStartRound}>Начать раунд</PrimaryAction>
-      <RoundsList
-        game={game}
-        playthrough={playthrough}
-        rounds={playthroughRounds}
-      />
-    </div>
+    <PlaythroughScreen
+      game={game}
+      playthrough={playthrough}
+      rounds={playthroughRounds}
+      onStartRound={handleStartRound}
+    />
   );
 };
+
+export { PlaythroughPage };
