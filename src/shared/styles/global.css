@@ -26,6 +26,7 @@
 @import '@heroui/styles/components/card.css' layer(components);
 @import '@heroui/styles/components/surface.css' layer(components);
 @import '@heroui/styles/components/modal.css' layer(components);
+@import '@heroui/styles/components/toast.css' layer(components);
 @import '@heroui/styles/components/alert.css' layer(components);
 @import '@heroui/styles/components/alert-dialog.css' layer(components);
 @import '@heroui/styles/components/switch.css' layer(components);

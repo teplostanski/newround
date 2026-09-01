@@ -2,6 +2,7 @@
 
 import { getPlayerChipStyle } from '@/shared/lib/player-chip';
 import { Routes } from '@/shared/lib/routes';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { useStore } from '@/shared/model/store';
 import type { Game, Playthrough, Round, Scores } from '@/shared/model/types';
 import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
@@ -54,8 +55,12 @@ const RoundsList = ({ game, playthrough, rounds }: RoundsListProps) => {
                 deleteLabel="Удалить раунд"
                 confirmHeading={`Удалить раунд ${round.sequenceNumber}?`}
                 confirmBody="Счёт этого раунда пропадёт. Это нельзя отменить."
-                onConfirm={() => {
-                  void deleteRound(round.id);
+                onConfirm={async () => {
+                  try {
+                    await deleteRound(round.id);
+                  } catch (error) {
+                    toastStorageDanger('Не удалось удалить раунд', error);
+                  }
                 }}
               />
             }

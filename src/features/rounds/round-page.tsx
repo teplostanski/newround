@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
 import { RoundSkeleton } from '@/features/rounds/round-screen/round-skeleton';
 import { Routes } from '@/shared/lib/routes';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
 
@@ -47,9 +48,13 @@ const RoundPage = () => {
     <RoundScreen
       players={game.players}
       scores={round.scores}
-      onChangeScore={(playerId, score) =>
-        updateScore(round.id, playerId, score)
-      }
+      onChangeScore={async (playerId, score) => {
+        try {
+          await updateScore(round.id, playerId, score);
+        } catch (error) {
+          toastStorageDanger('Не удалось сохранить счёт', error);
+        }
+      }}
       onFinishRound={() =>
         router.push(Routes.Playthrough(game.id, playthrough.id), {
           transitionTypes: routeTransitionTypes.back,

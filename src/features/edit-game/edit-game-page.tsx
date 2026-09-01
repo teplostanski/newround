@@ -6,6 +6,7 @@ import { EditGameScreen } from './edit-game-screen';
 import { EditGameSkeleton } from './edit-game-skeleton';
 import { findById, useStore } from '@/shared/model/store';
 import type { EditGameData } from '@/shared/model/types';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { Routes } from '@/shared/lib/routes';
 
@@ -22,15 +23,20 @@ const EditGamePage = () => {
     }
   }, [game, isReady, router]);
 
-  const handleEditGame = (data: EditGameData) => {
+  const handleEditGame = async (data: EditGameData) => {
     if (!game) {
       return;
     }
 
-    editGame(data, game.id);
-    router.push(Routes.Root, {
-      transitionTypes: routeTransitionTypes.forward,
-    });
+    try {
+      await editGame(data, game.id);
+
+      router.push(Routes.Root, {
+        transitionTypes: routeTransitionTypes.forward,
+      });
+    } catch (error) {
+      toastStorageDanger('Не удалось сохранить игру', error);
+    }
   };
 
   if (!isReady || !game) {

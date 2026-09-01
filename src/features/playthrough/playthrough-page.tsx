@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { PlaythroughScreen } from '@/features/playthrough/playthrough-screen';
 import { PlaythroughSkeleton } from '@/features/playthrough/playthrough-skeleton';
 import { Routes } from '@/shared/lib/routes';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
 
@@ -41,16 +42,21 @@ const PlaythroughPage = () => {
       return;
     }
 
-    startNavigation(() => {
-      const roundId = addRound(game.id, playthrough.id);
+    startNavigation(async () => {
+      try {
+        const roundId = await addRound(game.id, playthrough.id);
 
-      if (!roundId) {
-        return;
+        if (!roundId) {
+          toastStorageDanger('Не удалось начать раунд');
+          return;
+        }
+
+        router.push(Routes.Round(game.id, playthrough.id, roundId), {
+          transitionTypes: routeTransitionTypes.forward,
+        });
+      } catch (error) {
+        toastStorageDanger('Не удалось начать раунд', error);
       }
-
-      router.push(Routes.Round(game.id, playthrough.id, roundId), {
-        transitionTypes: routeTransitionTypes.forward,
-      });
     });
   };
 

@@ -5,6 +5,7 @@ import { Pencil, TrashBin, EllipsisVertical } from '@gravity-ui/icons';
 import { Button, Label } from '@heroui/react';
 import type { Game } from '@/shared/model/types';
 import { Routes } from '@/shared/lib/routes';
+import { toastStorageDanger } from '@/shared/lib/storage-error';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { useStore } from '@/shared/model/store';
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog/confirm-dialog';
@@ -113,8 +114,12 @@ const GamesList = ({ games }: GamesListProps) => {
             action={
               <GameItemActions
                 game={game}
-                onDelete={(gameId) => {
-                  void deleteGame(gameId);
+                onDelete={async (gameId) => {
+                  try {
+                    await deleteGame(gameId);
+                  } catch (error) {
+                    toastStorageDanger('Не удалось удалить игру', error);
+                  }
                 }}
               />
             }
