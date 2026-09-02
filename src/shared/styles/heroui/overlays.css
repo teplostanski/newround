@@ -1,0 +1,21 @@
+@layer components {
+  .popover,
+  .tooltip,
+  .dropdown__popover {
+    border: 1px solid var(--border);
+  }
+
+  .tooltip {
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .dropdown__popover,
+  .toast {
+    background-color: var(--popover-bg);
+  }
+
+  .toast {
+    border: 1px solid var(--border);
+  }
+}

@@ -1,0 +1,13 @@
+@layer components {
+  .card {
+    border: 1px solid var(--border);
+    border-radius: var(--card-radius);
+  }
+
+  .card__title {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+}

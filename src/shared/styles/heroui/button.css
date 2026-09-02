@@ -1,0 +1,16 @@
+@layer components {
+  .button {
+    font-size: 1rem;
+  }
+
+  .button--icon-only {
+    width: 2.75rem;
+  }
+
+  .button:focus-visible:not(:focus),
+  .button[data-focus-visible='true'] {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    box-shadow: none;
+  }
+}
