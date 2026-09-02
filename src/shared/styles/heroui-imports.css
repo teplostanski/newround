@@ -1,0 +1,35 @@
+@import '@heroui/styles/base/base.css' layer(base);
+@import '@heroui/styles/base/scrollbar.css' layer(base);
+
+@import '@heroui/styles/themes/shared/theme.css' layer(theme);
+@import '@heroui/styles/themes/default/index.css' layer(theme);
+
+@import '@heroui/styles/components/close-button.css' layer(components);
+@import '@heroui/styles/components/button.css' layer(components);
+@import '@heroui/styles/components/chip.css' layer(components);
+@import '@heroui/styles/components/skeleton.css' layer(components);
+@import '@heroui/styles/components/fieldset.css' layer(components);
+@import '@heroui/styles/components/separator.css' layer(components);
+@import '@heroui/styles/components/label.css' layer(components);
+@import '@heroui/styles/components/description.css' layer(components);
+@import '@heroui/styles/components/radio-group.css' layer(components);
+@import '@heroui/styles/components/radio.css' layer(components);
+@import '@heroui/styles/components/input.css' layer(components);
+@import '@heroui/styles/components/input-group.css' layer(components);
+@import '@heroui/styles/components/textfield.css' layer(components);
+@import '@heroui/styles/components/textarea.css' layer(components);
+@import '@heroui/styles/components/card.css' layer(components);
+@import '@heroui/styles/components/surface.css' layer(components);
+@import '@heroui/styles/components/modal.css' layer(components);
+@import '@heroui/styles/components/toast.css' layer(components);
+@import '@heroui/styles/components/alert.css' layer(components);
+@import '@heroui/styles/components/alert-dialog.css' layer(components);
+@import '@heroui/styles/components/switch.css' layer(components);
+@import '@heroui/styles/components/popover.css' layer(components);
+@import '@heroui/styles/components/tooltip.css' layer(components);
+@import '@heroui/styles/components/dropdown.css' layer(components);
+@import '@heroui/styles/components/menu.css' layer(components);
+@import '@heroui/styles/components/menu-item.css' layer(components);
+
+@import '@heroui/styles/utilities';
+@import '@heroui/styles/variants';

@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { useIsHydrated } from '@/shared/lib/use-is-hydrated';
 import { useOnionMode } from '@/shared/lib/use-onion-mode';
 import { useStore } from '@/shared/model/store';
+import { storageToastQueue } from '@/shared/lib/storage-toast';
 import { AppShell } from '../app-shell/app-shell';
 import {
   InitialLoader,
@@ -30,7 +31,7 @@ const AppGate = ({
 
   return (
     <I18nProvider locale="ru-RU">
-      <Toast.Provider />
+      <Toast.Provider queue={storageToastQueue} placement='bottom end'/>
       <AppShell onion={onionMode} skeletons={skeletons}>
         {children}
       </AppShell>

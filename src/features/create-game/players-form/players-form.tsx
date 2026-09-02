@@ -1,18 +1,24 @@
 'use client';
 
 import { useId, useState, type SubmitEvent } from 'react';
-import { Chip, Fieldset, Input, Separator } from '@heroui/react';
+import { Fieldset, Input, Separator } from '@heroui/react';
 import { Plus } from '@gravity-ui/icons';
 import type { Player } from '@/shared/model/types';
-import { getPlayerChipStyle } from '@/shared/lib/player-chip';
 import { IconAction } from '@/shared/ui/icon-action/icon-action';
+import { PlayerCard } from './player-card';
+import styles from './players-form.module.css';
 
 type PlayersFormProps = {
   players: Player[];
   onAddPlayer: (name: string) => void;
+  onRemovePlayer: (playerId: string) => void;
 };
 
-const PlayersForm = ({ players, onAddPlayer }: PlayersFormProps) => {
+const PlayersForm = ({
+  players,
+  onAddPlayer,
+  onRemovePlayer,
+}: PlayersFormProps) => {
   const playerNameId = useId();
   const [playerName, setPlayerName] = useState('');
   const addPlayerLabel = 'Добавить игрока';
@@ -31,11 +37,11 @@ const PlayersForm = ({ players, onAddPlayer }: PlayersFormProps) => {
   };
 
   return (
-    <Fieldset>
+    <Fieldset className={styles.fieldset}>
       <Fieldset.Legend>Игроки</Fieldset.Legend>
 
       <Separator className="mt-2" />
-      
+
       <form className="row" onSubmit={handleSubmit}>
         <label className="visuallyHidden" htmlFor={playerNameId}>
           Имя игрока
@@ -58,19 +64,19 @@ const PlayersForm = ({ players, onAddPlayer }: PlayersFormProps) => {
       {players.length === 0 ? (
         <p className="empty">Добавьте хотя бы одного игрока</p>
       ) : (
-        <div className="flex flex-wrap gap-2">
+        <ul className={`list ${styles.list}`}>
           {players.map((player, index) => (
-            <Chip
-              key={player.id}
-              variant="soft"
-              size="lg"
-              className="playerChip"
-              style={getPlayerChipStyle(index)}
-            >
-              {player.name}
-            </Chip>
+            <li key={player.id} className="min-w-0">
+              <PlayerCard
+                name={player.name}
+                index={index}
+                onRemove={() => {
+                  onRemovePlayer(player.id);
+                }}
+              />
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </Fieldset>
   );

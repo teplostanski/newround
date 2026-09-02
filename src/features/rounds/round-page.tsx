@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
 import { RoundSkeleton } from '@/features/rounds/round-screen/round-skeleton';
 import { Routes } from '@/shared/lib/routes';
-import { toastStorageDanger } from '@/shared/lib/storage-error';
+import { toastStorageError } from '@/shared/lib/storage-toast';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { findById, useStore } from '@/shared/model/store';
 
@@ -52,7 +52,7 @@ const RoundPage = () => {
         try {
           await updateScore(round.id, playerId, score);
         } catch (error) {
-          toastStorageDanger('Не удалось сохранить счёт', error);
+          toastStorageError('Не удалось сохранить счёт', error);
         }
       }}
       onFinishRound={() =>

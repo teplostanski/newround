@@ -20,11 +20,17 @@ import type {
   Playthrough,
   Round,
 } from './types';
+import { PromiseExtended } from 'dexie';
 
 type CreateGameResult = {
   gameId: string;
   playthroughId: string;
   roundId: string;
+};
+
+type AddPersistResult = {
+  id: string;
+  persist: PromiseExtended<void>;
 };
 
 type StoreValue = {
@@ -35,12 +41,12 @@ type StoreValue = {
   createGame: (data: CreateGameData) => Promise<CreateGameResult | undefined>;
   editGame: (data: EditGameData, id: string) => Promise<void>;
   deleteGame: (gameId: string) => Promise<void>;
-  addPlaythrough: (gameId: string) => Promise<string | undefined>;
+  addPlaythrough: (gameId: string) => AddPersistResult | undefined;
   deletePlaythrough: (playthroughId: string) => Promise<void>;
   addRound: (
     gameId: string,
     playthroughId: string,
-  ) => Promise<string | undefined>;
+  ) => AddPersistResult | undefined;
   deleteRound: (roundId: string) => Promise<void>;
   updateScore: (
     roundId: string,
@@ -158,7 +164,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         return { gameId, playthroughId, roundId };
       } catch (error) {
         console.error(error);
-        throw error
+        throw error;
       }
     },
     [],
@@ -182,7 +188,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         );
       } catch (error) {
         console.error(error);
-        throw error
+        throw error;
       }
     },
     [games],
@@ -203,12 +209,12 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       );
     } catch (error) {
       console.error(error);
-      throw error
+      throw error;
     }
   }, []);
 
   const addPlaythrough = useCallback(
-    async (gameId: string) => {
+    (gameId: string): AddPersistResult | undefined => {
       const game = findById(games, gameId);
 
       if (!game) {
@@ -234,16 +240,18 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: now,
       };
 
-      try {
-        await db.playthroughs.add(playthrough);
+      setPlaythroughs((current) => [playthrough, ...current]);
+      const persist = db
+        .transaction('rw', db.playthroughs, async () => {
+          await db.playthroughs.add(playthrough);
+        })
+        .catch((error) => {
+          setPlaythroughs((current) => current.filter(p => p.id !== id));
+          console.error(error);
+          throw error;
+        });
 
-        setPlaythroughs((current) => [playthrough, ...current]);
-
-        return playthrough.id;
-      } catch (error) {
-        console.error(error);
-        throw error
-      }
+      return { id: playthrough.id, persist };
     },
     [games, playthroughs],
   );
@@ -262,12 +270,12 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       );
     } catch (error) {
       console.error(error);
-      throw error
+      throw error;
     }
   }, []);
 
   const addRound = useCallback(
-    async (gameId: string, playthroughId: string) => {
+    (gameId: string, playthroughId: string): AddPersistResult | undefined => {
       const game = findById(games, gameId);
       const playthrough = findById(playthroughs, playthroughId);
 
@@ -275,6 +283,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
+      const id = nanoid();
       const now = Date.now();
       const playthroughRounds = rounds.filter(
         (round) => round.playthroughId === playthroughId,
@@ -285,7 +294,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       }, 0);
 
       const round: Round = {
-        id: nanoid(),
+        id,
         gameId,
         playthroughId,
         sequenceNumber: lastNumber + 1,
@@ -296,16 +305,19 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         updatedAt: now,
       };
 
-      try {
-        await db.rounds.add(round);
+      setRounds((current) => [round, ...current]);
 
-        setRounds((current) => [round, ...current]);
+      const persist = db
+        .transaction('rw', db.rounds, async () => {
+          await db.rounds.add(round);
+        })
+        .catch((error) => {
+          setRounds((current) => current.filter(r => r.id !== id));
+          console.error(error);
+          throw error;
+        });
 
-        return round.id;
-      } catch (error) {
-        console.error(error);
-        throw error
-      }
+      return { id: round.id, persist };
     },
     [games, playthroughs, rounds],
   );
@@ -317,7 +329,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       setRounds((current) => current.filter((round) => round.id !== roundId));
     } catch (error) {
       console.error(error);
-      throw error
+      throw error;
     }
   }, []);
 
@@ -342,7 +354,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         );
       } catch (error) {
         console.error(error);
-        throw error
+        throw error;
       }
     },
     [rounds],

@@ -1,7 +1,10 @@
 'use client';
 
 import { Routes } from '@/shared/lib/routes';
-import { toastStorageDanger } from '@/shared/lib/storage-error';
+import {
+  toastStorageError,
+  toastStorageSuccess,
+} from '@/shared/lib/storage-toast';
 import type { Playthrough } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
 import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
@@ -46,8 +49,11 @@ const PlaythroughsList = ({
                     onConfirm={async () => {
                       try {
                         await deletePlaythrough(playthrough.id);
+                        toastStorageSuccess(
+                          `Партия ${playthrough.sequenceNumber} удалена`,
+                        );
                       } catch (error) {
-                        toastStorageDanger('Не удалось удалить партию', error);
+                        toastStorageError('Не удалось удалить партию', error);
                       }
                     }}
                   />

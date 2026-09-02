@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { GameScreen } from '@/features/game/game-screen';
 import { GameSkeleton } from '@/features/game/game-skeleton';
 import { Routes } from '@/shared/lib/routes';
-import { toastStorageDanger } from '@/shared/lib/storage-error';
+import { toastStorageError } from '@/shared/lib/storage-toast';
 import { findById, useStore } from '@/shared/model/store';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 
@@ -36,21 +36,24 @@ const GamePage = () => {
       return;
     }
 
-    startNavigation(async () => {
-      try {
-        const playthroughId = await addPlaythrough(game.id);
+    startNavigation(() => {
+      const result = addPlaythrough(game.id);
 
-        if (!playthroughId) {
-          toastStorageDanger('Не удалось начать партию');
-          return;
-        }
-
-        router.push(Routes.Playthrough(game.id, playthroughId), {
-          transitionTypes: routeTransitionTypes.forward,
-        });
-      } catch (error) {
-        toastStorageDanger('Не удалось начать партию', error);
+      if (!result) {
+        toastStorageError('Не удалось начать партию');
+        return;
       }
+
+      const { id, persist } = result;
+
+      router.push(Routes.Playthrough(game.id, id), {
+        transitionTypes: routeTransitionTypes.forward,
+      });
+
+      persist.catch((error) => {
+        router.replace(Routes.Game(game.id));
+        toastStorageError('Не удалось начать партию', error);
+      });
     });
   };
 

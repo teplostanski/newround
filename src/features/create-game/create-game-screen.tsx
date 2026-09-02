@@ -20,6 +20,12 @@ const CreateGameScreen = ({ onCreateGame }: CreateGameScreenProps) => {
     setPlayers((current) => [...current, { id: nanoid(), name }]);
   };
 
+  const handleRemovePlayer = (playerId: string) => {
+    setPlayers((current) =>
+      current.filter((player) => player.id !== playerId),
+    );
+  };
+
   const handleCreateGame = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     onCreateGame({ name: gameName, players });
@@ -40,7 +46,11 @@ const CreateGameScreen = ({ onCreateGame }: CreateGameScreenProps) => {
           onChange={(event) => setGameName(event.target.value)}
         />
 
-        <PlayersForm players={players} onAddPlayer={handleAddPlayer} />
+        <PlayersForm
+          players={players}
+          onAddPlayer={handleAddPlayer}
+          onRemovePlayer={handleRemovePlayer}
+        />
 
         <PrimaryAction
           form={mainFormId}

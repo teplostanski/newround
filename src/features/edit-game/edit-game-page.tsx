@@ -6,7 +6,7 @@ import { EditGameScreen } from './edit-game-screen';
 import { EditGameSkeleton } from './edit-game-skeleton';
 import { findById, useStore } from '@/shared/model/store';
 import type { EditGameData } from '@/shared/model/types';
-import { toastStorageDanger } from '@/shared/lib/storage-error';
+import { toastStorageError } from '@/shared/lib/storage-toast';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { Routes } from '@/shared/lib/routes';
 
@@ -35,7 +35,7 @@ const EditGamePage = () => {
         transitionTypes: routeTransitionTypes.forward,
       });
     } catch (error) {
-      toastStorageDanger('Не удалось сохранить игру', error);
+      toastStorageError('Не удалось сохранить игру', error);
     }
   };
 

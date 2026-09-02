@@ -190,7 +190,7 @@
   --player-text-lightness: 0.32;
   --player-text-chroma: 0.05;
 
-  --popover-bg: color-mix(in oklab, var(--paper) 80%, var(--line) 20%);
+  --popover-bg: color-mix(in oklab, var(--paper) 70%, var(--line) 30%);
 }
 
 .dark,
@@ -222,54 +222,5 @@
   --player-text-lightness: 0.92;
   --player-text-chroma: 0.04;
 
-  --popover-bg: color-mix(in oklab, var(--paper) 80%, var(--page) 20%);
-}
-
-@layer components {
-  .dropdown__popover {
-    background-color: var(--popover-bg);
-  }
-
-  .card {
-    border: 1px solid var(--border);
-    border-radius: var(--card-radius);
-  }
-
-  .skeleton {
-    border-radius: var(--radius);
-  }
-
-  .card__title {
-    font-weight: 600;
-    font-size: 1rem;
-    line-height: 1.25;
-    word-break: break-word;
-  }
-
-  .chip.playerChip {
-    font-size: 1rem;
-    line-height: 1.25;
-  }
-
-  .button {
-    font-size: 1rem;
-  }
-
-  .button--icon-only {
-    width: 2.75rem;
-  }
-
-  .input,
-  .input-group__input {
-    height: 2.75rem;
-    border-radius: var(--radius);
-    font-size: 1rem;
-  }
-
-  .button:focus-visible:not(:focus),
-  .button[data-focus-visible='true'] {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-    box-shadow: none;
-  }
+  --popover-bg: color-mix(in oklab, var(--paper) 72%, var(--page) 28%);
 }
