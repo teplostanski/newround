@@ -13,9 +13,51 @@ import { IndexedDbPanel } from './indexed-db-panel';
 import { StoragePanel } from './storage-panel';
 import { TestDataPanel } from './test-data-panel';
 import styles from './dev-screen.module.css';
+import { useState } from 'react';
+import { db } from '@/shared/model/db';
 
 type OnionChoice = OnionMode | false;
 type OnionRadioValue = OnionMode | 'off';
+
+export default function ExportButton() {
+  const [status, setStatus] = useState('');
+
+  const handleExport = async () => {
+    try {
+      setStatus('Экспорт...');
+
+      const backup = {
+        games: await db.games.toArray(),
+        playthroughs: await db.playthroughs.toArray(),
+        rounds: await db.rounds.toArray(),
+      };
+
+      const jsonString = JSON.stringify(backup, null, 2);
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `newround-backup_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      setStatus('✅ Готово');
+    } catch (error) {
+      console.error(error);
+      setStatus('❌ Ошибка');
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleExport}>💾 Экспорт</button>
+      {status && <p>{status}</p>}
+    </div>
+  );
+}
 
 const toRadioValue = (mode: OnionChoice): OnionRadioValue =>
   mode === false ? 'off' : mode;
@@ -58,9 +100,9 @@ const DevScreen = () => {
         <Alert.Content>
           <Alert.Title>Внимание</Alert.Title>
           <Alert.Description>
-            Служебная панель предназначена исключительно для разработки. Действия
-            на этой странице могут повредить или безвозвратно стереть сохранённые
-            данные.
+            Служебная панель предназначена исключительно для разработки.
+            Действия на этой странице могут повредить или безвозвратно стереть
+            сохранённые данные.
           </Alert.Description>
         </Alert.Content>
       </Alert>
@@ -70,6 +112,10 @@ const DevScreen = () => {
         description="navigator.userAgent и включённые флаги undevice для этого агента."
       >
         <DevicePanel />
+      </DevSection>
+
+      <DevSection title="Экспорт">
+        <ExportButton />
       </DevSection>
 
       <DevSection
@@ -82,11 +128,7 @@ const DevScreen = () => {
           value={toRadioValue(current)}
           onChange={(value) => writeOnionMode(toOnionMode(value))}
         >
-          <OnionOption
-            value="off"
-            label="Off"
-            description="Без наложения"
-          />
+          <OnionOption value="off" label="Off" description="Без наложения" />
           <OnionOption
             value="ghost"
             label="Ghost"
@@ -114,15 +156,11 @@ const DevScreen = () => {
         <TestDataPanel />
       </DevSection>
 
-      <DevSection
-        title="sessionStorage"
-      >
+      <DevSection title="sessionStorage">
         <StoragePanel kind="session" />
       </DevSection>
 
-      <DevSection
-        title="localStorage"
-      >
+      <DevSection title="localStorage">
         <StoragePanel kind="local" />
       </DevSection>
     </div>
