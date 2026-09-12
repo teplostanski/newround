@@ -207,11 +207,9 @@ const DevScreen = () => {
       </DevSection>
 
       <DevSection title="sessionStorage">
-      <DevSection title="sessionStorage">
         <StoragePanel kind="session" />
       </DevSection>
 
-      <DevSection title="localStorage">
       <DevSection title="localStorage">
         <StoragePanel kind="local" />
       </DevSection>
