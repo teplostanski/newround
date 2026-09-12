@@ -1,6 +1,53 @@
-export const TEST_DATA_FLAG = 1;
+import type {
+  CompletionReasons,
+  EndAwardsKinds,
+  GameEndConditionTypes,
+  ScoreRankings,
+  ScoringModes,
+  TEST_DATA_FLAG,
+} from '@/shared/constants';
+import type { ValueOf } from '../types';
 
-type Entity = {
+export type ScoreRanking = ValueOf<typeof ScoreRankings>;
+
+export type EndAwards = ValueOf<typeof EndAwardsKinds>;
+
+export type GameEndCondition =
+  | { type: typeof GameEndConditionTypes.ScoreLimit; targetScore: number }
+  | { type: typeof GameEndConditionTypes.ScoreDepletion; floorScore: number }
+  | { type: typeof GameEndConditionTypes.RoundLimit; maxRounds: number }
+  | { type: typeof GameEndConditionTypes.Manual };
+
+export type GameEndConditionType = GameEndCondition['type'];
+
+export type GameOutcomeRule = {
+  ranking: ScoreRanking;
+  awards: EndAwards;
+};
+
+/**
+ * Пустой массив = только ручное завершение
+ */
+export type GameEndConfig = {
+  endConditions: GameEndCondition[];
+  outcome: GameOutcomeRule;
+};
+
+type PlayerColor = {
+  lightTheme: string[];
+  darkTheme: string[];
+};
+
+export type CompletionReason = ValueOf<typeof CompletionReasons>;
+
+export type Completion = {
+  reason: CompletionReason;
+  finishedAt: number;
+  highestScorePlayerIds: string[];
+  lowestScorePlayerIds: string[];
+};
+
+type BaseEntity = {
   id: string;
   createdAt: number;
   updatedAt: number;
@@ -10,32 +57,48 @@ type Entity = {
 export type Player = {
   id: string;
   name: string;
+  color?: PlayerColor;
 };
 
-export type Game = Entity & {
+export type ScoringMode = ValueOf<typeof ScoringModes>;
+
+type GameBase = BaseEntity & {
   name: string;
   players: Player[];
+  endConfig?: GameEndConfig;
 };
 
-export type CreateGameData = {
-  name: string;
-  players: Player[];
-};
+export type Game =
+  | (GameBase & { scoringMode: typeof ScoringModes.Rounds })
+  | (GameBase & { scoringMode: typeof ScoringModes.Playthrough });
+
+export type PlaythroughGame = Extract<
+  Game,
+  { scoringMode: typeof ScoringModes.Playthrough }
+>;
+
+export type CreateGameData = Pick<Game, 'name' | 'players' | 'scoringMode'>;
 
 export type EditGameData = {
   name: string;
 };
 
-export type Playthrough = Entity & {
-  gameId: string;
+type PlayRecord = {
   sequenceNumber: number;
+  scores: Scores;
+  completion?: Completion;
+  duration: number;
 };
+
+export type Playthrough = BaseEntity &
+  PlayRecord & {
+    gameId: string;
+  };
 
 export type Scores = Record<string, number>;
 
-export type Round = Entity & {
-  gameId: string;
-  playthroughId: string;
-  sequenceNumber: number;
-  scores: Scores;
-};
+export type Round = BaseEntity &
+  PlayRecord & {
+    gameId: string;
+    playthroughId: string;
+  };
