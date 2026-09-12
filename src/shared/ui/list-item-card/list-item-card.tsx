@@ -7,7 +7,7 @@ import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import styles from './list-item-card.module.css';
 
 type ListItemCardProps = {
-  title: string;
+  title: string | ReactNode;
   link?: string;
   description?: string;
   action?: ReactNode;

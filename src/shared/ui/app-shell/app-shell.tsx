@@ -2,6 +2,7 @@
 
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useLayoutEffect, type ReactNode } from 'react';
+import { ScoringModes } from '@/shared/constants';
 import { Paths, Routes } from '@/shared/lib/routes';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
 import { findById, useStore } from '@/shared/model/store';
@@ -128,11 +129,16 @@ const AppShell = ({
   }
 
   if (pathname === Paths.Playthrough) {
+    const title =
+      game?.scoringMode === ScoringModes.Playthrough
+        ? 'Счёт'
+        : playthrough
+          ? `Партия ${playthrough.sequenceNumber}`
+          : 'Партия';
+
     return (
       <AppShellView
-        title={
-          playthrough ? `Партия ${playthrough.sequenceNumber}` : 'Партия'
-        }
+        title={title}
         backHref={game ? Routes.Game(game.id) : Routes.Root}
         onion={onion}
         skeletons={skeletons}

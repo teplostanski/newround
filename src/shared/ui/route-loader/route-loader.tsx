@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { ViewTransition, type ReactNode } from 'react';
+import { OnionModes } from '@/shared/constants';
 import { cn } from '@/shared/lib/cn';
 import { Paths } from '@/shared/lib/routes';
 import type { OnionMode } from '@/shared/lib/use-onion-mode';
@@ -12,9 +13,11 @@ import {
 import appStyles from '../app-shell/app-shell.module.css';
 import styles from './route-loader.module.css';
 
-export type RouteKind = (typeof KindByPath)[keyof typeof KindByPath] | 'fallback';
+import type { KeyOf, ValueOf } from '@/shared/types';
 
-type RoutePath = keyof typeof KindByPath;
+export type RouteKind = ValueOf<typeof KindByPath> | 'fallback';
+
+type RoutePath = KeyOf<typeof KindByPath>;
 
 type RouteLoaderProps = {
   fullscreen?: boolean;
@@ -63,10 +66,7 @@ const titleSize = (kind: RouteKind): TitleSize => {
   return 'long';
 };
 
-const ContentSkeleton = ({
-  kind,
-  contents,
-}: ContentSkeletonProps) => {
+const ContentSkeleton = ({ kind, contents }: ContentSkeletonProps) => {
   if (kind === 'fallback') {
     return contents?.fallback ?? <div className="screen" />;
   }
@@ -95,7 +95,7 @@ const RouteLoader = ({
       <div
         className={cn(
           styles.onionLayer,
-          onion === 'ghost' ? styles.onionGhost : styles.onionDiff,
+          onion === OnionModes.Ghost ? styles.onionGhost : styles.onionDiff,
         )}
         aria-hidden="true"
       >
@@ -130,9 +130,7 @@ const RouteLoader = ({
   );
 };
 
-const InitialLoader = ({
-  contents,
-}: Pick<RouteLoaderProps, 'contents'>) => (
+const InitialLoader = ({ contents }: Pick<RouteLoaderProps, 'contents'>) => (
   <ViewTransition exit="initial-loader-exit" default="none">
     <RouteLoader fullscreen contents={contents} />
   </ViewTransition>
