@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { RoundScreen } from '@/features/rounds/round-screen/round-screen';
-import { RoundSkeleton } from '@/features/rounds/round-screen/round-skeleton';
+import { ScoreScreen } from '@/shared/ui/score-screen/score-screen';
+import { ScoreSkeleton } from '@/shared/ui/score-screen/score-skeleton';
 import { Routes } from '@/shared/lib/routes';
 import { toastStorageError } from '@/shared/lib/storage-toast';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
@@ -12,14 +12,21 @@ import { findById, useStore } from '@/shared/model/store';
 const RoundPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { games, isReady, playthroughs, rounds, updateScore } = useStore();
+  const {
+    games,
+    isReady,
+    playthroughs,
+    rounds,
+    updateRoundScore,
+    finishRound,
+  } = useStore();
   const gameId = searchParams.get('gameId');
   const playthroughId = searchParams.get('playthroughId');
   const roundId = searchParams.get('roundId');
   const game = findById(games, gameId);
   const playthrough = findById(playthroughs, playthroughId);
   const round = findById(rounds, roundId);
-
+  
   useEffect(() => {
     if (!isReady) {
       return;
@@ -41,25 +48,36 @@ const RoundPage = () => {
   }, [game, isReady, playthrough, round, router]);
 
   if (!isReady || !game || !playthrough || !round) {
-    return <RoundSkeleton />;
+    return <ScoreSkeleton />;
   }
 
+  const handleFinish = async () => {
+    try {
+      await finishRound(round.id);
+    } catch (error) {
+      toastStorageError('Не удалось завершить раунд', error);
+    }
+
+    router.push(Routes.Playthrough(game.id, playthrough.id), {
+      transitionTypes: routeTransitionTypes.back,
+    });
+  };
+
   return (
-    <RoundScreen
+    <ScoreScreen
       players={game.players}
       scores={round.scores}
+      finishLabel="Завершить раунд"
+      isFirstRun={round.sequenceNumber <= 1}
       onChangeScore={async (playerId, score) => {
         try {
-          await updateScore(round.id, playerId, score);
+          await updateRoundScore({ id: round.id, playerId, score });
         } catch (error) {
           toastStorageError('Не удалось сохранить счёт', error);
         }
       }}
-      onFinishRound={() =>
-        router.push(Routes.Playthrough(game.id, playthrough.id), {
-          transitionTypes: routeTransitionTypes.back,
-        })
-      }
+      onFinish={handleFinish}
+      totalScores={playthrough.scores}
     />
   );
 };
