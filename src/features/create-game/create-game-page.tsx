@@ -7,6 +7,7 @@ import { Routes } from '@/shared/lib/routes';
 import { toastStorageError } from '@/shared/lib/storage-toast';
 import { routeTransitionTypes } from '@/shared/lib/view-transitions';
 import { useStore } from '@/shared/model/store';
+import { ScoringModes } from '@/shared/constants';
 import type { CreateGameData } from '@/shared/model/types';
 
 const CreateGamePage = () => {
@@ -22,12 +23,14 @@ const CreateGamePage = () => {
         return;
       }
 
-      router.push(
-        Routes.Round(created.gameId, created.playthroughId, created.roundId),
-        {
-          transitionTypes: routeTransitionTypes.forward,
-        },
-      );
+      const nextRoute =
+        created.scoringMode === ScoringModes.Rounds
+          ? Routes.Round(created.gameId, created.playthroughId, created.roundId)
+          : Routes.Playthrough(created.gameId, created.playthroughId);
+
+      router.push(nextRoute, {
+        transitionTypes: routeTransitionTypes.forward,
+      });
     } catch (error) {
       toastStorageError('Не удалось создать игру', error);
     }
