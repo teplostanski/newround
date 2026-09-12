@@ -1,0 +1,48 @@
+.list {
+  gap: 0.65rem;
+}
+
+.scoreCard {
+  user-select: none;
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 0.35rem;
+}
+
+.stepperTile,
+.stepper :global(.button).stepperTile {
+  box-sizing: border-box;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.stepperValue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius);
+  background: var(--line);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.cardTitle {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.totalScore {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}
