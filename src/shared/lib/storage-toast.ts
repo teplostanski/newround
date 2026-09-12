@@ -53,4 +53,19 @@ const toastStorageSuccess = (title: string) => {
   );
 };
 
-export { storageToastQueue, toastStorageError, toastStorageSuccess };
+const toastError = (title: string) => {
+  storageToastQueue.add(
+    {
+      title,
+      variant: 'danger',
+    },
+    { timeout: STORAGE_ERROR_TOAST_TIMEOUT_MS },
+  );
+};
+
+export {
+  storageToastQueue,
+  toastStorageError,
+  toastStorageSuccess,
+  toastError,
+};

@@ -40,7 +40,11 @@ const RoundsList = ({ game, playthrough, rounds }: RoundsListProps) => {
       {rounds.map((round) => (
         <li key={round.id}>
           <ListItemCard
-            link={Routes.Round(game.id, playthrough.id, round.id)}
+            link={
+              round.completion
+                ? undefined
+                : Routes.Round(game.id, playthrough.id, round.id)
+            }
             title={
               <span className="flex gap-2 items-center">
                 Раунд {round.sequenceNumber}{' '}

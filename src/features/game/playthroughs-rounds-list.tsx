@@ -102,10 +102,17 @@ const PlaythroughsRoundsList = ({
                 roundCountByPlaythrough.get(playthrough.id) ?? 0;
               const { completion, duration } = playthrough;
 
+              const isPlaythroughMode = game.scoringMode === 'PLAYTHROUGH';
+              const isCompleted = Boolean(playthrough.completion);
+
               return (
                 <li key={playthrough.id}>
                   <ListItemCard
-                    link={Routes.Playthrough(game.id, playthrough.id)}
+                    link={
+                      isPlaythroughMode && isCompleted
+                        ? undefined
+                        : Routes.Playthrough(game.id, playthrough.id)
+                    }
                     title={
                       <span className="flex items-center gap-2">
                         Партия {playthrough.sequenceNumber}
