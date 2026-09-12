@@ -143,6 +143,9 @@ const DevScreen = () => {
             Служебная панель предназначена исключительно для разработки.
             Действия на этой странице могут повредить или безвозвратно стереть
             сохранённые данные.
+            Служебная панель предназначена исключительно для разработки.
+            Действия на этой странице могут повредить или безвозвратно стереть
+            сохранённые данные.
           </Alert.Description>
         </Alert.Content>
       </Alert>
@@ -204,9 +207,11 @@ const DevScreen = () => {
       </DevSection>
 
       <DevSection title="sessionStorage">
+      <DevSection title="sessionStorage">
         <StoragePanel kind="session" />
       </DevSection>
 
+      <DevSection title="localStorage">
       <DevSection title="localStorage">
         <StoragePanel kind="local" />
       </DevSection>
