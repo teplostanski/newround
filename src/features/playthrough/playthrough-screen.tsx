@@ -4,7 +4,7 @@ import { Button, Card, Chip } from '@heroui/react';
 import { CrownDiamond, FaceSad } from '@gravity-ui/icons';
 import { formatDate } from '@/shared/utils';
 import type { Game, Playthrough, Round } from '@/shared/model/types';
-import { rankScores, resolveEndConfig } from '@/shared/model/end-config';
+import { rankScores } from '@/shared/model/score-ranking';
 import { EndAwardsKinds } from '@/shared/constants';
 import { useStore } from '@/shared/model/store';
 import {
@@ -31,7 +31,7 @@ const PlaythroughScreen = ({
 
   const isAllCompleted = rounds.filter((round) => Boolean(round.completion)).length === rounds.length
 
-  const { outcome } = resolveEndConfig(game);
+  const { outcome } = game.endRules;
   const showWinners =
     outcome.awards === EndAwardsKinds.Winner ||
     outcome.awards === EndAwardsKinds.Both;

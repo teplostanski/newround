@@ -28,7 +28,7 @@ export type GameOutcomeRule = {
 /**
  * Пустой массив = только ручное завершение
  */
-export type GameEndConfig = {
+export type GameEndRules = {
   endConditions: GameEndCondition[];
   outcome: GameOutcomeRule;
 };
@@ -65,7 +65,7 @@ export type ScoringMode = ValueOf<typeof ScoringModes>;
 type GameBase = BaseEntity & {
   name: string;
   players: Player[];
-  endConfig?: GameEndConfig;
+  endRules: GameEndRules;
 };
 
 export type Game =
@@ -77,7 +77,7 @@ export type PlaythroughGame = Extract<
   { scoringMode: typeof ScoringModes.Playthrough }
 >;
 
-export type CreateGameData = Pick<Game, 'name' | 'players' | 'scoringMode'>;
+export type CreateGameData = Pick<Game, 'name' | 'players' | 'scoringMode' | 'endRules'>
 
 export type EditGameData = {
   name: string;

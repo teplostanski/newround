@@ -1,5 +1,11 @@
 import { nanoid } from 'nanoid';
-import { ScoringModes, TEST_DATA_FLAG } from '@/shared/constants';
+import {
+  ScoringModes,
+  TEST_DATA_FLAG,
+  GameEndConditionTypes,
+  ScoreRankings,
+  EndAwardsKinds,
+} from '@/shared/constants';
 import { db } from './db';
 import type { Game, Playthrough, Round } from './types';
 import { initialScores } from './entity-builders';
@@ -42,6 +48,13 @@ export const insertTestData = async () => {
       id: nanoid(),
       name: `Игрок ${playerIndex + 1}`,
     })),
+    endRules: {
+      endConditions: [{ type: GameEndConditionTypes.Manual }],
+      outcome: {
+        ranking: ScoreRankings.LowestBest,
+        awards: EndAwardsKinds.Loser,
+      },
+    },
     createdAt: now - gameIndex,
     updatedAt: now - gameIndex,
     isTestData: TEST_DATA_FLAG,

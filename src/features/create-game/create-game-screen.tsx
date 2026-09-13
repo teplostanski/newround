@@ -1,15 +1,31 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useId, useState, type SubmitEvent } from 'react';
+import { useCallback, useId, useState, type SubmitEvent } from 'react';
 import { Input, Skeleton } from '@heroui/react';
 import { nanoid } from 'nanoid';
-import { PrimaryAction, PrimaryActionBone } from '@/shared/ui/primary-action/primary-action';
-import { ScoringModes } from '@/shared/constants';
-import type { CreateGameData, Player, ScoringMode } from '@/shared/model/types';
+import {
+  PrimaryAction,
+  PrimaryActionBone,
+} from '@/shared/ui/primary-action/primary-action';
+import {
+  EndAwardsKinds,
+  ScoreRankings,
+  ScoringModes,
+} from '@/shared/constants';
+import type {
+  CreateGameData,
+  EndAwards,
+  GameEndCondition,
+  Player,
+  ScoreRanking,
+  ScoringMode,
+} from '@/shared/model/types';
 import { PlayersSection } from './form-sections/players-section/players-section';
 import { ScoringSection } from './form-sections/scoring-section/scoring-section';
 import sectionStyles from './form-sections/form-section.module.css';
 import styles from './create-game-screen.module.css';
+import { EndRulesSection } from './form-sections/end-rules-section/end-rules-section';
 
 type CreateGameScreenProps = {
   onCreateGame: (data: CreateGameData) => void;
@@ -23,7 +39,14 @@ const CreateGameScreen = ({
   const mainFormId = useId();
   const [gameName, setGameName] = useState('');
   const [players, setPlayers] = useState<Player[]>([]);
-  const [scoringMode, setScoringMode] = useState<ScoringMode>(ScoringModes.Rounds);
+  const [scoringMode, setScoringMode] = useState<ScoringMode>(
+    ScoringModes.Rounds,
+  );
+  const [endConditions, setEndConditions] = useState<GameEndCondition[]>([]);
+  const [ranking, setRanking] = useState<ScoreRanking>(
+    ScoreRankings.HighestBest,
+  );
+  const [awards, setAwards] = useState<EndAwards>(EndAwardsKinds.Winner);
 
   const handleAddPlayer = (name: string) => {
     setPlayers((current) => [...current, { id: nanoid(), name }]);
@@ -43,9 +66,26 @@ const CreateGameScreen = ({
             month: 'long',
           })}`
         : gameName.trim();
-    onCreateGame({ name, players, scoringMode });
+    onCreateGame({
+      name,
+      players,
+      scoringMode,
+      endRules: {
+        endConditions,
+        outcome: { ranking, awards },
+      },
+    });
   };
-  
+
+  const handleEndConditions = useCallback(
+    (conditions: GameEndCondition[]): void => {
+      console.log(conditions);
+
+      setEndConditions(conditions);
+    },
+    [],
+  );
+
   /*
   TODO
   Заменить скелетон на отдельный файл
@@ -84,6 +124,11 @@ const CreateGameScreen = ({
             scoringMode={scoringMode}
             onScoringModeChange={setScoringMode}
             isSkeleton={isSkeleton}
+          />
+
+          <EndRulesSection
+            isSkeleton={isSkeleton}
+            onEndConditionsChange={handleEndConditions}
           />
         </div>
 

@@ -17,8 +17,7 @@ import {
 } from '@/shared/utils';
 import type { Game, Playthrough } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
-import { resolveEndConfig } from '@/shared/model/end-config';
-import { EndAwardsKinds } from '@/shared/constants';
+import { EndAwardsKinds, ScoreRankings } from '@/shared/constants';
 import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
 import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 import { ScoreSummary } from '@/shared/ui/score-summary/score-summary';
@@ -34,8 +33,9 @@ const PlaythroughsRoundsList = ({
 }: PlaythroughsRoundsListProps) => {
   const { deletePlaythrough, rounds } = useStore();
 
-  const endConfig = resolveEndConfig(game);
-  const awards = endConfig.outcome.awards;
+  const endRules = game.endRules;
+  const awards = endRules.outcome.awards;
+  const ranking = endRules.outcome.ranking;
 
   const roundCountByPlaythrough = useMemo(() => {
     const counts = new Map<string, number>();
@@ -134,7 +134,8 @@ const PlaythroughsRoundsList = ({
                               : formatTime(playthrough.updatedAt)}
                           </span>
                           <span className="text-muted font-mono">
-                            {formatDuration(duration)} · {pluralizeRounds(roundCount)}
+                            {formatDuration(duration)} ·{' '}
+                            {pluralizeRounds(roundCount)}
                           </span>
                         </div>
 
@@ -146,20 +147,33 @@ const PlaythroughsRoundsList = ({
                         {completion && (
                           <div className="flex flex-col gap-2">
                             {showLosers &&
-                              completion.lowestScorePlayerIds.length > 0 && (
+                              completion[
+                                ranking === ScoreRankings.HighestBest
+                                  ? 'lowestScorePlayerIds'
+                                  : 'highestScorePlayerIds'
+                              ].length > 0 && (
                                 <div className="flex flex-row flex-wrap items-center gap-2">
                                   <Chip variant="soft" size="sm" color="danger">
                                     <span className="flex flex-row items-center gap-1">
                                       <FaceSad width={16} />
                                       {namesFromIds(
-                                        completion.lowestScorePlayerIds,
+                                        completion[
+                                          ranking === ScoreRankings.HighestBest
+                                            ? 'lowestScorePlayerIds'
+                                            : 'highestScorePlayerIds'
+                                        ],
                                       )}
                                     </span>
                                   </Chip>
                                 </div>
                               )}
                             {showWinners &&
-                              completion.highestScorePlayerIds.length > 0 && (
+                              completion[
+                                /** исправить хардкод */
+                                ranking === ScoreRankings.LowestBest
+                                  ? 'lowestScorePlayerIds'
+                                  : 'highestScorePlayerIds'
+                              ].length > 0 && (
                                 <div className="flex flex-row flex-wrap items-center gap-2">
                                   <Chip
                                     variant="soft"
@@ -169,7 +183,12 @@ const PlaythroughsRoundsList = ({
                                     <span className="flex flex-row items-center gap-1">
                                       <CrownDiamond width={16} />
                                       {namesFromIds(
-                                        completion.highestScorePlayerIds,
+                                        completion[
+                                          /** исправить хардкод */
+                                          ranking === ScoreRankings.LowestBest
+                                            ? 'lowestScorePlayerIds'
+                                            : 'highestScorePlayerIds'
+                                        ],
                                       )}
                                     </span>
                                   </Chip>
