@@ -1,6 +1,14 @@
 import { nanoid } from 'nanoid';
+import {
+  ScoringModes,
+  TEST_DATA_FLAG,
+  GameEndConditionTypes,
+  ScoreRankings,
+  EndAwardsKinds,
+} from '@/shared/constants';
 import { db } from './db';
-import { TEST_DATA_FLAG, type Game, type Playthrough, type Round } from './types';
+import type { Game, Playthrough, Round } from './types';
+import { initialScores } from './entity-builders';
 
 const SCALE = 10;
 const PLAYER_MIN = 2;
@@ -35,10 +43,18 @@ export const insertTestData = async () => {
   const games: Game[] = range(SCALE).map((gameIndex) => ({
     id: nanoid(),
     name: `Тест ${SCALE}×${SCALE}×${SCALE} · ${gameIndex + 1}`,
+    scoringMode: ScoringModes.Rounds,
     players: range(randomPlayerCount()).map((playerIndex) => ({
       id: nanoid(),
       name: `Игрок ${playerIndex + 1}`,
     })),
+    endRules: {
+      endConditions: [{ type: GameEndConditionTypes.Manual }],
+      outcome: {
+        ranking: ScoreRankings.LowestBest,
+        awards: EndAwardsKinds.Loser,
+      },
+    },
     createdAt: now - gameIndex,
     updatedAt: now - gameIndex,
     isTestData: TEST_DATA_FLAG,
@@ -51,6 +67,8 @@ export const insertTestData = async () => {
       id: nanoid(),
       gameId: game.id,
       sequenceNumber: playthroughIndex + 1,
+      scores: initialScores(game.players),
+      duration: 0,
       createdAt: now - gameIndex * SCALE - playthroughIndex,
       updatedAt: now - gameIndex * SCALE - playthroughIndex,
       isTestData: TEST_DATA_FLAG,
@@ -65,6 +83,7 @@ export const insertTestData = async () => {
         scores: Object.fromEntries(
           game.players.map((player) => [player.id, randomScore()]),
         ),
+        duration: 0,
         createdAt:
           now - gameIndex * SCALE * SCALE - playthroughIndex * SCALE - roundIndex,
         updatedAt:

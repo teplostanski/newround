@@ -35,3 +35,14 @@
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
 }
+
+.cardTitle {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.totalScore {
+  color: var(--color-muted);
+  font-size: 0.75rem;
+}

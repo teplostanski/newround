@@ -1,0 +1,40 @@
+.fieldset {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.legend {
+  font-size: 1.125rem;
+}
+
+.requiredMark {
+  margin-inline-start: 0.2rem;
+  color: var(--danger);
+}
+
+.description {
+  font-size: 0.875rem;
+}
+
+.fieldBone {
+  box-sizing: border-box;
+  height: 2.75rem;
+  border-radius: var(--radius);
+}
+
+.fieldBoneFull {
+  composes: fieldBone;
+  width: 100%;
+}
+
+.fieldBoneGrow {
+  composes: fieldBone;
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.legendBone {
+  display: inline-block;
+  height: 1.125rem;
+  width: 5.5rem;
+}

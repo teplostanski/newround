@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Pencil, TrashBin, EllipsisVertical } from '@gravity-ui/icons';
 import { Button, Label } from '@heroui/react';
+import { ScoringModes } from '@/shared/constants';
 import type { Game } from '@/shared/model/types';
 import { Routes } from '@/shared/lib/routes';
 import {
@@ -85,7 +86,11 @@ const GameItemActions = ({ game, onDelete }: GameItemActionsProps) => {
       <ConfirmDialog
         isOpen={isConfirmOpen}
         heading={`Удалить игру «${game.name}»?`}
-        body="Партии и раунды этой игры пропадут. Это нельзя отменить."
+        body={
+          game.scoringMode === ScoringModes.Rounds
+            ? 'Партии и раунды этой игры пропадут. Это нельзя отменить.'
+            : 'Партии и счёт этой игры пропадут. Это нельзя отменить.'
+        }
         confirmLabel="Удалить"
         onOpenChange={setConfirmOpen}
         onConfirm={() => {

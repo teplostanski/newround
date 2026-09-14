@@ -30,6 +30,7 @@
 @import '@heroui/styles/components/dropdown.css' layer(components);
 @import '@heroui/styles/components/menu.css' layer(components);
 @import '@heroui/styles/components/menu-item.css' layer(components);
+@import '@heroui/styles/components/number-field.css' layer(components);
 
 @import '@heroui/styles/utilities';
 @import '@heroui/styles/variants';

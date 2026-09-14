@@ -2,7 +2,7 @@
 
 import { Card, Skeleton } from '@heroui/react';
 import { cn } from '@/shared/lib/cn';
-import styles from './round-screen.module.css';
+import styles from './score-screen.module.css';
 
 const PLAYER_KEYS = [0, 1, 2] as const;
 
@@ -25,9 +25,9 @@ const ScoreCardBone = () => (
   </Card>
 );
 
-const FinishRoundBone = () => <Skeleton className="h-11 w-full" />;
+const FinishBone = () => <Skeleton className="h-11 w-full" />;
 
-const RoundSkeleton = () => (
+const ScoreSkeleton = () => (
   <div className="screen">
     <ul className={cn('list', styles.list)}>
       {PLAYER_KEYS.map((key) => (
@@ -36,8 +36,8 @@ const RoundSkeleton = () => (
         </li>
       ))}
     </ul>
-    <FinishRoundBone />
+    <FinishBone />
   </div>
 );
 
-export { RoundSkeleton };
+export { ScoreSkeleton };

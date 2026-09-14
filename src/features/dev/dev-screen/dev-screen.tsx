@@ -1,6 +1,7 @@
 'use client';
 
 import { Alert, Description, Radio, RadioGroup } from '@heroui/react';
+import { OnionModes } from '@/shared/constants';
 import { cn } from '@/shared/lib/cn';
 import {
   useOnionMode,
@@ -13,13 +14,14 @@ import { IndexedDbPanel } from './indexed-db-panel';
 import { StoragePanel } from './storage-panel';
 import { TestDataPanel } from './test-data-panel';
 import styles from './dev-screen.module.css';
+
 import { useState } from 'react';
 import { db } from '@/shared/model/db';
 
 type OnionChoice = OnionMode | false;
-type OnionRadioValue = OnionMode | 'off';
+type OnionRadioValue = OnionMode | typeof OnionModes.Off;
 
-export default function ExportButton() {
+function ExportImportPanel() {
   const [status, setStatus] = useState('');
 
   const handleExport = async () => {
@@ -44,26 +46,64 @@ export default function ExportButton() {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      setStatus('✅ Готово');
+      setStatus('✅ Экспорт завершён');
     } catch (error) {
       console.error(error);
-      setStatus('❌ Ошибка');
+      setStatus('❌ Ошибка экспорта');
     }
+  };
+
+  const handleImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setStatus('Импорт...');
+
+      const text = await file.text();
+      const backup = JSON.parse(text);
+
+      if (!backup.games || !backup.playthroughs || !backup.rounds) {
+        throw new Error('Неверный формат файла');
+      }
+
+      await db.transaction('rw', [db.games, db.playthroughs, db.rounds], async () => {
+        await db.games.bulkPut(backup.games);
+        await db.playthroughs.bulkPut(backup.playthroughs);
+        await db.rounds.bulkPut(backup.rounds);
+      });
+
+      setStatus('✅ Импорт завершён');
+    } catch (error) {
+      console.error(error);
+      setStatus('❌ Ошибка импорта');
+    }
+
+    event.target.value = '';
   };
 
   return (
     <div>
       <button onClick={handleExport}>💾 Экспорт</button>
+      <label>
+        📂 Импорт
+        <input
+          type="file"
+          accept="application/json"
+          onChange={handleImport}
+          style={{ display: 'none' }}
+        />
+      </label>
       {status && <p>{status}</p>}
     </div>
   );
 }
 
 const toRadioValue = (mode: OnionChoice): OnionRadioValue =>
-  mode === false ? 'off' : mode;
+  mode === false ? OnionModes.Off : mode;
 
 const toOnionMode = (value: string): OnionChoice => {
-  if (value === 'ghost' || value === 'diff') {
+  if (value === OnionModes.Ghost || value === OnionModes.Diff) {
     return value;
   }
 
@@ -103,6 +143,9 @@ const DevScreen = () => {
             Служебная панель предназначена исключительно для разработки.
             Действия на этой странице могут повредить или безвозвратно стереть
             сохранённые данные.
+            Служебная панель предназначена исключительно для разработки.
+            Действия на этой странице могут повредить или безвозвратно стереть
+            сохранённые данные.
           </Alert.Description>
         </Alert.Content>
       </Alert>
@@ -114,8 +157,11 @@ const DevScreen = () => {
         <DevicePanel />
       </DevSection>
 
-      <DevSection title="Экспорт">
-        <ExportButton />
+      <DevSection
+        title="Экспорт/Импорт"
+        description="Сохранение и восстановление всей базы данных в JSON."
+      >
+        <ExportImportPanel />
       </DevSection>
 
       <DevSection
@@ -128,14 +174,18 @@ const DevScreen = () => {
           value={toRadioValue(current)}
           onChange={(value) => writeOnionMode(toOnionMode(value))}
         >
-          <OnionOption value="off" label="Off" description="Без наложения" />
           <OnionOption
-            value="ghost"
+            value={OnionModes.Off}
+            label="Off"
+            description="Без наложения"
+          />
+          <OnionOption
+            value={OnionModes.Ghost}
             label="Ghost"
             description="Полупрозрачные кости поверх экрана"
           />
           <OnionOption
-            value="diff"
+            value={OnionModes.Diff}
             label="Diff"
             description="Разница расхождения скелетона и интерфейса"
           />

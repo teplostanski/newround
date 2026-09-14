@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { darkThemeColor } from '@/shared/lib/theme';
 
 export const dynamic = 'force-static';
 
@@ -8,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: 'newround',
     description: 'Счётчик очков для настольных игр',
     lang: 'ru',
-    theme_color: '#e8edf2',
-    background_color: '#e8edf2',
+    theme_color: darkThemeColor,
+    background_color: darkThemeColor,
     display: 'standalone',
     orientation: 'portrait',
     start_url: '/',

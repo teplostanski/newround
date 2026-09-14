@@ -1,43 +1,56 @@
+/* eslint-disable slop/max-comment-length */
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { CreateGameScreen } from './create-game-screen';
-import { CreateGameSkeleton } from './create-game-skeleton';
-import { Routes } from '@/shared/lib/routes';
-import { toastStorageError } from '@/shared/lib/storage-toast';
-import { routeTransitionTypes } from '@/shared/lib/view-transitions';
-import { useStore } from '@/shared/model/store';
-import type { CreateGameData } from '@/shared/model/types';
+//import { useRouter } from 'next/navigation';
+//import { CreateGameScreen } from './create-game-screen';
+//import { CreateGameSkeleton } from './create-game-skeleton';
+//import { Routes } from '@/shared/lib/routes';
+//import { toastStorageError } from '@/shared/lib/storage-toast';
+//import { routeTransitionTypes } from '@/shared/lib/view-transitions';
+//import { useStore } from '@/shared/model/store';
+//import { ScoringModes } from '@/shared/constants';
+//import type { CreateGameData } from '@/shared/model/types';
+import { Alert } from '@heroui/react';
 
 const CreateGamePage = () => {
-  const router = useRouter();
-  const { createGame, isReady } = useStore();
+  //const router = useRouter();
+  //const { createGame, isReady } = useStore();
 
-  const handleCreateGame = async (data: CreateGameData) => {
-    try {
-      const created = await createGame(data);
+  //const handleCreateGame = async (data: CreateGameData) => {
+  //  try {
+  //    const created = await createGame(data);
 
-      if (!created) {
-        toastStorageError('Не удалось создать игру');
-        return;
-      }
+  //    if (!created) {
+  //      toastStorageError('Не удалось создать игру');
+  //      return;
+  //    }
 
-      router.push(
-        Routes.Round(created.gameId, created.playthroughId, created.roundId),
-        {
-          transitionTypes: routeTransitionTypes.forward,
-        },
-      );
-    } catch (error) {
-      toastStorageError('Не удалось создать игру', error);
-    }
-  };
+  //    const nextRoute =
+  //      created.scoringMode === ScoringModes.Rounds
+  //        ? Routes.Round(created.gameId, created.playthroughId, created.roundId)
+  //        : Routes.Playthrough(created.gameId, created.playthroughId);
 
-  if (!isReady) {
-    return <CreateGameSkeleton />;
-  }
+  //    router.push(nextRoute, {
+  //      transitionTypes: routeTransitionTypes.forward,
+  //    });
+  //  } catch (error) {
+  //    toastStorageError('Не удалось создать игру', error);
+  //  }
+  //};
 
-  return <CreateGameScreen onCreateGame={handleCreateGame} />;
+  //if (!isReady) {
+  //  return <CreateGameSkeleton />;
+  //}
+
+  //return <CreateGameScreen onCreateGame={handleCreateGame} />;
+  return (
+    <Alert status='danger'>
+      <Alert.Indicator />
+      <Alert.Content>
+        <Alert.Title>Временно недоступно</Alert.Title>
+      </Alert.Content>
+    </Alert>
+  );
 };
 
 export { CreateGamePage };

@@ -11,6 +11,8 @@ import {
 } from 'react';
 import { nanoid } from 'nanoid';
 import { defu } from 'defu';
+import { buildGame, buildPlaythrough, buildRound } from './entity-builders';
+import { CompletionReasons, ScoringModes } from '@/shared/constants';
 import { db, resetDatabase } from './db';
 import { deleteTestData, insertTestData } from './test-data';
 import type {
@@ -19,18 +21,33 @@ import type {
   CreateGameData,
   Playthrough,
   Round,
+  Completion,
+  Scores,
 } from './types';
 import { PromiseExtended } from 'dexie';
 
-type CreateGameResult = {
-  gameId: string;
-  playthroughId: string;
-  roundId: string;
-};
+type CreateGameResult =
+  | {
+      gameId: string;
+      playthroughId: string;
+      roundId: string;
+      scoringMode: typeof ScoringModes.Rounds;
+    }
+  | {
+      gameId: string;
+      playthroughId: string;
+      scoringMode: typeof ScoringModes.Playthrough;
+    };
 
 type AddPersistResult = {
   id: string;
   persist: PromiseExtended<void>;
+};
+
+type UpdateScoreData = {
+  id: string;
+  playerId: string;
+  score: number;
 };
 
 type StoreValue = {
@@ -48,11 +65,10 @@ type StoreValue = {
     playthroughId: string,
   ) => AddPersistResult | undefined;
   deleteRound: (roundId: string) => Promise<void>;
-  updateScore: (
-    roundId: string,
-    playerId: string,
-    score: number,
-  ) => Promise<void>;
+  updatePlaythroughScore: (data: UpdateScoreData) => Promise<void>;
+  updateRoundScore: (data: UpdateScoreData) => Promise<void>;
+  finishPlaythrough: (id: string) => Promise<void>;
+  finishRound: (id: string) => Promise<void>;
   seedTestData: () => Promise<void>;
   removeTestData: () => Promise<void>;
   resetAll: () => Promise<void>;
@@ -114,35 +130,30 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
     async (data: CreateGameData): Promise<CreateGameResult | undefined> => {
       const gameId = nanoid();
       const playthroughId = nanoid();
-      const roundId = nanoid();
       const now = Date.now();
       const initSequenceNumber = 1;
+      const isRoundsMode = data.scoringMode === ScoringModes.Rounds;
 
-      const game: Game = {
-        id: gameId,
-        name: data.name,
-        players: data.players,
-        createdAt: now,
-        updatedAt: now,
-      };
-      const playthrough: Playthrough = {
+      const game = buildGame({ id: gameId, createdAt: now, data });
+
+      const playthrough = buildPlaythrough({
         id: playthroughId,
         gameId,
         sequenceNumber: initSequenceNumber,
         createdAt: now,
-        updatedAt: now,
-      };
-      const round: Round = {
-        id: roundId,
-        gameId,
-        playthroughId,
-        sequenceNumber: initSequenceNumber,
-        scores: Object.fromEntries(
-          data.players.map((player) => [player.id, 0]),
-        ),
-        createdAt: now,
-        updatedAt: now,
-      };
+        players: data.players,
+      });
+
+      const round: Round | undefined = isRoundsMode
+        ? buildRound({
+            id: nanoid(),
+            gameId,
+            playthroughId,
+            sequenceNumber: initSequenceNumber,
+            createdAt: now,
+            players: data.players,
+          })
+        : undefined;
 
       try {
         await db.transaction(
@@ -153,15 +164,29 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
           async () => {
             await db.games.add(game);
             await db.playthroughs.add(playthrough);
-            await db.rounds.add(round);
+            if (round) {
+              await db.rounds.add(round);
+            }
           },
         );
 
         setGames((current) => [game, ...current]);
         setPlaythroughs((current) => [playthrough, ...current]);
-        setRounds((current) => [round, ...current]);
+        if (round) {
+          setRounds((current) => [round, ...current]);
+        }
 
-        return { gameId, playthroughId, roundId };
+        const base = { gameId, playthroughId };
+
+        if (round) {
+          return {
+            ...base,
+            scoringMode: ScoringModes.Rounds,
+            roundId: round.id,
+          };
+        }
+
+        return { ...base, scoringMode: ScoringModes.Playthrough };
       } catch (error) {
         console.error(error);
         throw error;
@@ -232,13 +257,13 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         return Math.max(max, playthrough.sequenceNumber);
       }, 0);
 
-      const playthrough: Playthrough = {
+      const playthrough = buildPlaythrough({
         id,
         gameId,
         sequenceNumber: lastNumber + 1,
         createdAt: now,
-        updatedAt: now,
-      };
+        players: game.players,
+      });
 
       setPlaythroughs((current) => [playthrough, ...current]);
       const persist = db
@@ -246,7 +271,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
           await db.playthroughs.add(playthrough);
         })
         .catch((error) => {
-          setPlaythroughs((current) => current.filter(p => p.id !== id));
+          setPlaythroughs((current) => current.filter((p) => p.id !== id));
           console.error(error);
           throw error;
         });
@@ -283,6 +308,10 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
+      if (game.scoringMode !== ScoringModes.Rounds) {
+        return;
+      }
+
       const id = nanoid();
       const now = Date.now();
       const playthroughRounds = rounds.filter(
@@ -293,17 +322,14 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         return Math.max(max, round.sequenceNumber);
       }, 0);
 
-      const round: Round = {
+      const round = buildRound({
         id,
         gameId,
         playthroughId,
         sequenceNumber: lastNumber + 1,
-        scores: Object.fromEntries(
-          game.players.map((player) => [player.id, 0]),
-        ),
         createdAt: now,
-        updatedAt: now,
-      };
+        players: game.players,
+      });
 
       setRounds((current) => [round, ...current]);
 
@@ -312,7 +338,7 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
           await db.rounds.add(round);
         })
         .catch((error) => {
-          setRounds((current) => current.filter(r => r.id !== id));
+          setRounds((current) => current.filter((r) => r.id !== id));
           console.error(error);
           throw error;
         });
@@ -333,9 +359,36 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const updateScore = useCallback(
-    async (roundId: string, playerId: string, score: number) => {
-      const round = findById(rounds, roundId);
+  const updatePlaythroughScore = useCallback(
+    async ({ id, playerId, score }: UpdateScoreData) => {
+      const playthrough = findById(playthroughs, id);
+
+      if (!playthrough?.scores) {
+        return;
+      }
+
+      const now = Date.now();
+      const scores = { ...playthrough.scores, [playerId]: score };
+
+      try {
+        await db.playthroughs.update(id, { scores, updatedAt: now });
+
+        setPlaythroughs((current) =>
+          current.map((item) =>
+            item.id !== id ? item : { ...item, scores, updatedAt: now },
+          ),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    [playthroughs],
+  );
+
+  const updateRoundScore = useCallback(
+    async ({ id, playerId, score }: UpdateScoreData) => {
+      const round = findById(rounds, id);
 
       if (!round) {
         return;
@@ -345,11 +398,11 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       const scores = { ...round.scores, [playerId]: score };
 
       try {
-        await db.rounds.update(roundId, { scores, updatedAt: now });
+        await db.rounds.update(id, { scores, updatedAt: now });
 
         setRounds((current) =>
-          current.map((round) =>
-            round.id !== roundId ? round : { ...round, scores, updatedAt: now },
+          current.map((item) =>
+            item.id !== id ? item : { ...item, scores, updatedAt: now },
           ),
         );
       } catch (error) {
@@ -358,6 +411,162 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       }
     },
     [rounds],
+  );
+
+  const finishRound = useCallback(
+    async (id: string) => {
+      const round = findById(rounds, id);
+
+      if (!round || round.completion) {
+        return;
+      }
+
+      const playthrough = findById(playthroughs, round.playthroughId);
+      const game = findById(games, round.gameId);
+
+      if (!playthrough || !game) {
+        return;
+      }
+
+      const now = Date.now();
+
+      const updatedScores: Scores = Object.fromEntries(
+        game.players.map((player) => [
+          player.id,
+          playthrough.scores[player.id] + round.scores[player.id],
+        ]),
+      );
+
+      const scores = round.scores;
+      const scoreValues = Object.values(scores);
+      const min = Math.min(...scoreValues);
+      const max = Math.max(...scoreValues);
+
+      const highestScorePlayerIds = game.players
+        .filter((player) => scores[player.id] === max)
+        .map((player) => player.id);
+
+      const lowestScorePlayerIds = game.players
+        .filter((player) => scores[player.id] === min)
+        .map((player) => player.id);
+
+      const initialCompletion: Completion = {
+        reason: CompletionReasons.Manual,
+        finishedAt: now,
+        highestScorePlayerIds,
+        lowestScorePlayerIds,
+      };
+
+      const duration = now - round.createdAt;
+
+      try {
+        await db.transaction('rw', db.playthroughs, db.rounds, async () => {
+          await db.playthroughs.update(playthrough.id, {
+            scores: updatedScores,
+            updatedAt: now,
+          });
+          await db.rounds.update(round.id, {
+            completion: initialCompletion,
+            duration,
+            updatedAt: now,
+          });
+        });
+
+        setPlaythroughs((current) =>
+          current.map((item) =>
+            item.id !== playthrough.id
+              ? item
+              : { ...item, scores: updatedScores, updatedAt: now },
+          ),
+        );
+
+        setRounds((current) =>
+          current.map((item) =>
+            item.id !== round.id
+              ? item
+              : { ...item, completion: initialCompletion, duration, updatedAt: now },
+          ),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    [games, playthroughs, rounds],
+  );
+
+  const finishPlaythrough = useCallback(
+    async (id: string) => {
+      const playthrough = findById(playthroughs, id);
+
+      if (!playthrough || playthrough.completion) {
+        return;
+      }
+
+      const game = findById(games, playthrough.gameId);
+
+      if (!game) {
+        return;
+      }
+
+      const now = Date.now();
+
+      const updatedScores: Scores = Object.fromEntries(
+        game.players.map((player) => [
+          player.id,
+          playthrough.scores[player.id],
+        ]),
+      );
+
+      const scores = playthrough.scores;
+      const scoreValues = Object.values(scores);
+      const min = Math.min(...scoreValues);
+      const max = Math.max(...scoreValues);
+
+      const highestScorePlayerIds = game.players
+        .filter((player) => scores[player.id] === max)
+        .map((player) => player.id);
+
+      const lowestScorePlayerIds = game.players
+        .filter((player) => scores[player.id] === min)
+        .map((player) => player.id);
+
+      const initialCompletion: Completion = {
+        reason: CompletionReasons.Manual,
+        finishedAt: now,
+        highestScorePlayerIds,
+        lowestScorePlayerIds,
+      };
+
+      const duration = now - playthrough.createdAt;
+
+      try {
+        await db.playthroughs.update(playthrough.id, {
+          scores: updatedScores,
+          completion: initialCompletion,
+          duration,
+          updatedAt: now,
+        });
+
+        setPlaythroughs((current) =>
+          current.map((item) =>
+            item.id !== playthrough.id
+              ? item
+              : {
+                  ...item,
+                  scores: updatedScores,
+                  completion: initialCompletion,
+                  duration,
+                  updatedAt: now,
+                },
+          ),
+        );
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    [games, playthroughs],
   );
 
   const seedTestData = useCallback(async () => {
@@ -390,7 +599,10 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       deletePlaythrough,
       addRound,
       deleteRound,
-      updateScore,
+      updatePlaythroughScore,
+      updateRoundScore,
+      finishPlaythrough,
+      finishRound,
       seedTestData,
       removeTestData,
       resetAll,
@@ -407,7 +619,10 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
       deletePlaythrough,
       addRound,
       deleteRound,
-      updateScore,
+      updatePlaythroughScore,
+      updateRoundScore,
+      finishPlaythrough,
+      finishRound,
       seedTestData,
       removeTestData,
       resetAll,

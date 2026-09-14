@@ -10,12 +10,6 @@ class Database extends Dexie {
     super('newround-db');
 
     this.version(1).stores({
-      games: 'id, name, createdAt, updatedAt',
-      playthroughs: 'id, gameId, createdAt, updatedAt',
-      rounds: 'id, gameId, playthroughId, createdAt, updatedAt',
-    });
-
-    this.version(2).stores({
       games: 'id, name, createdAt, updatedAt, isTestData',
       playthroughs: 'id, gameId, createdAt, updatedAt, isTestData',
       rounds: 'id, gameId, playthroughId, createdAt, updatedAt, isTestData',

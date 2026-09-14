@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { cn } from '@/shared/lib/cn';
-import { TEST_DATA_FLAG } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
 import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import styles from './test-data-panel.module.css';
+import { TEST_DATA_FLAG } from '@/shared/constants';
 
 type Pending = 'seed' | 'remove' | null;
 

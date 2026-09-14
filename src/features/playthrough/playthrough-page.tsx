@@ -1,26 +1,29 @@
 'use client';
 
-import { useEffect, useTransition } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { PlaythroughScreen } from '@/features/playthrough/playthrough-screen';
+import { PlaythroughRoundsPage } from '@/features/playthrough/playthrough-rounds-page';
+import { PlaythroughScorePage } from '@/features/playthrough/playthrough-score-page';
 import { PlaythroughSkeleton } from '@/features/playthrough/playthrough-skeleton';
 import { Routes } from '@/shared/lib/routes';
-import { toastStorageError } from '@/shared/lib/storage-toast';
-import { routeTransitionTypes } from '@/shared/lib/view-transitions';
+import { toastError } from '@/shared/lib/storage-toast';
+import { ScoreSkeleton } from '@/shared/ui/score-screen/score-skeleton';
+import { ScoringModes } from '@/shared/constants';
 import { findById, useStore } from '@/shared/model/store';
 
 const PlaythroughPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { addRound, games, isReady, playthroughs, rounds } = useStore();
-  const [, startNavigation] = useTransition();
+  const { games, isReady, playthroughs } = useStore();
   const gameId = searchParams.get('gameId');
   const playthroughId = searchParams.get('playthroughId');
   const game = findById(games, gameId);
   const playthrough = findById(playthroughs, playthroughId);
-  const playthroughRounds = rounds
-    .filter((round) => round.playthroughId === playthroughId)
-    .toSorted((left, right) => right.sequenceNumber - left.sequenceNumber);
+  const isPlaythroughMode = game?.scoringMode === ScoringModes.Playthrough;
+
+  // В режиме PLAYTHROUGH завершённая партия это редактор счёта, который
+  // больше нельзя менять. Тост показываем один раз.
+  const blockedToastShown = useRef(false);
 
   useEffect(() => {
     if (!isReady) {
@@ -34,47 +37,45 @@ const PlaythroughPage = () => {
 
     if (!playthrough) {
       router.replace(Routes.Game(game.id));
-    }
-  }, [game, isReady, playthrough, router]);
-
-  const handleStartRound = () => {
-    if (!game || !playthrough) {
       return;
     }
 
-    startNavigation(() => {
-      const result = addRound(game.id, playthrough.id);
+    if (game.scoringMode === ScoringModes.Playthrough && !playthrough.scores) {
+      router.replace(Routes.Game(game.id));
+      return;
+    }
 
-      if (!result) {
-        toastStorageError('Не удалось начать раунд');
-        return;
+    // Завершённую партию в режиме единого счёта не редактируем.
+    if (
+      game.scoringMode === ScoringModes.Playthrough &&
+      playthrough.completion
+    ) {
+      if (!blockedToastShown.current) {
+        blockedToastShown.current = true;
+        toastError('Партия завершена и не редактируется');
       }
-
-      const { id, persist } = result;
-
-      router.push(Routes.Round(game.id, playthrough.id, id), {
-        transitionTypes: routeTransitionTypes.forward,
-      });
-
-      persist.catch((error) => {
-        router.replace(Routes.Playthrough(game.id, playthrough.id));
-        toastStorageError('Не удалось начать раунд', error);
-      });
-    });
-  };
+      router.replace(Routes.Game(game.id));
+    }
+  }, [game, isReady, playthrough, router]);
 
   if (!isReady || !game || !playthrough) {
-    return <PlaythroughSkeleton />;
+    return isPlaythroughMode ? <ScoreSkeleton /> : <PlaythroughSkeleton />;
   }
 
-  return (
-    <PlaythroughScreen
-      game={game}
-      playthrough={playthrough}
-      rounds={playthroughRounds}
-      onStartRound={handleStartRound}
-    />
-  );
+  if (game.scoringMode === ScoringModes.Playthrough) {
+    if (!playthrough.scores || playthrough.completion) {
+      return <ScoreSkeleton />;
+    }
+
+    return (
+      <PlaythroughScorePage
+        game={game}
+        playthrough={playthrough}
+      />
+    );
+  }
+
+  return <PlaythroughRoundsPage game={game} playthrough={playthrough} />;
 };
 
 export { PlaythroughPage };

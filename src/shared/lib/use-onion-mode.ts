@@ -1,41 +1,24 @@
 'use client';
 
-import { useEffect, useSyncExternalStore } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSyncExternalStore } from 'react';
+import { OnionModes } from '@/shared/constants';
 import {
   removeStorageEntry,
   subscribeBrowserStorage,
   writeStorageEntry,
 } from './browser-storage';
 
-export type OnionMode = 'ghost' | 'diff';
+export type OnionMode = typeof OnionModes.Ghost | typeof OnionModes.Diff;
 
 const STORAGE_KEY = 'newround:onion';
 
-const parseOnion = (value: string | null): OnionMode | false | undefined => {
-  if (value === null) {
-    return undefined;
-  }
-
-  if (value === '1' || value === 'ghost') {
-    return 'ghost';
-  }
-
-  if (value === 'diff') {
-    return 'diff';
-  }
-
-  if (value === '0' || value === 'off' || value === '') {
-    return false;
-  }
-
-  return undefined;
-};
+const isOnionMode = (value: string): value is OnionMode =>
+  value === OnionModes.Ghost || value === OnionModes.Diff;
 
 export const readOnionMode = (): OnionMode | false => {
   const stored = sessionStorage.getItem(STORAGE_KEY);
 
-  return stored === 'ghost' || stored === 'diff' ? stored : false;
+  return stored !== null && isOnionMode(stored) ? stored : false;
 };
 
 export const writeOnionMode = (mode: OnionMode | false) => {
@@ -49,26 +32,9 @@ export const writeOnionMode = (mode: OnionMode | false) => {
 
 const getOffOnion = (): OnionMode | false => false;
 
-export const useOnionMode = (): OnionMode | false => {
-  const searchParams = useSearchParams();
-  const fromQuery = parseOnion(searchParams.get('onion'));
-  const stored = useSyncExternalStore(
+export const useOnionMode = (): OnionMode | false =>
+  useSyncExternalStore(
     subscribeBrowserStorage,
     readOnionMode,
     getOffOnion,
   );
-
-  useEffect(() => {
-    if (fromQuery === undefined) {
-      return;
-    }
-
-    writeOnionMode(fromQuery);
-  }, [fromQuery]);
-
-  if (fromQuery !== undefined) {
-    return fromQuery;
-  }
-
-  return stored;
-};

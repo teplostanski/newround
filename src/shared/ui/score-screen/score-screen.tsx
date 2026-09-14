@@ -5,21 +5,27 @@ import { PrimaryAction } from '@/shared/ui/primary-action/primary-action';
 import type { Player, Scores } from '@/shared/model/types';
 import { cn } from '@/shared/lib/cn';
 import { getPlayerChipStyle } from '@/shared/lib/player-chip';
-import styles from './round-screen.module.css';
+import styles from './score-screen.module.css';
 
-type RoundScreenProps = {
+type ScoreScreenProps = {
   players: Player[];
   scores: Scores;
+  totalScores: Scores;
+  finishLabel: string;
+  isFirstRun: boolean;
   onChangeScore: (id: string, newValue: number) => void;
-  onFinishRound: () => void;
+  onFinish: () => void;
 };
 
-const RoundScreen = ({
+const ScoreScreen = ({
   players,
   scores,
+  totalScores,
+  finishLabel,
+  isFirstRun,
   onChangeScore,
-  onFinishRound,
-}: RoundScreenProps) => {
+  onFinish,
+}: ScoreScreenProps) => {
   const incScore = (playerId: string) => {
     const currentScore = scores[playerId];
 
@@ -38,38 +44,39 @@ const RoundScreen = ({
         {players.map((player, index) => (
           <li key={player.id}>
             <Card className={cn('w-full', styles.scoreCard)}>
-              <Chip
-                variant="soft"
-                size="lg"
-                className="playerChip"
-                style={getPlayerChipStyle(index)}
-              >
-                {player.name}
-              </Chip>
+              <div className={styles.cardTitle}>
+                <Chip
+                  variant="soft"
+                  size="lg"
+                  className="playerChip"
+                  style={getPlayerChipStyle(index)}
+                >
+                  {player.name}
+                </Chip>
+                {!isFirstRun && (
+                  <span className={styles.totalScore}>
+                    {totalScores[player.id] + scores[player.id]}
+                  </span>
+                )}
+              </div>
               <div className={styles.stepper}>
                 <Button
                   variant="secondary"
                   className={styles.stepperTile}
                   isDisabled={scores[player.id] === 0}
                   aria-label={`Уменьшить счёт ${player.name}`}
-                  onPress={() =>
-                    onChangeScore(player.id, decScore(player.id))
-                  }
+                  onPress={() => onChangeScore(player.id, decScore(player.id))}
                 >
                   −
                 </Button>
-                <output
-                  className={cn(styles.stepperTile, styles.stepperValue)}
-                >
+                <output className={cn(styles.stepperTile, styles.stepperValue)}>
                   {scores[player.id]}
                 </output>
                 <Button
                   variant="secondary"
                   className={styles.stepperTile}
                   aria-label={`Увеличить счёт ${player.name}`}
-                  onPress={() =>
-                    onChangeScore(player.id, incScore(player.id))
-                  }
+                  onPress={() => onChangeScore(player.id, incScore(player.id))}
                 >
                   +
                 </Button>
@@ -79,9 +86,9 @@ const RoundScreen = ({
         ))}
       </ul>
 
-      <PrimaryAction onPress={onFinishRound}>Завершить раунд</PrimaryAction>
+      <PrimaryAction onPress={onFinish}>{finishLabel}</PrimaryAction>
     </div>
   );
 };
 
-export { RoundScreen };
+export { ScoreScreen };
