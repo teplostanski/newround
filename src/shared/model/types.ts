@@ -43,8 +43,8 @@ export type CompletionReason = ValueOf<typeof CompletionReasons>;
 export type Completion = {
   reason: CompletionReason;
   finishedAt: number;
-  highestScorePlayerIds: string[];
-  lowestScorePlayerIds: string[];
+  //highestScorePlayerIds: string[];
+  //lowestScorePlayerIds: string[];
 };
 
 type BaseEntity = {
@@ -86,7 +86,7 @@ export type EditGameData = {
 type PlayRecord = {
   sequenceNumber: number;
   scores: Scores;
-  completion?: Completion;
+  completion: Completion | null;
   duration: number;
 };
 

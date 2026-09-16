@@ -1,4 +1,3 @@
-/* eslint-disable slop/max-comment-length */
 'use client';
 
 //import { useRouter } from 'next/navigation';

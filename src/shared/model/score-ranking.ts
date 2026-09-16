@@ -4,8 +4,8 @@ import type { GameEndRules, Scores } from './types';
 /**
  * Лидеры и отстающие по текущему счёту с учётом направления ranking.
  *
- * `leaders`: у кого счёт лучший (для LOWEST_BEST это минимум, для
- * HIGHEST_BEST максимум); `trailers`: у кого счёт худший.
+ * `winners`: у кого счёт лучший (для LOWEST_BEST это минимум, для
+ * HIGHEST_BEST максимум); `outsiders`: у кого счёт худший.
  * Используется и вживую в шапке партии (кто лидирует / кто в жопе),
  * и при завершении для расчёта итогового исхода. Один источник
  * правды, чтобы live-статус и completion не расходились.
@@ -20,14 +20,14 @@ export const rankScores = (
   const values = Object.values(scores);
 
   if (values.length === 0) {
-    return { leaders: [] as string[], trailers: [] as string[] };
+    return { winners: [] as string[], outsiders: [] as string[] };
   }
 
   const min = Math.min(...values);
   const max = Math.max(...values);
 
   if (min === max) {
-    return { leaders: [] as string[], trailers: [] as string[] };
+    return { winners: [] as string[], outsiders: [] as string[] };
   }
 
   const bestScore = ranking === ScoreRankings.LowestBest ? min : max;
@@ -39,7 +39,7 @@ export const rankScores = (
       .map(([id]) => id);
 
   return {
-    leaders: idsWithScore(bestScore),
-    trailers: idsWithScore(worstScore),
+    winners: idsWithScore(bestScore),
+    outsiders: idsWithScore(worstScore),
   };
 };

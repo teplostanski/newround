@@ -330,3 +330,11 @@ body {
     animation-delay: 0s !important;
   }
 }
+
+.toast {
+  view-transition-name: app-toast;
+}
+
+::view-transition-group(app-toast) {
+  z-index: 2;
+}

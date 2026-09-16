@@ -26,7 +26,7 @@ export const ScoreRankings = {
 
 export const EndAwardsKinds = {
   Winner: 'WINNER',
-  Loser: 'LOSER',
+  Outsider: 'OUTSIDER',
   Both: 'BOTH',
 } as const;
 

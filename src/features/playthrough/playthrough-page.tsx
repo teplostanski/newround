@@ -6,7 +6,7 @@ import { PlaythroughRoundsPage } from '@/features/playthrough/playthrough-rounds
 import { PlaythroughScorePage } from '@/features/playthrough/playthrough-score-page';
 import { PlaythroughSkeleton } from '@/features/playthrough/playthrough-skeleton';
 import { Routes } from '@/shared/lib/routes';
-import { toastError } from '@/shared/lib/storage-toast';
+import { toastStorageError } from '@/shared/lib/storage-toast';
 import { ScoreSkeleton } from '@/shared/ui/score-screen/score-skeleton';
 import { ScoringModes } from '@/shared/constants';
 import { findById, useStore } from '@/shared/model/store';
@@ -52,7 +52,7 @@ const PlaythroughPage = () => {
     ) {
       if (!blockedToastShown.current) {
         blockedToastShown.current = true;
-        toastError('Партия завершена и не редактируется');
+        toastStorageError('Партия завершена и не редактируется');
       }
       router.replace(Routes.Game(game.id));
     }
@@ -67,12 +67,7 @@ const PlaythroughPage = () => {
       return <ScoreSkeleton />;
     }
 
-    return (
-      <PlaythroughScorePage
-        game={game}
-        playthrough={playthrough}
-      />
-    );
+    return <PlaythroughScorePage game={game} playthrough={playthrough} />;
   }
 
   return <PlaythroughRoundsPage game={game} playthrough={playthrough} />;

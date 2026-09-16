@@ -16,7 +16,8 @@ const PLAYER_MAX = 10;
 const CHUNK_SIZE = 500;
 const SCORE_MAX = 10_000;
 
-const range = (count: number) => Array.from({ length: count }, (_, index) => index);
+const range = (count: number) =>
+  Array.from({ length: count }, (_, index) => index);
 
 const randomScore = () => Math.floor(Math.random() * (SCORE_MAX + 1));
 
@@ -52,7 +53,7 @@ export const insertTestData = async () => {
       endConditions: [{ type: GameEndConditionTypes.Manual }],
       outcome: {
         ranking: ScoreRankings.LowestBest,
-        awards: EndAwardsKinds.Loser,
+        awards: EndAwardsKinds.Outsider,
       },
     },
     createdAt: now - gameIndex,
@@ -63,33 +64,44 @@ export const insertTestData = async () => {
   await addChunks(db.games, games);
 
   for (const [gameIndex, game] of games.entries()) {
-    const playthroughs: Playthrough[] = range(SCALE).map((playthroughIndex) => ({
-      id: nanoid(),
-      gameId: game.id,
-      sequenceNumber: playthroughIndex + 1,
-      scores: initialScores(game.players),
-      duration: 0,
-      createdAt: now - gameIndex * SCALE - playthroughIndex,
-      updatedAt: now - gameIndex * SCALE - playthroughIndex,
-      isTestData: TEST_DATA_FLAG,
-    }));
-
-    const rounds: Round[] = playthroughs.flatMap((playthrough, playthroughIndex) =>
-      range(SCALE).map((roundIndex) => ({
+    const playthroughs: Playthrough[] = range(SCALE).map(
+      (playthroughIndex) => ({
         id: nanoid(),
         gameId: game.id,
-        playthroughId: playthrough.id,
-        sequenceNumber: roundIndex + 1,
-        scores: Object.fromEntries(
-          game.players.map((player) => [player.id, randomScore()]),
-        ),
+        sequenceNumber: playthroughIndex + 1,
+        scores: initialScores(game.players),
         duration: 0,
-        createdAt:
-          now - gameIndex * SCALE * SCALE - playthroughIndex * SCALE - roundIndex,
-        updatedAt:
-          now - gameIndex * SCALE * SCALE - playthroughIndex * SCALE - roundIndex,
+        createdAt: now - gameIndex * SCALE - playthroughIndex,
+        updatedAt: now - gameIndex * SCALE - playthroughIndex,
         isTestData: TEST_DATA_FLAG,
-      })),
+        completion: null,
+      }),
+    );
+
+    const rounds: Round[] = playthroughs.flatMap(
+      (playthrough, playthroughIndex) =>
+        range(SCALE).map((roundIndex) => ({
+          id: nanoid(),
+          gameId: game.id,
+          playthroughId: playthrough.id,
+          sequenceNumber: roundIndex + 1,
+          scores: Object.fromEntries(
+            game.players.map((player) => [player.id, randomScore()]),
+          ),
+          duration: 0,
+          createdAt:
+            now -
+            gameIndex * SCALE * SCALE -
+            playthroughIndex * SCALE -
+            roundIndex,
+          updatedAt:
+            now -
+            gameIndex * SCALE * SCALE -
+            playthroughIndex * SCALE -
+            roundIndex,
+          isTestData: TEST_DATA_FLAG,
+          completion: null,
+        })),
     );
 
     await addChunks(db.playthroughs, playthroughs);
