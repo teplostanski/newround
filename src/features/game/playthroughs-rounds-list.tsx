@@ -148,9 +148,9 @@ const PlaythroughsRoundsList = ({
                           <div className="flex flex-col gap-2">
                             {showLosers &&
                               completion[
-                                ranking === ScoreRankings.HighestBest
-                                  ? 'lowestScorePlayerIds'
-                                  : 'highestScorePlayerIds'
+                                ranking === ScoreRankings.LowestBest
+                                  ? 'highestScorePlayerIds'
+                                  : 'lowestScorePlayerIds'
                               ].length > 0 && (
                                 <div className="flex flex-row flex-wrap items-center gap-2">
                                   <Chip variant="soft" size="sm" color="danger">
@@ -158,9 +158,9 @@ const PlaythroughsRoundsList = ({
                                       <FaceSad width={16} />
                                       {namesFromIds(
                                         completion[
-                                          ranking === ScoreRankings.HighestBest
-                                            ? 'lowestScorePlayerIds'
-                                            : 'highestScorePlayerIds'
+                                          ranking === ScoreRankings.LowestBest
+                                  ? 'highestScorePlayerIds'
+                                  : 'lowestScorePlayerIds'
                                         ],
                                       )}
                                     </span>
