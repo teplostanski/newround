@@ -27,6 +27,7 @@ const PlaythroughScorePage = ({
       scores={playthrough.scores}
       totalScores={initialScores(game.players)}
       finishLabel="Завершить партию"
+      isCompleted={Boolean(playthrough.completion)}
       onChangeScore={async (playerId, score) => {
         try {
           await updatePlaythroughScore({

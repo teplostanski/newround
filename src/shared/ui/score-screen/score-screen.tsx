@@ -13,6 +13,7 @@ type ScoreScreenProps = {
   totalScores: Scores;
   finishLabel: string;
   isFirstRun: boolean;
+  isCompleted: boolean;
   onChangeScore: (id: string, newValue: number) => void;
   onFinish: () => void;
 };
@@ -23,6 +24,7 @@ const ScoreScreen = ({
   totalScores,
   finishLabel,
   isFirstRun,
+  isCompleted,
   onChangeScore,
   onFinish,
 }: ScoreScreenProps) => {
@@ -55,7 +57,7 @@ const ScoreScreen = ({
                 </Chip>
                 {!isFirstRun && (
                   <span className={styles.totalScore}>
-                    {totalScores[player.id] + scores[player.id]}
+                    {totalScores[player.id] + (isCompleted ? 0 : scores[player.id])}
                   </span>
                 )}
               </div>

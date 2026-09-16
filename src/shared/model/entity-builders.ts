@@ -1,9 +1,10 @@
 import type {
   CreateGameData,
-  Game, Playthrough,
+  Game,
+  Playthrough,
   Player,
   Round,
-  Scores
+  Scores,
 } from './types';
 
 const initialScores = (players: Player[]): Scores =>
@@ -49,6 +50,7 @@ const buildPlaythrough = ({
   duration: 0,
   createdAt,
   updatedAt: createdAt,
+  completion: null,
 });
 
 type BuildRoundInput = {
@@ -76,6 +78,7 @@ const buildRound = ({
   duration: 0,
   createdAt,
   updatedAt: createdAt,
+  completion: null,
 });
 
 export { buildGame, buildPlaythrough, buildRound, initialScores };

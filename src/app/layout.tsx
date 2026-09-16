@@ -1,17 +1,11 @@
 import type { Metadata, Viewport } from 'next';
-import { SerwistProvider } from '@serwist/next/react';
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
-import { Suspense, type ReactNode } from 'react';
-import { routeSkeletons } from './route-skeletons';
-import { AppGate } from '@/shared/ui/app-gate/app-gate';
-import { InitialLoader } from '@/shared/ui/route-loader/route-loader';
-import { ServiceWorkerReset } from '@/shared/lib/service-worker-reset';
-import { ThemeProvider } from '@/shared/ui/theme-provider/theme-provider';
-import { StoreProvider } from '@/shared/model/store';
+import { type ReactNode } from 'react';
 import { cn } from '@/shared/lib/cn';
 import { darkThemeColor, lightThemeColor } from '@/shared/lib/theme';
 import '@/shared/styles/global.css';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://newround.teplostanski.me'),
@@ -53,21 +47,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => (
     suppressHydrationWarning
   >
     <body className={cn(GeistSans.className, 'text-foreground')}>
-      <ThemeProvider>
-        <ServiceWorkerReset />
-        <SerwistProvider
-          swUrl="/sw.js"
-          disable={process.env.NODE_ENV === 'development'}
-          reloadOnOnline={false}
-          options={{ type: 'classic' }}
-        >
-          <StoreProvider>
-            <Suspense fallback={<InitialLoader contents={routeSkeletons} />}>
-              <AppGate skeletons={routeSkeletons}>{children}</AppGate>
-            </Suspense>
-          </StoreProvider>
-        </SerwistProvider>
-      </ThemeProvider>
+      <Providers>{children}</Providers>
     </body>
   </html>
 );

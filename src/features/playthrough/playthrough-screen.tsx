@@ -29,23 +29,29 @@ const PlaythroughScreen = ({
 }: PlaythroughScreenProps) => {
   const { finishPlaythrough } = useStore();
 
-  const isAllCompleted = rounds.filter((round) => Boolean(round.completion)).length === rounds.length
+    const hasUnfinished = rounds.some(
+    (round) => !round.completion,
+  );
 
   const { outcome } = game.endRules;
+  
+  /** Дубликат */
   const showWinners =
     outcome.awards === EndAwardsKinds.Winner ||
     outcome.awards === EndAwardsKinds.Both;
-  const showLosers =
-    outcome.awards === EndAwardsKinds.Loser ||
+  const showOutsiders =
+    outcome.awards === EndAwardsKinds.Outsider ||
     outcome.awards === EndAwardsKinds.Both;
 
   const { completion } = playthrough;
 
-  const { leaders, trailers } = rankScores(playthrough.scores, outcome.ranking);
+  const { winners, outsiders } = rankScores(playthrough.scores, outcome.ranking);
 
+  /** Дубликат */
   const playerName = (playerId: string) =>
     game.players.find((player) => player.id === playerId)?.name ?? playerId;
 
+  /** Дубликат */
   const namesFromIds = (playerIds: string[]) =>
     playerIds.map(playerName).join(', ');
 
@@ -67,24 +73,24 @@ const PlaythroughScreen = ({
             {game.players.length}{' '}
             {game.players.length === 1 ? 'игрок' : 'игроков'}
           </p>
-          {(leaders.length > 0 || trailers.length > 0) && (
+          {(winners.length > 0 || outsiders.length > 0) && (
             <div className="mt-3 flex flex-col gap-2">
-              {showWinners && leaders.length > 0 && (
+              {showWinners && winners.length > 0 && (
                 <div className="flex flex-row flex-wrap items-center gap-2">
                   <Chip variant="soft" size="sm" color="success">
                     <span className="flex flex-row items-center gap-1">
                       <CrownDiamond width={16} />
-                      {namesFromIds(leaders)}
+                      {namesFromIds(winners)}
                     </span>
                   </Chip>
                 </div>
               )}
-              {showLosers && trailers.length > 0 && (
+              {showOutsiders && outsiders.length > 0 && (
                 <div className="flex flex-row flex-wrap items-center gap-2">
                   <Chip variant="soft" size="sm" color="danger">
                     <span className="flex flex-row items-center gap-1">
                       <FaceSad width={16} />
-                      {namesFromIds(trailers)}
+                      {namesFromIds(outsiders)}
                     </span>
                   </Chip>
                 </div>
@@ -96,7 +102,7 @@ const PlaythroughScreen = ({
 
       {!completion && (
         <>
-          <PrimaryAction onPress={onStartRound} isDisabled={!isAllCompleted}>Начать раунд</PrimaryAction>
+          <PrimaryAction onPress={onStartRound} isDisabled={hasUnfinished}>Начать раунд</PrimaryAction>
           <Button variant="danger-soft" fullWidth onPress={handleFinish}>
             Завершить партию
           </Button>

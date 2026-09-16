@@ -17,10 +17,11 @@ import {
 } from '@/shared/utils';
 import type { Game, Playthrough } from '@/shared/model/types';
 import { useStore } from '@/shared/model/store';
-import { EndAwardsKinds, ScoreRankings } from '@/shared/constants';
+import { EndAwardsKinds } from '@/shared/constants';
 import { ConfirmDeleteButton } from '@/shared/ui/confirm-delete-button/confirm-delete-button';
 import { ListItemCard } from '@/shared/ui/list-item-card/list-item-card';
 import { ScoreSummary } from '@/shared/ui/score-summary/score-summary';
+import { rankScores } from '@/shared/model/score-ranking';
 
 type PlaythroughsRoundsListProps = {
   game: Game;
@@ -33,9 +34,7 @@ const PlaythroughsRoundsList = ({
 }: PlaythroughsRoundsListProps) => {
   const { deletePlaythrough, rounds } = useStore();
 
-  const endRules = game.endRules;
-  const awards = endRules.outcome.awards;
-  const ranking = endRules.outcome.ranking;
+  const { outcome } = game.endRules;
 
   const roundCountByPlaythrough = useMemo(() => {
     const counts = new Map<string, number>();
@@ -78,16 +77,23 @@ const PlaythroughsRoundsList = ({
     return <p className="empty">Пока нет партий</p>;
   }
 
+  /** Дубликат */
   const playerName = (playerId: string) =>
     game.players.find((player) => player.id === playerId)?.name ?? playerId;
 
+  /** Дубликат */
   const namesFromIds = (playerIds: string[]) =>
     playerIds.map(playerName).join(', ');
 
+  /** Дубликат */
   const showWinners =
-    awards === EndAwardsKinds.Winner || awards === EndAwardsKinds.Both;
-  const showLosers =
-    awards === EndAwardsKinds.Loser || awards === EndAwardsKinds.Both;
+    outcome.awards === EndAwardsKinds.Winner ||
+    outcome.awards === EndAwardsKinds.Both;
+  const showOutsiders =
+    outcome.awards === EndAwardsKinds.Outsider ||
+    outcome.awards === EndAwardsKinds.Both;
+    
+      //const { winners, outsiders } = rankScores(playthrough.scores, outcome.ranking);
 
   return (
     <div className="flex flex-col gap-6">
@@ -146,34 +152,17 @@ const PlaythroughsRoundsList = ({
 
                         {completion && (
                           <div className="flex flex-col gap-2">
-                            {showLosers &&
-                              completion[
-                                ranking === ScoreRankings.LowestBest
-                                  ? 'highestScorePlayerIds'
-                                  : 'lowestScorePlayerIds'
-                              ].length > 0 && (
+                            {showOutsiders && rankScores(playthrough.scores, outcome.ranking).outsiders.length > 0 && (
                                 <div className="flex flex-row flex-wrap items-center gap-2">
                                   <Chip variant="soft" size="sm" color="danger">
                                     <span className="flex flex-row items-center gap-1">
                                       <FaceSad width={16} />
-                                      {namesFromIds(
-                                        completion[
-                                          ranking === ScoreRankings.LowestBest
-                                  ? 'highestScorePlayerIds'
-                                  : 'lowestScorePlayerIds'
-                                        ],
-                                      )}
+                                      {namesFromIds(rankScores(playthrough.scores, outcome.ranking).outsiders)}
                                     </span>
                                   </Chip>
                                 </div>
                               )}
-                            {showWinners &&
-                              completion[
-                                /** исправить хардкод */
-                                ranking === ScoreRankings.LowestBest
-                                  ? 'lowestScorePlayerIds'
-                                  : 'highestScorePlayerIds'
-                              ].length > 0 && (
+                            {showWinners && rankScores(playthrough.scores, outcome.ranking).winners.length > 0 && (
                                 <div className="flex flex-row flex-wrap items-center gap-2">
                                   <Chip
                                     variant="soft"
@@ -182,14 +171,7 @@ const PlaythroughsRoundsList = ({
                                   >
                                     <span className="flex flex-row items-center gap-1">
                                       <CrownDiamond width={16} />
-                                      {namesFromIds(
-                                        completion[
-                                          /** исправить хардкод */
-                                          ranking === ScoreRankings.LowestBest
-                                            ? 'lowestScorePlayerIds'
-                                            : 'highestScorePlayerIds'
-                                        ],
-                                      )}
+                                      {namesFromIds(rankScores(playthrough.scores, outcome.ranking).winners)}
                                     </span>
                                   </Chip>
                                 </div>

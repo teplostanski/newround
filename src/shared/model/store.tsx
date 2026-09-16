@@ -437,24 +437,24 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         ]),
       );
 
-      const scores = round.scores;
-      const scoreValues = Object.values(scores);
-      const min = Math.min(...scoreValues);
-      const max = Math.max(...scoreValues);
+      //const scores = round.scores;
+      //const scoreValues = Object.values(scores);
+      //const min = Math.min(...scoreValues);
+      //const max = Math.max(...scoreValues);
 
-      const highestScorePlayerIds = game.players
-        .filter((player) => scores[player.id] === max)
-        .map((player) => player.id);
+      //const highestScorePlayerIds = game.players
+      //  .filter((player) => scores[player.id] === max)
+      //  .map((player) => player.id);
 
-      const lowestScorePlayerIds = game.players
-        .filter((player) => scores[player.id] === min)
-        .map((player) => player.id);
+      //const lowestScorePlayerIds = game.players
+      //  .filter((player) => scores[player.id] === min)
+      //  .map((player) => player.id);
 
       const initialCompletion: Completion = {
         reason: CompletionReasons.Manual,
         finishedAt: now,
-        highestScorePlayerIds,
-        lowestScorePlayerIds,
+        //highestScorePlayerIds,
+        //lowestScorePlayerIds,
       };
 
       const duration = now - round.createdAt;
@@ -518,24 +518,24 @@ const StoreProvider = ({ children }: { children: ReactNode }) => {
         ]),
       );
 
-      const scores = playthrough.scores;
-      const scoreValues = Object.values(scores);
-      const min = Math.min(...scoreValues);
-      const max = Math.max(...scoreValues);
+      //const scores = playthrough.scores;
+      //const scoreValues = Object.values(scores);
+      //const min = Math.min(...scoreValues);
+      //const max = Math.max(...scoreValues);
 
-      const highestScorePlayerIds = game.players
-        .filter((player) => scores[player.id] === max)
-        .map((player) => player.id);
+      //const highestScorePlayerIds = game.players
+      //  .filter((player) => scores[player.id] === max)
+      //  .map((player) => player.id);
 
-      const lowestScorePlayerIds = game.players
-        .filter((player) => scores[player.id] === min)
-        .map((player) => player.id);
+      //const lowestScorePlayerIds = game.players
+      //  .filter((player) => scores[player.id] === min)
+      //  .map((player) => player.id);
 
       const initialCompletion: Completion = {
         reason: CompletionReasons.Manual,
         finishedAt: now,
-        highestScorePlayerIds,
-        lowestScorePlayerIds,
+        //highestScorePlayerIds,
+        //lowestScorePlayerIds,
       };
 
       const duration = now - playthrough.createdAt;
